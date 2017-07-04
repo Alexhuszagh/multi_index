@@ -45,7 +45,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/multi_index/detail/uintptr_type.hpp>
 #include <boost/type_traits/alignment_of.hpp>
-#include <boost/type_traits/is_same.hpp>
+#include <type_traits>
 #endif
 
 namespace boost{
@@ -211,7 +211,7 @@ struct ordered_index_node_impl_base:
       (alignment_of<
         ordered_index_node_compressed_base<AugmentPolicy,Allocator>
        >::value%2)||
-      !(is_same<
+      !(std::is_same<
         typename boost::detail::allocator::rebind_to<
           Allocator,
           ordered_index_node_impl<AugmentPolicy,Allocator>

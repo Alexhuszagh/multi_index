@@ -58,10 +58,9 @@
 #include <boost/multi_index/detail/ord_index_impl_fwd.hpp>
 #include <boost/ref.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <utility>
-
 #include <initializer_list>
+#include <utility>
+#include <type_traits>
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
 #define BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT_OF(x)                    \
@@ -475,14 +474,14 @@ public:
   range(LowerBounder lower,UpperBounder upper)const
   {
     typedef typename mpl::if_<
-      is_same<LowerBounder,unbounded_type>,
+      std::is_same<LowerBounder,unbounded_type>,
       BOOST_DEDUCED_TYPENAME mpl::if_<
-        is_same<UpperBounder,unbounded_type>,
+        std::is_same<UpperBounder,unbounded_type>,
         both_unbounded_tag,
         lower_unbounded_tag
       >::type,
       BOOST_DEDUCED_TYPENAME mpl::if_<
-        is_same<UpperBounder,unbounded_type>,
+        std::is_same<UpperBounder,unbounded_type>,
         upper_unbounded_tag,
         none_unbounded_tag
       >::type

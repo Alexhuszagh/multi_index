@@ -30,14 +30,13 @@
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/multi_index/hashed_index_fwd.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <cmath>
 #include <cstddef>
 #include <functional>
-#include <iterator>
-#include <utility>
-
 #include <initializer_list>
+#include <iterator>
+#include <type_traits>
+#include <utility>
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
 #define BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT_OF(x)                 \
@@ -955,7 +954,7 @@ private:
   };
 
   typedef typename mpl::if_<
-    is_same<Category,hashed_unique_tag>,
+    std::is_same<Category,hashed_unique_tag>,
     node_impl_base_pointer,
     link_info_non_unique
   >::type                                link_info;

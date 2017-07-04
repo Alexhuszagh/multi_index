@@ -16,8 +16,8 @@
 #include <boost/mpl/if.hpp>
 #include <boost/multi_index/tag.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <functional>
+#include <type_traits>
 
 namespace boost{
 

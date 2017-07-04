@@ -32,10 +32,6 @@ struct is_transparent:mpl::true_{};
 
 } /* namespace boost */
 
-#if !defined(BOOST_NO_SFINAE)&&!defined(BOOST_NO_SFINAE_EXPR)&& \
-    !defined(BOOST_NO_CXX11_DECLTYPE)&& \
-    (defined(BOOST_NO_CXX11_FINAL)||defined(BOOST_IS_FINAL))
-
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/or.hpp>
@@ -43,10 +39,11 @@ struct is_transparent:mpl::true_{};
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_final.hpp>
 #include <boost/type_traits/is_function.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/utility/declval.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <type_traits>
+
 
 namespace boost{
 
@@ -71,7 +68,7 @@ template<typename F,typename Arg1,typename Arg2>
 struct is_transparent_class<
   F,Arg1,Arg2,
   typename enable_if<
-    is_same<
+    std::is_same<
       decltype(
         declval<const is_transparent_class_helper<F,Arg1,Arg2> >()(
           declval<const Arg1&>(),declval<const Arg2&>())
@@ -101,12 +98,12 @@ struct is_transparent_function<
   typename enable_if<
     mpl::or_<
       mpl::not_<mpl::or_<
-        is_same<typename function_traits<F>::arg1_type,const Arg1&>,
-        is_same<typename function_traits<F>::arg1_type,Arg1>
+        std::is_same<typename function_traits<F>::arg1_type,const Arg1&>,
+        std::is_same<typename function_traits<F>::arg1_type,Arg1>
       > >,
       mpl::not_<mpl::or_<
-        is_same<typename function_traits<F>::arg2_type,const Arg2&>,
-        is_same<typename function_traits<F>::arg2_type,Arg2>
+        std::is_same<typename function_traits<F>::arg2_type,const Arg2&>,
+        std::is_same<typename function_traits<F>::arg2_type,Arg2>
       > >
     >
   >::type
@@ -125,5 +122,3 @@ struct is_transparent<
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif
