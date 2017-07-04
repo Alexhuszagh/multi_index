@@ -15,18 +15,10 @@
       (issue raised by Steve Cleary).
 */
 
-#ifndef BOOST_DETAIL_CALL_TRAITS_HPP
-#define BOOST_DETAIL_CALL_TRAITS_HPP
+#pragma once
 
-#ifndef BOOST_CONFIG_HPP
-#include <boost/config.hpp>
-#endif
 #include <cstddef>
-
-#include <boost/type_traits/is_arithmetic.hpp>
-#include <boost/type_traits/is_enum.hpp>
-#include <boost/type_traits/is_pointer.hpp>
-#include <boost/detail/workaround.hpp>
+#include <type_traits>
 
 namespace boost{
 
@@ -85,9 +77,9 @@ public:
    // of ct_imp to handle the logic. (JM)
    typedef typename boost::detail::ct_imp<
       T,
-      ::boost::is_pointer<T>::value,
-      ::boost::is_arithmetic<T>::value,
-      ::boost::is_enum<T>::value
+      std::is_pointer<T>::value,
+      std::is_arithmetic<T>::value,
+      std::is_enum<T>::value
    >::param_type param_type;
 };
 
@@ -100,73 +92,4 @@ struct call_traits<T&>
    typedef T& param_type;  // hh removed const
 };
 
-#if BOOST_WORKAROUND( __BORLANDC__,  < 0x5A0 )
-// these are illegal specialisations; cv-qualifies applied to
-// references have no effect according to [8.3.2p1],
-// C++ Builder requires them though as it treats cv-qualified
-// references as distinct types...
-template <typename T>
-struct call_traits<T&const>
-{
-   typedef T& value_type;
-   typedef T& reference;
-   typedef const T& const_reference;
-   typedef T& param_type;  // hh removed const
-};
-template <typename T>
-struct call_traits<T&volatile>
-{
-   typedef T& value_type;
-   typedef T& reference;
-   typedef const T& const_reference;
-   typedef T& param_type;  // hh removed const
-};
-template <typename T>
-struct call_traits<T&const volatile>
-{
-   typedef T& value_type;
-   typedef T& reference;
-   typedef const T& const_reference;
-   typedef T& param_type;  // hh removed const
-};
-
-template <typename T>
-struct call_traits< T * >
-{
-   typedef T * value_type;
-   typedef T * & reference;
-   typedef T * const & const_reference;
-   typedef T * const param_type;  // hh removed const
-};
-#endif
-#if !defined(BOOST_NO_ARRAY_TYPE_SPECIALIZATIONS)
-template <typename T, std::size_t N>
-struct call_traits<T [N]>
-{
-private:
-   typedef T array_type[N];
-public:
-   // degrades array to pointer:
-   typedef const T* value_type;
-   typedef array_type& reference;
-   typedef const array_type& const_reference;
-   typedef const T* const param_type;
-};
-
-template <typename T, std::size_t N>
-struct call_traits<const T [N]>
-{
-private:
-   typedef const T array_type[N];
-public:
-   // degrades array to pointer:
-   typedef const T* value_type;
-   typedef array_type& reference;
-   typedef const array_type& const_reference;
-   typedef const T* const param_type;
-};
-#endif
-
 }
-
-#endif // BOOST_DETAIL_CALL_TRAITS_HPP
