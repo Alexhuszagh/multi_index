@@ -8,9 +8,7 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/type_traits/aligned_storage.hpp>
-#include <boost/type_traits/alignment_of.hpp>
+#include <type_traits>
 
 namespace boost{
 
@@ -25,9 +23,9 @@ namespace detail{
 template<typename Value>
 struct pod_value_holder
 {
-  typename aligned_storage<
+  typename std::aligned_storage<
     sizeof(Value),
-    alignment_of<Value>::value
+    std::alignment_of<Value>::value
   >::type                      space;
 };
 
@@ -38,8 +36,6 @@ struct index_node_base:private pod_value_holder<Value>
   typedef Value           value_type;
   typedef Allocator       allocator_type;
 
-#include <boost/multi_index/detail/ignore_wstrict_aliasing.hpp>
-
   value_type& value()
   {
     return *reinterpret_cast<value_type*>(&this->space);
@@ -49,8 +45,6 @@ struct index_node_base:private pod_value_holder<Value>
   {
     return *reinterpret_cast<const value_type*>(&this->space);
   }
-
-#include <boost/multi_index/detail/restore_wstrict_aliasing.hpp>
 
   static index_node_base* from_value(const value_type* p)
   {

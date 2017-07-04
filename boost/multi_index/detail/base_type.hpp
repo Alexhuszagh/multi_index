@@ -9,7 +9,6 @@
 #pragma once
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/detail/workaround.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/size.hpp>

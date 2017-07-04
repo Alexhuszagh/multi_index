@@ -78,7 +78,7 @@ template<typename Node,typename Allocator,typename Compare>
 void random_access_index_inplace_merge(
   const Allocator& al,
   random_access_index_ptr_array<Allocator>& ptrs,
-  BOOST_DEDUCED_TYPENAME Node::impl_ptr_pointer first1,Compare comp)
+  typename Node::impl_ptr_pointer first1,Compare comp)
 {
   typedef typename Node::value_type       value_type;
   typedef typename Node::impl_pointer     impl_pointer;

@@ -11,10 +11,6 @@
 /* Utilities for emulation of variadic template functions. Variadic packs are
  * replaced by lists of BOOST_MULTI_INDEX_LIMIT_VARTEMPL_ARGS parameters:
  *
- *   - typename... Args            --> BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK
- *   - Args&&... args              --> BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK
- *   - std::forward<Args>(args)... --> BOOST_MULTI_INDEX_FORWARD_PARAM_PACK
- *
  * Forwarding emulated with Boost.Move. A template functions foo_imp
  * defined in such way accepts *exactly* BOOST_MULTI_INDEX_LIMIT_VARTEMPL_ARGS
  * arguments: variable number of arguments is emulated by providing a set of

@@ -10,7 +10,8 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/bool.hpp>
-#include <boost/type_traits/intrinsics.hpp>
+#include <type_traits>
+#include <utility>
 
 namespace boost{
 
@@ -24,7 +25,7 @@ namespace detail{
  */
 
 template<typename F,typename Arg1,typename Arg2,typename=void>
-struct is_transparent:mpl::true_{};
+struct is_transparent:std::true_type{};
 
 } /* namespace multi_index::detail */
 
@@ -36,13 +37,8 @@ struct is_transparent:mpl::true_{};
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/type_traits/function_traits.hpp>
-#include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_final.hpp>
-#include <boost/type_traits/is_function.hpp>
-#include <boost/type_traits/remove_pointer.hpp>
-#include <boost/utility/declval.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <type_traits>
 
 
 namespace boost{
@@ -62,7 +58,7 @@ struct is_transparent_class_helper:F
 };
 
 template<typename F,typename Arg1,typename Arg2,typename=void>
-struct is_transparent_class:mpl::true_{};
+struct is_transparent_class:std::true_type{};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent_class<
@@ -70,27 +66,27 @@ struct is_transparent_class<
   typename enable_if<
     std::is_same<
       decltype(
-        declval<const is_transparent_class_helper<F,Arg1,Arg2> >()(
-          declval<const Arg1&>(),declval<const Arg2&>())
+        std::declval<const is_transparent_class_helper<F,Arg1,Arg2> >()(
+          std::declval<const Arg1&>(),std::declval<const Arg2&>())
       ),
       not_is_transparent_result_type
     >
   >::type
->:mpl::false_{};
+>:std::false_type{};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent<
   F,Arg1,Arg2,
   typename enable_if<
     mpl::and_<
-      is_class<F>,
+      std::is_class<F>,
       mpl::not_<is_final<F> > /* is_transparent_class_helper derives from F */
     >
   >::type
 >:is_transparent_class<F,Arg1,Arg2>{};
 
 template<typename F,typename Arg1,typename Arg2,typename=void>
-struct is_transparent_function:mpl::true_{};
+struct is_transparent_function:std::true_type{};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent_function<
@@ -107,15 +103,15 @@ struct is_transparent_function<
       > >
     >
   >::type
->:mpl::false_{};
+>:std::false_type{};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent<
   F,Arg1,Arg2,
   typename enable_if<
-    is_function<typename remove_pointer<F>::type>
+    std::is_function<typename std::remove_pointer<F>::type>
   >::type
->:is_transparent_function<typename remove_pointer<F>::type,Arg1,Arg2>{};
+>:is_transparent_function<typename std::remove_pointer<F>::type,Arg1,Arg2>{};
 
 } /* namespace multi_index::detail */
 

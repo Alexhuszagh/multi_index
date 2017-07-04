@@ -12,7 +12,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
-#include <boost/detail/workaround.hpp>
 #include <boost/move/core.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/contains.hpp>
@@ -244,7 +243,7 @@ public:
     return*this;
   }
 
-  allocator_type get_allocator()const BOOST_NOEXCEPT
+  allocator_type get_allocator()const noexcept
   {
     return allocator_type(bfm_allocator::member);
   }
@@ -259,14 +258,14 @@ public:
   };
 
   template<int N>
-  typename nth_index<N>::type& get()BOOST_NOEXCEPT
+  typename nth_index<N>::type& get()noexcept
   {
     static_assert(N>=0&&N<mpl::size<index_type_list>::type::value, "");
     return *this;
   }
 
   template<int N>
-  const typename nth_index<N>::type& get()const BOOST_NOEXCEPT
+  const typename nth_index<N>::type& get()const noexcept
   {
     static_assert(N>=0&&N<mpl::size<index_type_list>::type::value, "");
     return *this;
@@ -282,21 +281,20 @@ public:
       detail::has_tag<Tag>
     >::type                                    iter;
 
-    BOOST_STATIC_CONSTANT(
-      bool,index_found=!(std::is_same<iter,typename mpl::end<index_type_list>::type >::value));
+    static const bool index_found = !(std::is_same<iter,typename mpl::end<index_type_list>::type >::value);
     static_assert(index_found, "");
 
     typedef typename mpl::deref<iter>::type    type;
   };
 
   template<typename Tag>
-  typename index<Tag>::type& get()BOOST_NOEXCEPT
+  typename index<Tag>::type& get()noexcept
   {
     return *this;
   }
 
   template<typename Tag>
-  const typename index<Tag>::type& get()const BOOST_NOEXCEPT
+  const typename index<Tag>::type& get()const noexcept
   {
     return *this;
   }
@@ -720,7 +718,7 @@ template<int N,typename Value,typename IndexSpecifierList,typename Allocator>
 typename nth_index<
   multi_index_container<Value,IndexSpecifierList,Allocator>,N>::type&
 get(
-  multi_index_container<Value,IndexSpecifierList,Allocator>& m)BOOST_NOEXCEPT
+  multi_index_container<Value,IndexSpecifierList,Allocator>& m)noexcept
 {
   typedef multi_index_container<
     Value,IndexSpecifierList,Allocator>    multi_index_type;
@@ -733,7 +731,7 @@ get(
   static_assert(N>=0&&
     N<
     mpl::size<
-      BOOST_DEDUCED_TYPENAME multi_index_type::index_type_list
+      typename multi_index_type::index_type_list
     >::type::value, "");
 
   return detail::converter<multi_index_type,index_type>::index(m);
@@ -744,7 +742,7 @@ const typename nth_index<
   multi_index_container<Value,IndexSpecifierList,Allocator>,N>::type&
 get(
   const multi_index_container<Value,IndexSpecifierList,Allocator>& m
-)BOOST_NOEXCEPT
+)noexcept
 {
   typedef multi_index_container<
     Value,IndexSpecifierList,Allocator>    multi_index_type;
@@ -757,7 +755,7 @@ get(
   static_assert(N>=0&&
     N<
     mpl::size<
-      BOOST_DEDUCED_TYPENAME multi_index_type::index_type_list
+      typename multi_index_type::index_type_list
     >::type::value, "");
 
   return detail::converter<multi_index_type,index_type>::index(m);
@@ -788,7 +786,7 @@ template<
 typename ::boost::multi_index::index<
   multi_index_container<Value,IndexSpecifierList,Allocator>,Tag>::type&
 get(
-  multi_index_container<Value,IndexSpecifierList,Allocator>& m)BOOST_NOEXCEPT
+  multi_index_container<Value,IndexSpecifierList,Allocator>& m)noexcept
 {
   typedef multi_index_container<
     Value,IndexSpecifierList,Allocator>         multi_index_type;
@@ -808,7 +806,7 @@ const typename ::boost::multi_index::index<
   multi_index_container<Value,IndexSpecifierList,Allocator>,Tag>::type&
 get(
   const multi_index_container<Value,IndexSpecifierList,Allocator>& m
-)BOOST_NOEXCEPT
+)noexcept
 {
   typedef multi_index_container<
     Value,IndexSpecifierList,Allocator>         multi_index_type;

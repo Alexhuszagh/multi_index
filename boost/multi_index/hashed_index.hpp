@@ -12,8 +12,6 @@
 #include <algorithm>
 #include <boost/call_traits.hpp>
 #include <boost/detail/allocator_utilities.hpp>
-#include <boost/detail/workaround.hpp>
-#include <boost/foreach_fwd.hpp>
 #include <boost/move/core.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
@@ -151,27 +149,27 @@ public:
     return *this;
   }
 
-  allocator_type get_allocator()const BOOST_NOEXCEPT
+  allocator_type get_allocator()const noexcept
   {
     return this->final().get_allocator();
   }
 
   /* size and capacity */
 
-  bool      empty()const BOOST_NOEXCEPT{return this->final_empty_();}
-  size_type size()const BOOST_NOEXCEPT{return this->final_size_();}
-  size_type max_size()const BOOST_NOEXCEPT{return this->final_max_size_();}
+  bool      empty()const noexcept{return this->final_empty_();}
+  size_type size()const noexcept{return this->final_size_();}
+  size_type max_size()const noexcept{return this->final_max_size_();}
 
   /* iterators */
 
-  iterator begin()BOOST_NOEXCEPT
+  iterator begin()noexcept
     {return make_iterator(node_type::from_impl(header()->next()->prior()));}
-  const_iterator begin()const BOOST_NOEXCEPT
+  const_iterator begin()const noexcept
     {return make_iterator(node_type::from_impl(header()->next()->prior()));}
-  iterator       end()BOOST_NOEXCEPT{return make_iterator(header());}
-  const_iterator end()const BOOST_NOEXCEPT{return make_iterator(header());}
-  const_iterator cbegin()const BOOST_NOEXCEPT{return begin();}
-  const_iterator cend()const BOOST_NOEXCEPT{return end();}
+  iterator       end()noexcept{return make_iterator(header());}
+  const_iterator end()const noexcept{return make_iterator(header());}
+  const_iterator cbegin()const noexcept{return begin();}
+  const_iterator cend()const noexcept{return end();}
 
   iterator iterator_to(const value_type& x)
   {
@@ -308,7 +306,7 @@ public:
       modify_key_adaptor<Rollback,value_type,KeyFromValue>(back_,key));
   }
 
-  void clear()BOOST_NOEXCEPT
+  void clear()noexcept
   {
     this->final_clear_();
   }
@@ -388,8 +386,8 @@ public:
 
   /* bucket interface */
 
-  size_type bucket_count()const BOOST_NOEXCEPT{return buckets.size();}
-  size_type max_bucket_count()const BOOST_NOEXCEPT{return static_cast<size_type>(-1);}
+  size_type bucket_count()const noexcept{return buckets.size();}
+  size_type max_bucket_count()const noexcept{return static_cast<size_type>(-1);}
 
   size_type bucket_size(size_type n)const
   {
@@ -443,9 +441,9 @@ public:
 
   /* hash policy */
 
-  float load_factor()const BOOST_NOEXCEPT
+  float load_factor()const noexcept
     {return static_cast<float>(size())/bucket_count();}
-  float max_load_factor()const BOOST_NOEXCEPT{return mlf;}
+  float max_load_factor()const noexcept{return mlf;}
   void  max_load_factor(float z){mlf=z;calculate_max_load();}
 
   void rehash(size_type n)
@@ -1435,18 +1433,3 @@ struct hashed_non_unique
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-/* Boost.Foreach compatibility */
-
-template<
-  typename KeyFromValue,typename Hash,typename Pred,
-  typename SuperMeta,typename TagList,typename Category
->
-inline boost::mpl::true_* boost_foreach_is_noncopyable(
-  boost::multi_index::detail::hashed_index<
-    KeyFromValue,Hash,Pred,SuperMeta,TagList,Category>*&,
-  boost_foreach_argument_dependent_lookup_hack)
-{
-  return 0;
-}
-

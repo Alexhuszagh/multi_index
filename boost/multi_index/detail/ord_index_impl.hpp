@@ -38,9 +38,6 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <boost/call_traits.hpp>
-//#include <boost/detail/workaround.hpp>
-#include <boost/foreach_fwd.hpp>
-#include <boost/iterator/reverse_iterator.hpp>
 #include <boost/move/core.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
@@ -59,6 +56,7 @@
 #include <boost/ref.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <initializer_list>
+#include <iterator>
 #include <utility>
 #include <type_traits>
 
@@ -126,9 +124,9 @@ public:
   typedef typename allocator_type::pointer           pointer;
   typedef typename allocator_type::const_pointer     const_pointer;
   typedef typename
-    boost::reverse_iterator<iterator>                reverse_iterator;
+    std::reverse_iterator<iterator>                reverse_iterator;
   typedef typename
-    boost::reverse_iterator<const_iterator>          const_reverse_iterator;
+    std::reverse_iterator<const_iterator>          const_reverse_iterator;
   typedef TagList                                    tag_list;
 
 protected:
@@ -170,7 +168,7 @@ public:
    * Assignment operators defined at ordered_index rather than here.
    */
 
-  allocator_type get_allocator()const BOOST_NOEXCEPT
+  allocator_type get_allocator()const noexcept
   {
     return this->final().get_allocator();
   }
@@ -178,29 +176,29 @@ public:
   /* iterators */
 
   iterator
-    begin()BOOST_NOEXCEPT{return make_iterator(leftmost());}
+    begin()noexcept{return make_iterator(leftmost());}
   const_iterator
-    begin()const BOOST_NOEXCEPT{return make_iterator(leftmost());}
+    begin()const noexcept{return make_iterator(leftmost());}
   iterator
-    end()BOOST_NOEXCEPT{return make_iterator(header());}
+    end()noexcept{return make_iterator(header());}
   const_iterator
-    end()const BOOST_NOEXCEPT{return make_iterator(header());}
+    end()const noexcept{return make_iterator(header());}
   reverse_iterator
-    rbegin()BOOST_NOEXCEPT{return boost::make_reverse_iterator(end());}
+    rbegin()noexcept{return reverse_iterator(end());}
   const_reverse_iterator
-    rbegin()const BOOST_NOEXCEPT{return boost::make_reverse_iterator(end());}
+    rbegin()const noexcept{return const_reverse_iterator(end());}
   reverse_iterator
-    rend()BOOST_NOEXCEPT{return boost::make_reverse_iterator(begin());}
+    rend()noexcept{return reverse_iterator(begin());}
   const_reverse_iterator
-    rend()const BOOST_NOEXCEPT{return boost::make_reverse_iterator(begin());}
+    rend()const noexcept{return const_reverse_iterator(begin());}
   const_iterator
-    cbegin()const BOOST_NOEXCEPT{return begin();}
+    cbegin()const noexcept{return begin();}
   const_iterator
-    cend()const BOOST_NOEXCEPT{return end();}
+    cend()const noexcept{return end();}
   const_reverse_iterator
-    crbegin()const BOOST_NOEXCEPT{return rbegin();}
+    crbegin()const noexcept{return rbegin();}
   const_reverse_iterator
-    crend()const BOOST_NOEXCEPT{return rend();}
+    crend()const noexcept{return rend();}
 
   iterator iterator_to(const value_type& x)
   {
@@ -214,9 +212,9 @@ public:
 
   /* capacity */
 
-  bool      empty()const BOOST_NOEXCEPT{return this->final_empty_();}
-  size_type size()const BOOST_NOEXCEPT{return this->final_size_();}
-  size_type max_size()const BOOST_NOEXCEPT{return this->final_max_size_();}
+  bool      empty()const noexcept{return this->final_empty_();}
+  size_type size()const noexcept{return this->final_size_();}
+  size_type max_size()const noexcept{return this->final_max_size_();}
 
   /* modifiers */
 
@@ -344,7 +342,7 @@ public:
     this->final_swap_(x.final());
   }
 
-  void clear()BOOST_NOEXCEPT
+  void clear()noexcept
   {
     this->final_clear_();
   }
@@ -446,12 +444,12 @@ public:
   {
     typedef typename mpl::if_<
       std::is_same<LowerBounder,unbounded_type>,
-      BOOST_DEDUCED_TYPENAME mpl::if_<
+      typename mpl::if_<
         std::is_same<UpperBounder,unbounded_type>,
         both_unbounded_tag,
         lower_unbounded_tag
       >::type,
-      BOOST_DEDUCED_TYPENAME mpl::if_<
+      typename mpl::if_<
         std::is_same<UpperBounder,unbounded_type>,
         upper_unbounded_tag,
         none_unbounded_tag
@@ -1067,7 +1065,7 @@ public:
   }
 
   ordered_index& operator=(
-    std::initializer_list<BOOST_DEDUCED_TYPENAME super::value_type> list)
+    std::initializer_list<typename super::value_type> list)
   {
     this->final()=list;
     return *this;
@@ -1208,17 +1206,3 @@ void swap(
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-/* Boost.Foreach compatibility */
-
-template<
-  typename KeyFromValue,typename Compare,
-  typename SuperMeta,typename TagList,typename Category,typename AugmentPolicy
->
-inline boost::mpl::true_* boost_foreach_is_noncopyable(
-  boost::multi_index::detail::ordered_index<
-    KeyFromValue,Compare,SuperMeta,TagList,Category,AugmentPolicy>*&,
-  boost_foreach_argument_dependent_lookup_hack)
-{
-  return 0;
-}

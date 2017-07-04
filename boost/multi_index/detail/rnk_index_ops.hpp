@@ -88,7 +88,7 @@ template<
 >
 inline std::size_t ranked_index_find_rank(
   Node* top,Node* y,const KeyFromValue& key,
-  const BOOST_DEDUCED_TYPENAME KeyFromValue::result_type& x,
+  const typename KeyFromValue::result_type& x,
   const CompatibleCompare& comp,mpl::true_)
 {
   return ranked_index_find_rank(top,y,key,x,comp,mpl::false_());
@@ -141,7 +141,7 @@ template<
 >
 inline std::size_t ranked_index_lower_bound_rank(
   Node* top,Node* y,const KeyFromValue& key,
-  const BOOST_DEDUCED_TYPENAME KeyFromValue::result_type& x,
+  const typename KeyFromValue::result_type& x,
   const CompatibleCompare& comp,mpl::true_)
 {
   return ranked_index_lower_bound_rank(top,y,key,x,comp,mpl::false_());
@@ -192,7 +192,7 @@ template<
 >
 inline std::size_t ranked_index_upper_bound_rank(
   Node* top,Node* y,const KeyFromValue& key,
-  const BOOST_DEDUCED_TYPENAME KeyFromValue::result_type& x,
+  const typename KeyFromValue::result_type& x,
   const CompatibleCompare& comp,mpl::true_)
 {
   return ranked_index_upper_bound_rank(top,y,key,x,comp,mpl::false_());
@@ -245,7 +245,7 @@ template<
 >
 inline std::pair<std::size_t,std::size_t> ranked_index_equal_range_rank(
   Node* top,Node* y,const KeyFromValue& key,
-  const BOOST_DEDUCED_TYPENAME KeyFromValue::result_type& x,
+  const typename KeyFromValue::result_type& x,
   const CompatibleCompare& comp,mpl::true_)
 {
   return ranked_index_equal_range_rank(top,y,key,x,comp,mpl::false_());

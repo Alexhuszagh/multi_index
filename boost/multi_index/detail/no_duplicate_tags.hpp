@@ -63,7 +63,7 @@ struct duplicate_tag_list_marker
 {
   template <typename MplSet,typename Index>
   struct apply:mpl::fold<
-    BOOST_DEDUCED_TYPENAME Index::tag_list,
+    typename Index::tag_list,
     MplSet,
     duplicate_tag_marker>
   {

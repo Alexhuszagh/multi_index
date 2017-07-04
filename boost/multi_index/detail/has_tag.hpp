@@ -23,7 +23,7 @@ template<typename Tag>
 struct has_tag
 {
   template<typename Index>
-  struct apply:mpl::contains<BOOST_DEDUCED_TYPENAME Index::tag_list,Tag>
+  struct apply:mpl::contains<typename Index::tag_list,Tag>
   {
   };
 };

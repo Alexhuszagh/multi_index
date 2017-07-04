@@ -8,12 +8,10 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/seq_index_node.hpp>
-#include <boost/type_traits/aligned_storage.hpp>
-#include <boost/type_traits/alignment_of.hpp>
 #include <cstddef>
 #include <limits>
+#include <type_traits>
 
 namespace boost{
 
@@ -71,8 +69,8 @@ void sequenced_index_merge(SequencedIndex& x,SequencedIndex& y,Compare comp)
 
 template<typename Node,typename Compare>
 void sequenced_index_collate(
-  BOOST_DEDUCED_TYPENAME Node::impl_type* x,
-  BOOST_DEDUCED_TYPENAME Node::impl_type* y,
+  typename Node::impl_type* x,
+  typename Node::impl_type* y,
   Compare comp)
 {
   typedef typename Node::impl_type    impl_type;
@@ -104,8 +102,6 @@ BOOST_STATIC_CONSTANT(
   sequenced_index_sort_max_fill=
     (std::size_t)std::numeric_limits<std::size_t>::digits+1);
 
-#include <boost/multi_index/detail/ignore_wstrict_aliasing.hpp>
-
 template<typename Node,typename Compare>
 void sequenced_index_sort(Node* header,Compare comp)
 {
@@ -125,18 +121,18 @@ void sequenced_index_sort(Node* header,Compare comp)
   typedef typename Node::impl_type      impl_type;
   typedef typename Node::impl_pointer   impl_pointer;
 
-  typedef typename aligned_storage<
+  typedef typename std::aligned_storage<
     sizeof(impl_type),
-    alignment_of<impl_type>::value
+    std::alignment_of<impl_type>::value
   >::type                               carry_spc_type;
   carry_spc_type                        carry_spc;
   impl_type&                            carry=
     *reinterpret_cast<impl_type*>(&carry_spc);
-  typedef typename aligned_storage<
+  typedef typename std::aligned_storage<
     sizeof(
       impl_type
         [sequenced_index_sort_max_fill]),
-    alignment_of<
+    std::alignment_of<
       impl_type
         [sequenced_index_sort_max_fill]
     >::value
@@ -184,8 +180,6 @@ void sequenced_index_sort(Node* header,Compare comp)
     throw;
   }
 }
-
-#include <boost/multi_index/detail/restore_wstrict_aliasing.hpp>
 
 } /* namespace multi_index::detail */
 

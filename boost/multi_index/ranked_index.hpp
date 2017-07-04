@@ -122,12 +122,12 @@ public:
   {
     typedef typename mpl::if_<
       std::is_same<LowerBounder,unbounded_type>,
-      BOOST_DEDUCED_TYPENAME mpl::if_<
+      typename mpl::if_<
         std::is_same<UpperBounder,unbounded_type>,
         both_unbounded_tag,
         lower_unbounded_tag
       >::type,
-      BOOST_DEDUCED_TYPENAME mpl::if_<
+      typename mpl::if_<
         std::is_same<UpperBounder,unbounded_type>,
         upper_unbounded_tag,
         none_unbounded_tag

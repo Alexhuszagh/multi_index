@@ -9,7 +9,6 @@
 #pragma once
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/detail/workaround.hpp>
 #include <boost/mpl/bind.hpp>
 #include <boost/mpl/reverse_iter_fold.hpp>
 #include <boost/mpl/deref.hpp>

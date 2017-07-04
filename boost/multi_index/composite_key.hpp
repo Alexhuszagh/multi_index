@@ -83,7 +83,7 @@
 /* typename list(0)<list(1),n>::type */
 
 #define BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N(z,n,list)                  \
-  BOOST_DEDUCED_TYPENAME BOOST_PP_LIST_AT(list,0)<                           \
+  typename BOOST_PP_LIST_AT(list,0)<                           \
     BOOST_PP_LIST_AT(list,1),n                                               \
   >::type
 
@@ -219,9 +219,9 @@ struct equal_ckey_ckey_normal
   {
     if(!eq.get_head()(c0.get_head()(v0),c1.get_head()(v1)))return false;
     return equal_ckey_ckey<
-      BOOST_DEDUCED_TYPENAME KeyCons1::tail_type,Value1,
-      BOOST_DEDUCED_TYPENAME KeyCons2::tail_type,Value2,
-      BOOST_DEDUCED_TYPENAME EqualCons::tail_type
+      typename KeyCons1::tail_type,Value1,
+      typename KeyCons2::tail_type,Value2,
+      typename EqualCons::tail_type
     >::compare(c0.get_tail(),v0,c1.get_tail(),v1,eq.get_tail());
   }
 };
@@ -284,9 +284,9 @@ struct equal_ckey_cval_normal
   {
     if(!eq.get_head()(c.get_head()(v),vc.get_head()))return false;
     return equal_ckey_cval<
-      BOOST_DEDUCED_TYPENAME KeyCons::tail_type,Value,
-      BOOST_DEDUCED_TYPENAME ValCons::tail_type,
-      BOOST_DEDUCED_TYPENAME EqualCons::tail_type
+      typename KeyCons::tail_type,Value,
+      typename ValCons::tail_type,
+      typename EqualCons::tail_type
     >::compare(c.get_tail(),v,vc.get_tail(),eq.get_tail());
   }
 
@@ -296,9 +296,9 @@ struct equal_ckey_cval_normal
   {
     if(!eq.get_head()(vc.get_head(),c.get_head()(v)))return false;
     return equal_ckey_cval<
-      BOOST_DEDUCED_TYPENAME KeyCons::tail_type,Value,
-      BOOST_DEDUCED_TYPENAME ValCons::tail_type,
-      BOOST_DEDUCED_TYPENAME EqualCons::tail_type
+      typename KeyCons::tail_type,Value,
+      typename ValCons::tail_type,
+      typename EqualCons::tail_type
     >::compare(vc.get_tail(),c.get_tail(),v,eq.get_tail());
   }
 };
@@ -361,9 +361,9 @@ struct compare_ckey_ckey_normal
     if(comp.get_head()(c0.get_head()(v0),c1.get_head()(v1)))return true;
     if(comp.get_head()(c1.get_head()(v1),c0.get_head()(v0)))return false;
     return compare_ckey_ckey<
-      BOOST_DEDUCED_TYPENAME KeyCons1::tail_type,Value1,
-      BOOST_DEDUCED_TYPENAME KeyCons2::tail_type,Value2,
-      BOOST_DEDUCED_TYPENAME CompareCons::tail_type
+      typename KeyCons1::tail_type,Value1,
+      typename KeyCons2::tail_type,Value2,
+      typename CompareCons::tail_type
     >::compare(c0.get_tail(),v0,c1.get_tail(),v1,comp.get_tail());
   }
 };
@@ -427,9 +427,9 @@ struct compare_ckey_cval_normal
     if(comp.get_head()(c.get_head()(v),vc.get_head()))return true;
     if(comp.get_head()(vc.get_head(),c.get_head()(v)))return false;
     return compare_ckey_cval<
-      BOOST_DEDUCED_TYPENAME KeyCons::tail_type,Value,
-      BOOST_DEDUCED_TYPENAME ValCons::tail_type,
-      BOOST_DEDUCED_TYPENAME CompareCons::tail_type
+      typename KeyCons::tail_type,Value,
+      typename ValCons::tail_type,
+      typename CompareCons::tail_type
     >::compare(c.get_tail(),v,vc.get_tail(),comp.get_tail());
   }
 
@@ -440,9 +440,9 @@ struct compare_ckey_cval_normal
     if(comp.get_head()(vc.get_head(),c.get_head()(v)))return true;
     if(comp.get_head()(c.get_head()(v),vc.get_head()))return false;
     return compare_ckey_cval<
-      BOOST_DEDUCED_TYPENAME KeyCons::tail_type,Value,
-      BOOST_DEDUCED_TYPENAME ValCons::tail_type,
-      BOOST_DEDUCED_TYPENAME CompareCons::tail_type
+      typename KeyCons::tail_type,Value,
+      typename ValCons::tail_type,
+      typename CompareCons::tail_type
     >::compare(vc.get_tail(),c.get_tail(),v,comp.get_tail());
   }
 };
@@ -487,8 +487,8 @@ struct hash_ckey_normal
 
     carry^=h.get_head()(c.get_head()(v))+0x9e3779b9+(carry<<6)+(carry>>2);
     return hash_ckey<
-      BOOST_DEDUCED_TYPENAME KeyCons::tail_type,Value,
-      BOOST_DEDUCED_TYPENAME HashCons::tail_type
+      typename KeyCons::tail_type,Value,
+      typename HashCons::tail_type
     >::hash(c.get_tail(),v,h.get_tail(),carry);
   }
 };
@@ -523,8 +523,8 @@ struct hash_cval_normal
   {
     carry^=h.get_head()(vc.get_head())+0x9e3779b9+(carry<<6)+(carry>>2);
     return hash_cval<
-      BOOST_DEDUCED_TYPENAME ValCons::tail_type,
-      BOOST_DEDUCED_TYPENAME HashCons::tail_type
+      typename ValCons::tail_type,
+      typename HashCons::tail_type
     >::hash(vc.get_tail(),h.get_tail(),carry);
   }
 };
@@ -1309,7 +1309,7 @@ composite_key_equal_to<                                                      \
       BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N,                             \
       /* the argument is a PP list */                                        \
       (detail::nth_composite_key_equal_to,                                   \
-        (BOOST_DEDUCED_TYPENAME CompositeKeyResult::composite_key_type,      \
+        (typename CompositeKeyResult::composite_key_type,      \
           BOOST_PP_NIL)))                                                    \
   >
 
@@ -1335,7 +1335,7 @@ composite_key_compare<                                                       \
       BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N,                             \
       /* the argument is a PP list */                                        \
       (detail::nth_composite_key_less,                                       \
-        (BOOST_DEDUCED_TYPENAME CompositeKeyResult::composite_key_type,      \
+        (typename CompositeKeyResult::composite_key_type,      \
           BOOST_PP_NIL)))                                                    \
   >
 
@@ -1361,7 +1361,7 @@ composite_key_compare<                                                       \
       BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N,                             \
       /* the argument is a PP list */                                        \
       (detail::nth_composite_key_greater,                                    \
-        (BOOST_DEDUCED_TYPENAME CompositeKeyResult::composite_key_type,      \
+        (typename CompositeKeyResult::composite_key_type,      \
           BOOST_PP_NIL)))                                                    \
   >
 
@@ -1387,7 +1387,7 @@ composite_key_hash<                                                          \
       BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N,                             \
       /* the argument is a PP list */                                        \
       (detail::nth_composite_key_hash,                                       \
-        (BOOST_DEDUCED_TYPENAME CompositeKeyResult::composite_key_type,      \
+        (typename CompositeKeyResult::composite_key_type,      \
           BOOST_PP_NIL)))                                                    \
   >
 

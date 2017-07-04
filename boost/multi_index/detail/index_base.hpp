@@ -10,7 +10,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/allocator_utilities.hpp>
-#include <boost/detail/workaround.hpp>
 #include <boost/move/core.hpp>
 #include <boost/move/utility.hpp>
 #include <boost/mpl/vector.hpp>
