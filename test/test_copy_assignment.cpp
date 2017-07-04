@@ -12,7 +12,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
-#include <boost/move/utility.hpp>
 #include <list>
 #include <numeric>
 #include <vector>
@@ -199,11 +198,11 @@ void test_copy_assignment()
   employee_set es10(produce_employee_set()),es11(produce_employee_set());
   BOOST_TEST(es10==es11);
 
-  employee_set es12(boost::move(es10));
+  employee_set es12(std::move(es10));
   BOOST_TEST(es10.empty());
   BOOST_TEST(es11==es12);
 
-  es10=boost::move(es12);
+  es10=std::move(es12);
   BOOST_TEST(es12.empty());
   BOOST_TEST(es11==es10);
 

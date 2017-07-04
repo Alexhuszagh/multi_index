@@ -10,8 +10,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/allocator_utilities.hpp>
-#include <boost/move/core.hpp>
-#include <boost/move/utility.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/multi_index/detail/copy_map.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
@@ -100,7 +98,7 @@ protected:
        * perfect forwarding emulation of Boost.Move might break other libs.
        */
 
-      new (&x->value()) value_type(boost::move(const_cast<value_type&>(v)));
+      new (&x->value()) value_type(std::move(const_cast<value_type&>(v)));
     }
     catch(...){
       final().deallocate_node(x);
@@ -156,7 +154,7 @@ protected:
 
   bool replace_(const value_type& v,node_type* x,rvalue_tag)
   {
-    x->value()=boost::move(const_cast<value_type&>(v));
+    x->value()=std::move(const_cast<value_type&>(v));
     return true;
   }
 

@@ -12,9 +12,9 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/move/core.hpp>
 #include <iterator>
 #include <memory>
+#include <utility>
 #include <vector>
 #include "employee.hpp"
 
@@ -23,8 +23,8 @@ using namespace boost::multi_index;
 struct non_copyable_int
 {
   explicit non_copyable_int(int n_):n(n_){}
-  non_copyable_int(BOOST_RV_REF(non_copyable_int) x):n(x.n){x.n=0;}
-  non_copyable_int& operator=(BOOST_RV_REF(non_copyable_int) x)
+  non_copyable_int(non_copyable_int&& x):n(x.n){x.n=0;}
+  non_copyable_int& operator=(non_copyable_int&& x)
   {
     n=x.n;
     x.n=0;
@@ -33,7 +33,8 @@ struct non_copyable_int
 
   int n;
 private:
-  BOOST_MOVABLE_BUT_NOT_COPYABLE(non_copyable_int)
+  non_copyable_int(const non_copyable_int&) = delete;
+  non_copyable_int & operator=(const non_copyable_int&) = delete;
 };
 
 class always_one
@@ -381,19 +382,19 @@ void test_modifiers()
   get<3>(ncic).emplace_back(1);
 
   non_copyable_int nci(1);
-  ncic.insert(boost::move(nci));
+  ncic.insert(std::move(nci));
   BOOST_TEST(nci.n==0);
 
   nci.n=1;
-  get<1>(ncic).insert(boost::move(nci));
+  get<1>(ncic).insert(std::move(nci));
   BOOST_TEST(nci.n==0);
 
   nci.n=1;
-  get<2>(ncic).push_back(boost::move(nci));
+  get<2>(ncic).push_back(std::move(nci));
   BOOST_TEST(nci.n==0);
 
   nci.n=1;
-  get<3>(ncic).push_back(boost::move(nci));
+  get<3>(ncic).push_back(std::move(nci));
   BOOST_TEST(nci.n==0);
 
   std::vector<int> vi(4,1);

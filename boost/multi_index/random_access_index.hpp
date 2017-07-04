@@ -11,8 +11,6 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <boost/call_traits.hpp>
-#include <boost/move/core.hpp>
-#include <boost/move/utility.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/push_front.hpp>
@@ -245,8 +243,8 @@ public:
 
   std::pair<iterator,bool> push_front(const value_type& x)
                              {return insert(begin(),x);}
-  std::pair<iterator,bool> push_front(BOOST_RV_REF(value_type) x)
-                             {return insert(begin(),boost::move(x));}
+  std::pair<iterator,bool> push_front(value_type&& x)
+                             {return insert(begin(),std::move(x));}
   void                     pop_front(){erase(begin());}
 
   BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL(
@@ -254,8 +252,8 @@ public:
 
   std::pair<iterator,bool> push_back(const value_type& x)
                              {return insert(end(),x);}
-  std::pair<iterator,bool> push_back(BOOST_RV_REF(value_type) x)
-                             {return insert(end(),boost::move(x));}
+  std::pair<iterator,bool> push_back(value_type&& x)
+                             {return insert(end(),std::move(x));}
   void                     pop_back(){erase(--end());}
 
   BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL_EXTRA_ARG(
@@ -270,7 +268,7 @@ public:
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
   }
 
-  std::pair<iterator,bool> insert(iterator position,BOOST_RV_REF(value_type) x)
+  std::pair<iterator,bool> insert(iterator position,value_type&& x)
   {
     std::pair<final_node_type*,bool> p=this->final_insert_rv_(x);
     if(p.second&&position.get_node()!=header()){
@@ -325,7 +323,7 @@ public:
       x,static_cast<final_node_type*>(position.get_node()));
   }
 
-  bool replace(iterator position,BOOST_RV_REF(value_type) x)
+  bool replace(iterator position,value_type&& x)
   {
     return this->final_replace_rv_(
       x,static_cast<final_node_type*>(position.get_node()));

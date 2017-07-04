@@ -12,8 +12,6 @@
 #define BOOST_MULTI_INDEX_TEST_EMPLOYEE_HPP
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/move/core.hpp>
-#include <boost/move/utility.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/hashed_index.hpp>
@@ -25,6 +23,7 @@
 #include <cstddef>
 #include <ostream>
 #include <string>
+#include <utility>
 #include "non_std_allocator.hpp"
 
 struct employee
@@ -42,11 +41,11 @@ struct employee
     id(x.id),name(x.name),age(x.age),ssn(x.ssn)
   {}
 
-  employee(BOOST_RV_REF(employee) x):
-    id(x.id),name(boost::move(x.name)),age(x.age),ssn(x.ssn)
+  employee(employee&& x):
+    id(x.id),name(std::move(x.name)),age(x.age),ssn(x.ssn)
   {}
 
-  employee& operator=(BOOST_COPY_ASSIGN_REF(employee) x)
+  employee& operator=(const employee& x)
   {
     id=x.id;
     name=x.name;
@@ -55,10 +54,10 @@ struct employee
     return *this;
   };
 
-  employee& operator=(BOOST_RV_REF(employee) x)
+  employee& operator=(employee&& x)
   {
     id=x.id;
-    name=boost::move(x.name);
+    name=std::move(x.name);
     age=x.age;
     ssn=x.ssn;
     return *this;
@@ -90,9 +89,6 @@ struct employee
     os<<e.id<<" "<<e.name<<" "<<e.age<<std::endl;
     return os;
   }
-
-private:
-  BOOST_COPYABLE_AND_MOVABLE(employee)
 };
 
 struct name{};

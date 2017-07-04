@@ -12,7 +12,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
-#include <boost/move/core.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/contains.hpp>
 #include <boost/mpl/find_if.hpp>
@@ -54,8 +53,6 @@ class multi_index_container:
     Value,IndexSpecifierList,Allocator>::type
 {
 private:
-  BOOST_COPYABLE_AND_MOVABLE(multi_index_container)
-
   template <typename,typename,typename> friend class  detail::index_base;
   template <typename,typename>          friend struct detail::header_holder;
   template <typename,typename>          friend struct detail::converter;
@@ -184,7 +181,7 @@ public:
 
   }
 
-  multi_index_container(BOOST_RV_REF(multi_index_container) x):
+  multi_index_container(multi_index_container&& x):
     bfm_allocator(x.bfm_allocator::member),
     bfm_header(),
     super(x,detail::do_not_copy_elements_tag()),
@@ -198,22 +195,8 @@ public:
     delete_all_nodes_();
   }
 
-#if defined(BOOST_NO_CXX11_RVALUE_REFERENCES)
-  /* As per http://www.boost.org/doc/html/move/emulation_limitations.html
-   * #move.emulation_limitations.assignment_operator
-   */
-
   multi_index_container<Value,IndexSpecifierList,Allocator>& operator=(
-    const multi_index_container<Value,IndexSpecifierList,Allocator>& x)
-  {
-    multi_index_container y(x);
-    this->swap(y);
-    return *this;
-  }
-#endif
-
-  multi_index_container<Value,IndexSpecifierList,Allocator>& operator=(
-    BOOST_COPY_ASSIGN_REF(multi_index_container) x)
+    const multi_index_container& x)
   {
     multi_index_container y(x);
     this->swap(y);
@@ -221,7 +204,7 @@ public:
   }
 
   multi_index_container<Value,IndexSpecifierList,Allocator>& operator=(
-    BOOST_RV_REF(multi_index_container) x)
+    multi_index_container&& x)
   {
     this->swap(x);
     return *this;
@@ -706,9 +689,7 @@ private:
 template<typename MultiIndexContainer,int N>
 struct nth_index
 {
-  BOOST_STATIC_CONSTANT(
-    int,
-    M=mpl::size<typename MultiIndexContainer::index_type_list>::type::value);
+  static const int M=mpl::size<typename MultiIndexContainer::index_type_list>::type::value;
   static_assert(N>=0&&N<M, "");
   typedef typename mpl::at_c<
     typename MultiIndexContainer::index_type_list,N>::type type;
@@ -773,8 +754,7 @@ struct index
     detail::has_tag<Tag>
   >::type                                      iter;
 
-  BOOST_STATIC_CONSTANT(
-    bool,index_found=!(std::is_same<iter,typename mpl::end<index_type_list>::type >::value));
+  static const bool index_found = !std::is_same<iter,typename mpl::end<index_type_list>::type >::value;
   static_assert(index_found, "");
 
   typedef typename mpl::deref<iter>::type       type;
