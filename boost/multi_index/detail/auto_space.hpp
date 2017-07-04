@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <algorithm>
 #include <boost/core/noncopyable.hpp>
+#include <algorithm>
+#include <memory>
 #include <utility>
 
 namespace boost{
