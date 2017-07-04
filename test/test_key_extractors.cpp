@@ -188,8 +188,8 @@ void test_key_extractors()
   test_class**                               tpp=&tp;
   const test_class**                         ctpp=&ctp;
 
-  std::auto_ptr<test_class*>                 tap(new test_class*(tp));
-  std::auto_ptr<const test_class*>           ctap(new const test_class*(ctp));
+  std::unique_ptr<test_class*>                 tap(new test_class*(tp));
+  std::unique_ptr<const test_class*>           ctap(new const test_class*(ctp));
 
   boost::reference_wrapper<test_class>       tw(tr);
   boost::reference_wrapper<const test_class> ctw(tr);
@@ -303,7 +303,7 @@ void test_key_extractors()
   BOOST_TEST(k_cm(tdp)==0);
   BOOST_TEST(k_cm(ctdp)==0);
 #endif
-  
+
   BOOST_TEST(k_cm(tpp)==0);
   BOOST_TEST(k_cm(ctpp)==0);
   BOOST_TEST(k_cm(tap)==0);
@@ -375,7 +375,7 @@ void test_key_extractors()
 
   BOOST_TEST(k_gf(tw));
   BOOST_TEST(k_gf(ctw));
-  
+
   BOOST_TEST(!k_gcrf(tr));
   BOOST_TEST(!k_gcrf(ctr));
 
@@ -452,7 +452,7 @@ void test_key_extractors()
   test_nc_class nc_t(1,0);
   BOOST_TEST(nc_cmpk(nc_td)==make_tuple(boost::cref(nc_t),1,1,true));
 #endif
-  
+
   std::list<test_class> tl;
   for(int i=0;i<20;++i)tl.push_back(test_class(i));
 

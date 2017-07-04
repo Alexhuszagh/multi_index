@@ -10,7 +10,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
-#include <boost/detail/no_exceptions_support.hpp>
 #include <boost/multi_index/detail/auto_space.hpp>
 #include <boost/multi_index/detail/raw_ptr.hpp>
 #include <boost/noncopyable.hpp>
@@ -78,15 +77,14 @@ public:
   {
     (spc.data()+n)->first=node;
     (spc.data()+n)->second=raw_ptr<Node*>(al_.allocate(1));
-    BOOST_TRY{
+    try {
       boost::detail::allocator::construct(
         &(spc.data()+n)->second->value(),node->value());
     }
-    BOOST_CATCH(...){
+    catch(...){
       deallocate((spc.data()+n)->second);
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
     ++n;
 
     if(n==size_){

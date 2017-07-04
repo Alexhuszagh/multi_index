@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <boost/detail/no_exceptions_support.hpp>
 #include <boost/mpl/if.hpp>
 
 namespace boost{
@@ -74,11 +73,10 @@ protected:
 
   template<typename J>
   static void safe_execute(J& j){
-    BOOST_TRY{
+    try {
       if(!j.dismissed_)j.execute();
     }
-    BOOST_CATCH(...){}
-    BOOST_CATCH_END
+    catch(...){}
   }
 
   mutable bool dismissed_;

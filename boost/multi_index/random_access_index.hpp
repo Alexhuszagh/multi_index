@@ -12,7 +12,6 @@
 #include <algorithm>
 #include <boost/bind.hpp>
 #include <boost/call_traits.hpp>
-#include <boost/detail/no_exceptions_support.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/foreach_fwd.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
@@ -350,16 +349,15 @@ public:
     BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     size_type s=0;
-    BOOST_TRY{
+    try {
       while(n--){
         if(push_back(x).second)++s;
       }
     }
-    BOOST_CATCH(...){
+    catch(...){
       relocate(position,end()-s,end());
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
     relocate(position,end()-s,end());
   }
 
@@ -485,7 +483,7 @@ public:
     BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     iterator  first=x.begin(),last=x.end();
     size_type n=0;
-    BOOST_TRY{
+    try {
       while(first!=last){
         if(push_back(*first).second){
           first=x.erase(first);
@@ -494,11 +492,10 @@ public:
         else ++first;
       }
     }
-    BOOST_CATCH(...){
+    catch(...){
       relocate(position,end()-n,end());
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
     relocate(position,end()-n,end());
   }
 
@@ -545,7 +542,7 @@ public:
     if(&x==this)relocate(position,first,last);
     else{
       size_type n=0;
-      BOOST_TRY{
+      try {
         while(first!=last){
           if(push_back(*first).second){
             first=x.erase(first);
@@ -554,11 +551,10 @@ public:
           else ++first;
         }
       }
-      BOOST_CATCH(...){
+      catch(...){
         relocate(position,end()-n,end());
-        BOOST_RETHROW;
+        throw;
       }
-      BOOST_CATCH_END
       relocate(position,end()-n,end());
     }
   }
@@ -834,7 +830,7 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
 
   bool modify_(node_type* x)
   {
-    BOOST_TRY{
+    try {
       if(!super::modify_(x)){
         ptrs.erase(x->impl());
 
@@ -846,16 +842,15 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
       }
       else return true;
     }
-    BOOST_CATCH(...){
+    catch(...){
       ptrs.erase(x->impl());
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
       detach_iterators(x);
 #endif
 
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
   }
 
   bool modify_rollback_(node_type* x)
@@ -934,16 +929,15 @@ private:
   {
     BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     size_type s=0;
-    BOOST_TRY{
+    try {
       for(;first!=last;++first){
         if(this->final_insert_ref_(*first).second)++s;
       }
     }
-    BOOST_CATCH(...){
+    catch(...){
       relocate(position,end()-s,end());
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
     relocate(position,end()-s,end());
   }
 
@@ -954,16 +948,15 @@ private:
     BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     size_type  s=0;
-    BOOST_TRY{
+    try {
       while(n--){
         if(push_back(x).second)++s;
       }
     }
-    BOOST_CATCH(...){
+    catch(...){
       relocate(position,end()-s,end());
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
     relocate(position,end()-s,end());
   }
 

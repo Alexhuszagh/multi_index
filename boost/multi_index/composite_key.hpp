@@ -22,22 +22,12 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <functional>
+#include <type_traits>
 
-#if !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
 #include <boost/ref.hpp>
-#endif
-
-#if !defined(BOOST_NO_SFINAE)
-#include <boost/type_traits/is_convertible.hpp>
-#endif
-
-#if !defined(BOOST_NO_CXX11_HDR_TUPLE)&&\
-    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
 #include <boost/multi_index/detail/cons_stdtuple.hpp>
-#endif
 
 /* A composite key stores n key extractors and "computes" the
  * result on a given value as a packed reference to the value and
@@ -246,8 +236,8 @@ template
 struct equal_ckey_ckey:
   mpl::if_<
     mpl::or_<
-      is_same<KeyCons1,tuples::null_type>,
-      is_same<KeyCons2,tuples::null_type>
+      std::is_same<KeyCons1,tuples::null_type>,
+      std::is_same<KeyCons2,tuples::null_type>
     >,
     equal_ckey_ckey_terminal<KeyCons1,Value1,KeyCons2,Value2,EqualCons>,
     equal_ckey_ckey_normal<KeyCons1,Value1,KeyCons2,Value2,EqualCons>
@@ -322,8 +312,8 @@ template
 struct equal_ckey_cval:
   mpl::if_<
     mpl::or_<
-      is_same<KeyCons,tuples::null_type>,
-      is_same<ValCons,tuples::null_type>
+      std::is_same<KeyCons,tuples::null_type>,
+      std::is_same<ValCons,tuples::null_type>
     >,
     equal_ckey_cval_terminal<KeyCons,Value,ValCons,EqualCons>,
     equal_ckey_cval_normal<KeyCons,Value,ValCons,EqualCons>
@@ -388,8 +378,8 @@ template
 struct compare_ckey_ckey:
   mpl::if_<
     mpl::or_<
-      is_same<KeyCons1,tuples::null_type>,
-      is_same<KeyCons2,tuples::null_type>
+      std::is_same<KeyCons1,tuples::null_type>,
+      std::is_same<KeyCons2,tuples::null_type>
     >,
     compare_ckey_ckey_terminal<KeyCons1,Value1,KeyCons2,Value2,CompareCons>,
     compare_ckey_ckey_normal<KeyCons1,Value1,KeyCons2,Value2,CompareCons>
@@ -466,8 +456,8 @@ template
 struct compare_ckey_cval:
   mpl::if_<
     mpl::or_<
-      is_same<KeyCons,tuples::null_type>,
-      is_same<ValCons,tuples::null_type>
+      std::is_same<KeyCons,tuples::null_type>,
+      std::is_same<ValCons,tuples::null_type>
     >,
     compare_ckey_cval_terminal<KeyCons,Value,ValCons,CompareCons>,
     compare_ckey_cval_normal<KeyCons,Value,ValCons,CompareCons>
@@ -507,7 +497,7 @@ struct hash_ckey_normal
 template<typename KeyCons,typename Value,typename HashCons>
 struct hash_ckey:
   mpl::if_<
-    is_same<KeyCons,tuples::null_type>,
+    std::is_same<KeyCons,tuples::null_type>,
     hash_ckey_terminal<KeyCons,Value,HashCons>,
     hash_ckey_normal<KeyCons,Value,HashCons>
   >::type
@@ -543,7 +533,7 @@ struct hash_cval_normal
 template<typename ValCons,typename HashCons>
 struct hash_cval:
   mpl::if_<
-    is_same<ValCons,tuples::null_type>,
+    std::is_same<ValCons,tuples::null_type>,
     hash_cval_terminal<ValCons,HashCons>,
     hash_cval_normal<ValCons,HashCons>
   >::type
@@ -609,7 +599,7 @@ public:
 
 #if !defined(BOOST_NO_SFINAE)
   typename disable_if<
-    is_convertible<const ChainedPtr&,const value_type&>,result_type>::type
+    std::is_convertible<const ChainedPtr&,const value_type&>,result_type>::type
 #else
   result_type
 #endif
@@ -712,8 +702,6 @@ inline bool operator==(
     y.value,detail::generic_operator_equal_tuple());
 }
 
-#if !defined(BOOST_NO_CXX11_HDR_TUPLE)&&\
-    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
 template<typename CompositeKey,typename... Values>
 inline bool operator==(
   const composite_key_result<CompositeKey>& x,
@@ -759,7 +747,6 @@ inline bool operator==(
     detail::make_cons_stdtuple(x),y.composite_key.key_extractors(),
     y.value,detail::generic_operator_equal_tuple());
 }
-#endif
 
 /* < */
 
@@ -825,8 +812,6 @@ inline bool operator<(
     y.value,detail::generic_operator_less_tuple());
 }
 
-#if !defined(BOOST_NO_CXX11_HDR_TUPLE)&&\
-    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
 template<typename CompositeKey,typename... Values>
 inline bool operator<(
   const composite_key_result<CompositeKey>& x,
@@ -864,7 +849,6 @@ inline bool operator<(
     detail::make_cons_stdtuple(x),y.composite_key.key_extractors(),
     y.value,detail::generic_operator_less_tuple());
 }
-#endif
 
 /* rest of comparison operators */
 
@@ -910,8 +894,6 @@ BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
   composite_key_result<CompositeKey>
 )
 
-#if !defined(BOOST_NO_CXX11_HDR_TUPLE)&&\
-    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
 BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
   typename CompositeKey,
   typename... Values,
@@ -925,7 +907,6 @@ BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
   std::tuple<Values...>,
   composite_key_result<CompositeKey>
 )
-#endif
 
 /* composite_key_equal_to */
 
@@ -1028,8 +1009,6 @@ public:
     >::compare(x,y.composite_key.key_extractors(),y.value,key_eqs());
   }
 
-#if !defined(BOOST_NO_CXX11_HDR_TUPLE)&&\
-    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
   template<typename CompositeKey,typename... Values>
   bool operator()(
     const composite_key_result<CompositeKey>& x,
@@ -1079,7 +1058,6 @@ public:
       detail::make_cons_stdtuple(x),y.composite_key.key_extractors(),
       y.value,key_eqs());
   }
-#endif
 };
 
 /* composite_key_compare */
@@ -1133,7 +1111,6 @@ public:
       key_comps());
   }
 
-#if !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
   template<typename CompositeKey,typename Value>
   bool operator()(
     const composite_key_result<CompositeKey>& x,
@@ -1141,7 +1118,6 @@ public:
   {
     return operator()(x,boost::make_tuple(boost::cref(y)));
   }
-#endif
 
   template
   <
@@ -1168,7 +1144,6 @@ public:
     >::compare(x.composite_key.key_extractors(),x.value,y,key_comps());
   }
 
-#if !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
   template<typename Value,typename CompositeKey>
   bool operator()(
     const Value& x,
@@ -1176,7 +1151,6 @@ public:
   {
     return operator()(boost::make_tuple(boost::cref(x)),y);
   }
-#endif
 
   template
   <
@@ -1203,8 +1177,6 @@ public:
     >::compare(x,y.composite_key.key_extractors(),y.value,key_comps());
   }
 
-#if !defined(BOOST_NO_CXX11_HDR_TUPLE)&&\
-    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
   template<typename CompositeKey,typename... Values>
   bool operator()(
     const composite_key_result<CompositeKey>& x,
@@ -1254,7 +1226,6 @@ public:
       detail::make_cons_stdtuple(x),y.composite_key.key_extractors(),
       y.value,key_comps());
   }
-#endif
 };
 
 /* composite_key_hash */
@@ -1313,8 +1284,6 @@ public:
     >::hash(x,key_hash_functions());
   }
 
-#if !defined(BOOST_NO_CXX11_HDR_TUPLE)&&\
-    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
   template<typename... Values>
   std::size_t operator()(const std::tuple<Values...>& x)const
   {
@@ -1330,7 +1299,6 @@ public:
       cons_key_tuple,key_hasher_tuple
     >::hash(detail::make_cons_stdtuple(x),key_hash_functions());
   }
-#endif
 };
 
 /* Instantiations of the former functors with "natural" basic components:

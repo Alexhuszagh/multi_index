@@ -9,7 +9,6 @@
 #pragma once
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/detail/no_exceptions_support.hpp>
 #include <boost/multi_index/detail/seq_index_node.hpp>
 #include <boost/limits.hpp>
 #include <boost/type_traits/aligned_storage.hpp>
@@ -150,7 +149,7 @@ void sequenced_index_sort(Node* header,Compare comp)
   carry.prior()=carry.next()=static_cast<impl_pointer>(&carry);
   counter[0].prior()=counter[0].next()=static_cast<impl_pointer>(&counter[0]);
 
-  BOOST_TRY{
+  try {
     while(header->next()!=header->impl()){
       impl_type::relink(carry.next(),header->next());
       std::size_t i=0;
@@ -173,7 +172,7 @@ void sequenced_index_sort(Node* header,Compare comp)
     impl_type::swap(
       header->impl(),static_cast<impl_pointer>(&counter[fill-1]));
   }
-  BOOST_CATCH(...)
+  catch(...)
   {
     impl_type::relink(
       header->impl(),carry.next(),static_cast<impl_pointer>(&carry));
@@ -182,9 +181,8 @@ void sequenced_index_sort(Node* header,Compare comp)
         header->impl(),counter[i].next(),
         static_cast<impl_pointer>(&counter[i]));
     }
-    BOOST_RETHROW;
+    throw;
   }
-  BOOST_CATCH_END
 }
 
 #include <boost/multi_index/detail/restore_wstrict_aliasing.hpp>

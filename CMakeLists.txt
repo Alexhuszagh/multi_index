@@ -13,6 +13,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CXX_STANDARD TRUE)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+# TODO: need to remove later...
 add_definitions(-DBOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
 
 # TESTS

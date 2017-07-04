@@ -38,7 +38,6 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <boost/call_traits.hpp>
-#include <boost/detail/no_exceptions_support.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/foreach_fwd.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
@@ -785,7 +784,7 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     node_impl_type::rebalance_for_erase(
       x->impl(),header()->parent(),header()->left(),header()->right());
 
-    BOOST_TRY{
+    try {
       link_info inf;
       if(link_point(key(v),inf,Category())&&super::replace_(v,x,variant)){
         node_impl_type::link(x->impl(),inf.side,inf.pos,header()->impl());
@@ -794,28 +793,26 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
       node_impl_type::restore(x->impl(),next->impl(),header()->impl());
       return false;
     }
-    BOOST_CATCH(...){
+    catch(...){
       node_impl_type::restore(x->impl(),next->impl(),header()->impl());
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
   }
 
   bool modify_(node_type* x)
   {
     bool b;
-    BOOST_TRY{
+    try {
       b=in_place(x->value(),x,Category());
     }
-    BOOST_CATCH(...){
+    catch(...){
       erase_(x);
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
     if(!b){
       node_impl_type::rebalance_for_erase(
         x->impl(),header()->parent(),header()->left(),header()->right());
-      BOOST_TRY{
+      try {
         link_info inf;
         if(!link_point(key(x->value()),inf,Category())){
           super::erase_(x);
@@ -827,19 +824,18 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
         }
         node_impl_type::link(x->impl(),inf.side,inf.pos,header()->impl());
       }
-      BOOST_CATCH(...){
+      catch(...){
         super::erase_(x);
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
         detach_iterators(x);
 #endif
 
-        BOOST_RETHROW;
+        throw;
       }
-      BOOST_CATCH_END
     }
 
-    BOOST_TRY{
+    try {
       if(!super::modify_(x)){
         node_impl_type::rebalance_for_erase(
           x->impl(),header()->parent(),header()->left(),header()->right());
@@ -852,7 +848,7 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
       }
       else return true;
     }
-    BOOST_CATCH(...){
+    catch(...){
       node_impl_type::rebalance_for_erase(
         x->impl(),header()->parent(),header()->left(),header()->right());
 
@@ -860,9 +856,8 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
       detach_iterators(x);
 #endif
 
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
   }
 
   bool modify_rollback_(node_type* x)
@@ -877,7 +872,7 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     node_impl_type::rebalance_for_erase(
       x->impl(),header()->parent(),header()->left(),header()->right());
 
-    BOOST_TRY{
+    try {
       link_info inf;
       if(link_point(key(x->value()),inf,Category())&&
          super::modify_rollback_(x)){
@@ -887,11 +882,10 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
       node_impl_type::restore(x->impl(),next->impl(),header()->impl());
       return false;
     }
-    BOOST_CATCH(...){
+    catch(...){
       node_impl_type::restore(x->impl(),next->impl(),header()->impl());
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
   }
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)

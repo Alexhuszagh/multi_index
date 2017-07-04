@@ -12,7 +12,6 @@
 #include <boost/bind.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/detail/allocator_utilities.hpp>
-#include <boost/detail/no_exceptions_support.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/foreach_fwd.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
@@ -728,7 +727,7 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
 
   bool modify_(node_type* x)
   {
-    BOOST_TRY{
+    try {
       if(!super::modify_(x)){
         unlink(x);
 
@@ -740,16 +739,15 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
       }
       else return true;
     }
-    BOOST_CATCH(...){
+    catch(...){
       unlink(x);
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
       detach_iterators(x);
 #endif
 
-      BOOST_RETHROW;
+      throw;
     }
-    BOOST_CATCH_END
   }
 
   bool modify_rollback_(node_type* x)
