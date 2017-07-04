@@ -14,7 +14,7 @@ set(CXX_STANDARD TRUE)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 # TODO: need to remove later...
-add_definitions(-DBOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
+add_definitions(-DBOOST_MULTI_INDEX_DISABLE_SERIALIZATION -UBOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
 
 # TESTS
 # -----
@@ -37,7 +37,6 @@ set(TEST_FILES
     test/test_projection.cpp
     test/test_range.cpp
     test/test_rearrange.cpp
-    test/test_safe_mode.cpp
     test/test_set_ops.cpp
     test/test_special_set_ops.cpp
     test/test_update.cpp

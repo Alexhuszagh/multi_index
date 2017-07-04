@@ -16,7 +16,6 @@
 #include <list>
 #include <numeric>
 #include <vector>
-#include "pre_multi_index.hpp"
 #include "employee.hpp"
 #include <boost/detail/lightweight_test.hpp>
 

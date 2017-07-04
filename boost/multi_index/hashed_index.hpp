@@ -27,7 +27,6 @@
 #include <boost/multi_index/detail/index_node_base.hpp>
 #include <boost/multi_index/detail/modify_key_adaptor.hpp>
 #include <boost/multi_index/detail/promotes_arg.hpp>
-#include <boost/multi_index/detail/safe_mode.hpp>
 #include <boost/multi_index/detail/scope_guard.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/multi_index/hashed_index_fwd.hpp>
@@ -39,9 +38,7 @@
 #include <iterator>
 #include <utility>
 
-#if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
 #include <initializer_list>
-#endif
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
 #define BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT_OF(x)                 \
@@ -74,11 +71,6 @@ template<
 >
 class hashed_index:
   BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS SuperMeta::type
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-  ,public safe_mode::safe_container<
-    hashed_index<KeyFromValue,Hash,Pred,SuperMeta,TagList,Category> >
-#endif
 
 {
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)&&\
@@ -122,18 +114,9 @@ public:
   typedef typename allocator_type::const_reference   const_reference;
   typedef std::size_t                                size_type;
   typedef std::ptrdiff_t                             difference_type;
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-  typedef safe_mode::safe_iterator<
-    hashed_index_iterator<
-      node_type,bucket_array_type,
-      hashed_index_global_iterator_tag>,
-    hashed_index>                                    iterator;
-#else
   typedef hashed_index_iterator<
     node_type,bucket_array_type,
     hashed_index_global_iterator_tag>                iterator;
-#endif
 
   typedef iterator                                   const_iterator;
 
@@ -161,11 +144,6 @@ protected:
   typedef typename super::copy_map_type       copy_map_type;
 
 private:
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-  typedef safe_mode::safe_container<
-    hashed_index>                             safe_super;
-#endif
-
   typedef typename call_traits<value_type>::param_type value_param_type;
   typedef typename call_traits<
     key_type>::param_type                              key_param_type;
@@ -190,14 +168,12 @@ public:
     return *this;
   }
 
-#if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
   hashed_index<KeyFromValue,Hash,Pred,SuperMeta,TagList,Category>& operator=(
     std::initializer_list<value_type> list)
   {
     this->final()=list;
     return *this;
   }
-#endif
 
   allocator_type get_allocator()const BOOST_NOEXCEPT
   {
@@ -255,8 +231,6 @@ public:
 
   iterator insert(iterator position,const value_type& x)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_(
       x,static_cast<final_node_type*>(position.get_node()));
@@ -265,8 +239,6 @@ public:
 
   iterator insert(iterator position,BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_rv_(
       x,static_cast<final_node_type*>(position.get_node()));
@@ -280,18 +252,13 @@ public:
     for(;first!=last;++first)this->final_insert_ref_(*first);
   }
 
-#if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
   void insert(std::initializer_list<value_type> list)
   {
     insert(list.begin(),list.end());
   }
-#endif
 
   iterator erase(iterator position)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     this->final_erase_(static_cast<final_node_type*>(position++.get_node()));
     return position;
@@ -322,11 +289,6 @@ public:
 
   iterator erase(iterator first,iterator last)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(first);
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(last);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(first,*this);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(last,*this);
-    BOOST_MULTI_INDEX_CHECK_VALID_RANGE(first,last);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     while(first!=last){
       first=erase(first);
@@ -336,9 +298,6 @@ public:
 
   bool replace(iterator position,const value_type& x)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     return this->final_replace_(
       x,static_cast<final_node_type*>(position.get_node()));
@@ -346,9 +305,6 @@ public:
 
   bool replace(iterator position,BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     return this->final_replace_rv_(
       x,static_cast<final_node_type*>(position.get_node()));
@@ -357,19 +313,7 @@ public:
   template<typename Modifier>
   bool modify(iterator position,Modifier mod)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    /* MSVC++ 6.0 optimizer on safe mode code chokes if this
-     * this is not added. Left it for all compilers as it does no
-     * harm.
-     */
-
-    position.detach();
-#endif
 
     return this->final_modify_(
       mod,static_cast<final_node_type*>(position.get_node()));
@@ -378,19 +322,7 @@ public:
   template<typename Modifier,typename Rollback>
   bool modify(iterator position,Modifier mod,Rollback back_)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    /* MSVC++ 6.0 optimizer on safe mode code chokes if this
-     * this is not added. Left it for all compilers as it does no
-     * harm.
-     */
-
-    position.detach();
-#endif
 
     return this->final_modify_(
       mod,back_,static_cast<final_node_type*>(position.get_node()));
@@ -399,9 +331,6 @@ public:
   template<typename Modifier>
   bool modify_key(iterator position,Modifier mod)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     return modify(
       position,modify_key_adaptor<Modifier,value_type,KeyFromValue>(mod,key));
@@ -410,9 +339,6 @@ public:
   template<typename Modifier,typename Rollback>
   bool modify_key(iterator position,Modifier mod,Rollback back_)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     return modify(
       position,
@@ -598,10 +524,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     const hashed_index<KeyFromValue,Hash,Pred,SuperMeta,TagList,Category>& x):
     super(x),
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    safe_super(),
-#endif
-
     key(x.key),
     hash_(x.hash_),
     eq_(x.eq_),
@@ -619,10 +541,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     do_not_copy_elements_tag):
     super(x,do_not_copy_elements_tag()),
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    safe_super(),
-#endif
-
     key(x.key),
     hash_(x.hash_),
     eq_(x.eq_),
@@ -637,17 +555,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     /* the container is guaranteed to be empty by now */
   }
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-  iterator make_iterator(node_type* node)
-  {
-    return iterator(node,this);
-  }
-
-  const_iterator make_iterator(node_type* node)const
-  {
-    return const_iterator(node,const_cast<hashed_index*>(this));
-  }
-#else
   iterator make_iterator(node_type* node)
   {
     return iterator(node);
@@ -657,7 +564,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
   {
     return const_iterator(node);
   }
-#endif
 
   local_iterator make_local_iterator(node_type* node)
   {
@@ -798,10 +704,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
   {
     unlink(x);
     super::erase_(x);
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    detach_iterators(x);
-#endif
   }
 
   void delete_all_nodes_()
@@ -842,10 +744,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
   {
     super::clear_();
     buckets.clear(header()->impl());
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    safe_super::detach_dereferenceable_iterators();
-#endif
   }
 
   void swap_(
@@ -858,10 +756,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     std::swap(mlf,x.mlf);
     std::swap(max_load,x.max_load);
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    safe_super::swap(x);
-#endif
-
     super::swap_(x);
   }
 
@@ -871,10 +765,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     buckets.swap(x.buckets);
     std::swap(mlf,x.mlf);
     std::swap(max_load,x.max_load);
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    safe_super::swap(x);
-#endif
 
     super::swap_elements_(x);
   }
@@ -923,21 +813,12 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
         link_info pos(buckets.at(buc));
         if(!link_point(x->value(),pos)){
           super::erase_(x);
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-          detach_iterators(x);
-#endif
           return false;
         }
         link(x,pos);
       }
       catch(...){
         super::erase_(x);
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-      detach_iterators(x);
-#endif
-
         throw;
       }
     }
@@ -945,21 +826,12 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     try {
       if(!super::modify_(x)){
         unlink(x);
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-        detach_iterators(x);
-#endif
         return false;
       }
       else return true;
     }
     catch(...){
       unlink(x);
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-      detach_iterators(x);
-#endif
-
       throw;
     }
   }
@@ -1435,14 +1307,6 @@ private:
     return found;
   }
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-  void detach_iterators(node_type* x)
-  {
-    iterator it=make_iterator(x);
-    safe_mode::detach_equivalent_iterators(it);
-  }
-#endif
-
   template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
   std::pair<iterator,bool> emplace_impl(BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
   {
@@ -1456,8 +1320,6 @@ private:
   iterator emplace_hint_impl(
     iterator position,BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool>p=
       this->final_emplace_hint_(

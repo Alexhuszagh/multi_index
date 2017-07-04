@@ -12,7 +12,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/lightweight_test.hpp>
-#include "pre_multi_index.hpp"
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/composite_key.hpp>
 #include <boost/multi_index/hashed_index.hpp>
@@ -52,7 +51,7 @@ struct composite_key_result_length
 {
   BOOST_STATIC_CONSTANT(int,
     value=boost::tuples::length<
-      BOOST_DEDUCED_TYPENAME 
+      BOOST_DEDUCED_TYPENAME
       CompositeKeyResult::composite_key_type::key_extractor_tuple
     >::value);
 };

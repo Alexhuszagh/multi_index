@@ -11,7 +11,6 @@
 #include "test_comparison.hpp"
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include "pre_multi_index.hpp"
 #include "employee.hpp"
 #include "pair_of_ints.hpp"
 #include <boost/detail/lightweight_test.hpp>
@@ -66,7 +65,7 @@ void test_comparison()
   es2.insert(employee(3,"Albert",20,9012));
 
   BOOST_TEST(es==es&&es<=es&&es>=es&&
-             i12==i12&&  
+             i12==i12&&
              i22==i22&&i22<=i22&&i22>=i22&&
              i32==i32&&i32<=i32&&i32>=i32&&
              i42==i42&&

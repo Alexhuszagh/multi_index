@@ -19,7 +19,6 @@
 #include <boost/shared_ptr.hpp>
 #include <iterator>
 #include <vector>
-#include "pre_multi_index.hpp"
 #include "employee.hpp"
 
 using namespace boost::multi_index;
@@ -27,13 +26,13 @@ using namespace boost::multi_index;
 struct non_copyable_int
 {
   explicit non_copyable_int(int n_):n(n_){}
-  non_copyable_int(BOOST_RV_REF(non_copyable_int) x):n(x.n){x.n=0;} 
+  non_copyable_int(BOOST_RV_REF(non_copyable_int) x):n(x.n){x.n=0;}
   non_copyable_int& operator=(BOOST_RV_REF(non_copyable_int) x)
   {
     n=x.n;
     x.n=0;
     return *this;
-  } 
+  }
 
   int n;
 private:
@@ -128,11 +127,11 @@ struct tempvalue_iterator:
     tempvalue_iterator,int,boost::forward_traversal_tag,int>
 {
   tempvalue_iterator(int n_):n(n_){}
-  
+
   void increment(){++n;}
   bool equal(const tempvalue_iterator& x)const{return n==x.n;}
   int dereference()const{return n;}
-  
+
   int n;
 };
 
@@ -231,7 +230,7 @@ void test_modifiers()
 
   i5.erase(i5.begin());
   BOOST_TEST(es.size()==0);
-  
+
   std::vector<employee> ve;
   ve.push_back(employee(3,"Anna",31,5388));
   ve.push_back(employee(1,"Rachel",27,9012));

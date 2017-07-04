@@ -25,7 +25,6 @@
 #include "test_projection.hpp"
 #include "test_range.hpp"
 #include "test_rearrange.hpp"
-#include "test_safe_mode.hpp"
 #include "test_set_ops.hpp"
 #include "test_special_set_ops.hpp"
 #include "test_update.hpp"
@@ -48,7 +47,6 @@ int main()
   test_projection();
   test_range();
   test_rearrange();
-  test_safe_mode();
   test_set_ops();
   test_special_set_ops();
   test_update();

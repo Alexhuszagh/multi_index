@@ -12,7 +12,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/lightweight_test.hpp>
-#include "pre_multi_index.hpp"
 #include <boost/multi_index/key_extractors.hpp>
 #include <boost/ref.hpp>
 #include <boost/scoped_ptr.hpp>

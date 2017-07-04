@@ -24,7 +24,6 @@
 #include <boost/multi_index/detail/bidir_node_iterator.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
 #include <boost/multi_index/detail/index_node_base.hpp>
-#include <boost/multi_index/detail/safe_mode.hpp>
 #include <boost/multi_index/detail/scope_guard.hpp>
 #include <boost/multi_index/detail/seq_index_node.hpp>
 #include <boost/multi_index/detail/seq_index_ops.hpp>
@@ -36,9 +35,7 @@
 #include <functional>
 #include <utility>
 
-#if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
-#include<initializer_list>
-#endif
+#include <initializer_list>
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
 #define BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT_OF(x)                    \
@@ -63,11 +60,6 @@ namespace detail{
 template<typename SuperMeta,typename TagList>
 class sequenced_index:
   BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS SuperMeta::type
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-  ,public safe_mode::safe_container<
-    sequenced_index<SuperMeta,TagList> >
-#endif
 
 {
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)&&\
@@ -97,15 +89,7 @@ public:
   typedef typename super::final_allocator_type        allocator_type;
   typedef typename allocator_type::reference          reference;
   typedef typename allocator_type::const_reference    const_reference;
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-  typedef safe_mode::safe_iterator<
-    bidir_node_iterator<node_type>,
-    sequenced_index>                                  iterator;
-#else
   typedef bidir_node_iterator<node_type>              iterator;
-#endif
-
   typedef iterator                                    const_iterator;
 
   typedef std::size_t                                 size_type;
@@ -135,11 +119,6 @@ protected:
   typedef typename super::copy_map_type       copy_map_type;
 
 private:
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-  typedef safe_mode::safe_container<
-    sequenced_index>                          safe_super;
-#endif
-
   typedef typename call_traits<value_type>::param_type value_param_type;
 
   /* Needed to avoid commas in BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL
@@ -162,14 +141,12 @@ public:
     return *this;
   }
 
-#if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
   sequenced_index<SuperMeta,TagList>& operator=(
     std::initializer_list<value_type> list)
   {
     this->final()=list;
     return *this;
   }
-#endif
 
   template <class InputIterator>
   void assign(InputIterator first,InputIterator last)
@@ -177,12 +154,10 @@ public:
     assign_iter(first,last,mpl::not_<is_integral<InputIterator> >());
   }
 
-#if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
   void assign(std::initializer_list<value_type> list)
   {
     assign(list.begin(),list.end());
   }
-#endif
 
   void assign(size_type n,value_param_type value)
   {
@@ -288,8 +263,6 @@ public:
 
   std::pair<iterator,bool> insert(iterator position,const value_type& x)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_(x);
     if(p.second&&position.get_node()!=header()){
@@ -300,8 +273,6 @@ public:
 
   std::pair<iterator,bool> insert(iterator position,BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_rv_(x);
     if(p.second&&position.get_node()!=header()){
@@ -312,8 +283,6 @@ public:
 
   void insert(iterator position,size_type n,value_param_type x)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     for(size_type i=0;i<n;++i)insert(position,x);
   }
@@ -324,18 +293,13 @@ public:
     insert_iter(position,first,last,mpl::not_<is_integral<InputIterator> >());
   }
 
-#if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
   void insert(iterator position,std::initializer_list<value_type> list)
   {
     insert(position,list.begin(),list.end());
   }
-#endif
 
   iterator erase(iterator position)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     this->final_erase_(static_cast<final_node_type*>(position++.get_node()));
     return position;
@@ -343,11 +307,6 @@ public:
 
   iterator erase(iterator first,iterator last)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(first);
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(last);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(first,*this);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(last,*this);
-    BOOST_MULTI_INDEX_CHECK_VALID_RANGE(first,last);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     while(first!=last){
       first=erase(first);
@@ -357,9 +316,6 @@ public:
 
   bool replace(iterator position,const value_type& x)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     return this->final_replace_(
       x,static_cast<final_node_type*>(position.get_node()));
@@ -367,9 +323,6 @@ public:
 
   bool replace(iterator position,BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     return this->final_replace_rv_(
       x,static_cast<final_node_type*>(position.get_node()));
@@ -378,19 +331,7 @@ public:
   template<typename Modifier>
   bool modify(iterator position,Modifier mod)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    /* MSVC++ 6.0 optimizer on safe mode code chokes if this
-     * this is not added. Left it for all compilers as it does no
-     * harm.
-     */
-
-    position.detach();
-#endif
 
     return this->final_modify_(
       mod,static_cast<final_node_type*>(position.get_node()));
@@ -399,19 +340,7 @@ public:
   template<typename Modifier,typename Rollback>
   bool modify(iterator position,Modifier mod,Rollback back_)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    /* MSVC++ 6.0 optimizer on safe mode code chokes if this
-     * this is not added. Left it for all compilers as it does no
-     * harm.
-     */
-
-    position.detach();
-#endif
 
     return this->final_modify_(
       mod,back_,static_cast<final_node_type*>(position.get_node()));
@@ -434,9 +363,6 @@ public:
 
   void splice(iterator position,sequenced_index<SuperMeta,TagList>& x)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
-    BOOST_MULTI_INDEX_CHECK_DIFFERENT_CONTAINER(*this,x);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     iterator first=x.begin(),last=x.end();
     while(first!=last){
@@ -447,28 +373,13 @@ public:
 
   void splice(iterator position,sequenced_index<SuperMeta,TagList>& x,iterator i)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(i);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(i);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(i,x);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     if(&x==this){
       if(position!=i)relink(position.get_node(),i.get_node());
     }
     else{
       if(insert(position,*i).second){
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    /* MSVC++ 6.0 optimizer has a hard time with safe mode, and the following
-     * workaround is needed. Left it for all compilers as it does no
-     * harm.
-     */
-        i.detach();
-        x.erase(x.make_iterator(i.get_node()));
-#else
         x.erase(i);
-#endif
 
       }
     }
@@ -478,16 +389,8 @@ public:
     iterator position,sequenced_index<SuperMeta,TagList>& x,
     iterator first,iterator last)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(first);
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(last);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(first,x);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(last,x);
-    BOOST_MULTI_INDEX_CHECK_VALID_RANGE(first,last);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     if(&x==this){
-      BOOST_MULTI_INDEX_CHECK_OUTSIDE_RANGE(position,first,last);
       if(position!=last)relink(
         position.get_node(),first.get_node(),last.get_node());
     }
@@ -557,25 +460,12 @@ public:
 
   void relocate(iterator position,iterator i)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(i);
-    BOOST_MULTI_INDEX_CHECK_DEREFERENCEABLE_ITERATOR(i);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(i,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     if(position!=i)relink(position.get_node(),i.get_node());
   }
 
   void relocate(iterator position,iterator first,iterator last)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(first);
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(last);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(first,*this);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(last,*this);
-    BOOST_MULTI_INDEX_CHECK_VALID_RANGE(first,last);
-    BOOST_MULTI_INDEX_CHECK_OUTSIDE_RANGE(position,first,last);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     if(position!=last)relink(
       position.get_node(),first.get_node(),last.get_node());
@@ -601,11 +491,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
 
   sequenced_index(const sequenced_index<SuperMeta,TagList>& x):
     super(x)
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    ,safe_super()
-#endif
-
   {
     /* the actual copying takes place in subsequent call to copy_() */
   }
@@ -613,10 +498,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
   sequenced_index(
     const sequenced_index<SuperMeta,TagList>& x,do_not_copy_elements_tag):
     super(x,do_not_copy_elements_tag())
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    ,safe_super()
-#endif
 
   {
     empty_initialize();
@@ -627,15 +508,9 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     /* the container is guaranteed to be empty by now */
   }
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-  iterator       make_iterator(node_type* node){return iterator(node,this);}
-  const_iterator make_iterator(node_type* node)const
-    {return const_iterator(node,const_cast<sequenced_index*>(this));}
-#else
   iterator       make_iterator(node_type* node){return iterator(node);}
   const_iterator make_iterator(node_type* node)const
                    {return const_iterator(node);}
-#endif
 
   void copy_(
     const sequenced_index<SuperMeta,TagList>& x,const copy_map_type& map)
@@ -676,10 +551,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
   {
     unlink(x);
     super::erase_(x);
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    detach_iterators(x);
-#endif
   }
 
   void delete_all_nodes_()
@@ -695,27 +566,15 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
   {
     super::clear_();
     empty_initialize();
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    safe_super::detach_dereferenceable_iterators();
-#endif
   }
 
   void swap_(sequenced_index<SuperMeta,TagList>& x)
   {
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    safe_super::swap(x);
-#endif
-
     super::swap_(x);
   }
 
   void swap_elements_(sequenced_index<SuperMeta,TagList>& x)
   {
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-    safe_super::swap(x);
-#endif
-
     super::swap_elements_(x);
   }
 
@@ -730,22 +589,12 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     try {
       if(!super::modify_(x)){
         unlink(x);
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-        detach_iterators(x);
-#endif
-
         return false;
       }
       else return true;
     }
     catch(...){
       unlink(x);
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-      detach_iterators(x);
-#endif
-
       throw;
     }
   }
@@ -813,14 +662,6 @@ private:
       position->impl(),first->impl(),last->impl());
   }
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
-  void detach_iterators(node_type* x)
-  {
-    iterator it=make_iterator(x);
-    safe_mode::detach_equivalent_iterators(it);
-  }
-#endif
-
   template <class InputIterator>
   void assign_iter(InputIterator first,InputIterator last,mpl::true_)
   {
@@ -853,8 +694,6 @@ private:
   void insert_iter(
     iterator position,size_type n,value_param_type x,mpl::false_)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     for(size_type i=0;i<n;++i)insert(position,x);
   }
@@ -877,8 +716,6 @@ private:
   std::pair<iterator,bool> emplace_impl(
     iterator position,BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=
       this->final_emplace_(BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);

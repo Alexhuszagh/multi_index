@@ -13,7 +13,6 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <vector>
-#include "pre_multi_index.hpp"
 #include "employee.hpp"
 #include <boost/detail/lightweight_test.hpp>
 

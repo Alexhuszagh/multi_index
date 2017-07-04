@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <iterator>
 #include <boost/detail/lightweight_test.hpp>
-#include "pre_multi_index.hpp"
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/sequenced_index.hpp>
 #include <boost/multi_index/random_access_index.hpp>

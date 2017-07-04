@@ -11,7 +11,6 @@
 #include "test_capacity.hpp"
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include "pre_multi_index.hpp"
 #include "employee.hpp"
 #include <boost/detail/lightweight_test.hpp>
 

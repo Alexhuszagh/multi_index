@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <vector>
 #include <boost/detail/lightweight_test.hpp>
-#include "pre_multi_index.hpp"
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/identity.hpp>
 #include <boost/multi_index/ordered_index.hpp>
@@ -245,7 +244,7 @@ void test_list_ops()
       sequenced<>
     >
   > sequenced_set;
-  
+
   test_list_ops_unique_seq<sequenced_set>();
 
 
@@ -256,7 +255,7 @@ void test_list_ops()
       random_access<>
     >
   > random_access_set;
-  
+
   test_list_ops_unique_seq<random_access_set>();
 
   typedef multi_index_container<

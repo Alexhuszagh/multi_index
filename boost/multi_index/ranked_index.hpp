@@ -51,9 +51,6 @@ public:
 
   std::size_t rank(iterator position)const
   {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
-    BOOST_MULTI_INDEX_CHECK_IS_OWNER(position,*this);
-
     return ranked_index_rank(
       position.get_node()->impl(),this->header()->impl());
   }
