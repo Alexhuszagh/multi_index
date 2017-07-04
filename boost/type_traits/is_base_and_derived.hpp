@@ -5,18 +5,17 @@
 //  http://www.boost.org/LICENSE_1_0.txt).
 //
 //  See http://www.boost.org/libs/type_traits for most recent version including documentation.
- 
+
 #ifndef BOOST_TT_IS_BASE_AND_DERIVED_HPP_INCLUDED
 #define BOOST_TT_IS_BASE_AND_DERIVED_HPP_INCLUDED
 
+#include <type_traits>
 #include <boost/type_traits/intrinsics.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #ifndef BOOST_IS_BASE_OF
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/config.hpp>
-#include <boost/static_assert.hpp>
 #endif
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -139,8 +138,8 @@ struct is_base_and_derived_impl2
     // May silently do the wrong thing with incomplete types
     // unless we trap them here:
     //
-    BOOST_STATIC_ASSERT(sizeof(B) != 0);
-    BOOST_STATIC_ASSERT(sizeof(D) != 0);
+    static_assert(sizeof(B) != 0, "");
+    static_assert(sizeof(D) != 0, "");
 
     struct Host
     {
@@ -167,8 +166,7 @@ struct is_base_and_derived_impl2
 template<typename B, typename D>
 struct is_base_and_derived_impl2
 {
-    BOOST_STATIC_CONSTANT(bool, value =
-        (::boost::is_convertible<D*,B*>::value));
+    static const bool value = std:is_convertible<D*,B*>::value);
 };
 
 #define BOOST_BROKEN_IS_BASE_AND_DERIVED
@@ -178,7 +176,7 @@ struct is_base_and_derived_impl2
 template <typename B, typename D>
 struct is_base_and_derived_impl3
 {
-    BOOST_STATIC_CONSTANT(bool, value = false);
+    static const bool value = false;
 };
 
 template <bool ic1, bool ic2, bool iss>
@@ -208,13 +206,13 @@ struct is_base_and_derived_impl
     typedef typename remove_cv<D>::type ncvD;
 
     typedef is_base_and_derived_select<
-       ::boost::is_class<B>::value,
-       ::boost::is_class<D>::value,
-       ::boost::is_same<ncvB,ncvD>::value> selector;
+       std::is_class<B>::value,
+       std::is_class<D>::value,
+       std::is_same<ncvB,ncvD>::value> selector;
     typedef typename selector::template rebind<ncvB,ncvD> binder;
     typedef typename binder::type bound_type;
 
-    BOOST_STATIC_CONSTANT(bool, value = bound_type::value);
+    static const bool value = bound_type::value;
 };
 #else
 template <typename B, typename D>
@@ -223,7 +221,7 @@ struct is_base_and_derived_impl
     typedef typename remove_cv<B>::type ncvB;
     typedef typename remove_cv<D>::type ncvD;
 
-    BOOST_STATIC_CONSTANT(bool, value = (BOOST_IS_BASE_OF(B,D) && ! ::boost::is_same<ncvB,ncvD>::value));
+    static const bool value = BOOST_IS_BASE_OF(B,D) && ! std::is_same<ncvB,ncvD>::value;
 };
 #endif
 } // namespace detail

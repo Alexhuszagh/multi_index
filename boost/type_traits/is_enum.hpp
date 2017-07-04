@@ -1,6 +1,6 @@
 
 //  (C) Copyright Dave Abrahams, Steve Cleary, Beman Dawes, Howard
-//  Hinnant & John Maddock 2000.  
+//  Hinnant & John Maddock 2000.
 //  Use, modification and distribution are subject to the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt).
@@ -11,19 +11,14 @@
 #ifndef BOOST_TT_IS_ENUM_HPP_INCLUDED
 #define BOOST_TT_IS_ENUM_HPP_INCLUDED
 
+#include <type_traits>
 #include <boost/type_traits/intrinsics.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #ifndef BOOST_IS_ENUM
 #include <boost/type_traits/add_reference.hpp>
-#include <boost/type_traits/is_arithmetic.hpp>
-#include <boost/type_traits/is_reference.hpp>
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_array.hpp>
-#ifdef __GNUC__
-#include <boost/type_traits/is_function.hpp>
-#endif
 #include <boost/type_traits/detail/config.hpp>
-#if defined(BOOST_TT_HAS_CONFORMING_IS_CLASS_IMPLEMENTATION) 
+#if defined(BOOST_TT_HAS_CONFORMING_IS_CLASS_IMPLEMENTATION)
 #  include <boost/type_traits/is_class.hpp>
 #  include <boost/type_traits/is_union.hpp>
 #endif
@@ -36,7 +31,7 @@ namespace boost {
 
 namespace detail {
 
-#if defined(BOOST_TT_HAS_CONFORMING_IS_CLASS_IMPLEMENTATION) 
+#if defined(BOOST_TT_HAS_CONFORMING_IS_CLASS_IMPLEMENTATION)
 
 template <typename T>
 struct is_class_or_union
@@ -89,7 +84,7 @@ struct is_enum_helper<false>
 {
     template <typename T> struct type
     {
-       static const bool value = ::boost::is_convertible<typename boost::add_reference<T>::type, ::boost::detail::int_convertible>::value;
+       static const bool value = std::is_convertible<typename boost::add_reference<T>::type, ::boost::detail::int_convertible>::value;
     };
 };
 
@@ -101,34 +96,34 @@ template <typename T> struct is_enum_impl
 #if defined(__GNUC__)
 
 #ifdef BOOST_TT_HAS_CONFORMING_IS_CLASS_IMPLEMENTATION
-    
+
    // We MUST check for is_class_or_union on conforming compilers in
    // order to correctly deduce that noncopyable types are not enums
    // (dwa 2002/04/15)...
    BOOST_STATIC_CONSTANT(bool, selector =
-           ::boost::is_arithmetic<T>::value
-         || ::boost::is_reference<T>::value
-         || ::boost::is_function<T>::value
+           std::is_arithmetic<T>::value
+         || std::is_reference<T>::value
+         || std::is_function<T>::value
          || is_class_or_union<T>::value
          || is_array<T>::value);
 #else
    // ...however, not checking is_class_or_union on non-conforming
    // compilers prevents a dependency recursion.
    BOOST_STATIC_CONSTANT(bool, selector =
-           ::boost::is_arithmetic<T>::value
-         || ::boost::is_reference<T>::value
-         || ::boost::is_function<T>::value
+           std::is_arithmetic<T>::value
+         || std::is_reference<T>::value
+         || std::is_function<T>::value
          || is_array<T>::value);
 #endif // BOOST_TT_HAS_CONFORMING_IS_CLASS_IMPLEMENTATION
 
 #else // !defined(__GNUC__):
-    
+
    BOOST_STATIC_CONSTANT(bool, selector =
-           ::boost::is_arithmetic<T>::value
-         || ::boost::is_reference<T>::value
+           std::is_arithmetic<T>::value
+         || std::is_reference<T>::value
          || is_class_or_union<T>::value
          || is_array<T>::value);
-    
+
 #endif
 
 #if BOOST_WORKAROUND(__BORLANDC__, < 0x600)
