@@ -53,6 +53,11 @@ struct or_
         >
 
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(
+          5
+        , or_
+        , ( T1, T2, T3, T4, T5)
+        )
 };
 
 BOOST_MPL_AUX_NA_SPEC2(

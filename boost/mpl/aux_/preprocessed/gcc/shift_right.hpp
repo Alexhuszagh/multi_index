@@ -7,7 +7,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
-// Preprocessed version of "boost/mpl/shift_left.hpp" header
+// Preprocessed version of "boost/mpl/shift_right.hpp" header
 // -- DO NOT modify by hand!
 
 namespace boost { namespace mpl {
@@ -16,20 +16,20 @@ template<
       typename Tag1
     , typename Tag2
     >
-struct shift_left_impl
+struct shift_right_impl
     : if_c<
           ( BOOST_MPL_AUX_NESTED_VALUE_WKND(int, Tag1)
               > BOOST_MPL_AUX_NESTED_VALUE_WKND(int, Tag2)
             )
 
-        , aux::cast2nd_impl< shift_left_impl< Tag1,Tag1 >,Tag1, Tag2 >
-        , aux::cast1st_impl< shift_left_impl< Tag2,Tag2 >,Tag1, Tag2 >
+        , aux::cast2nd_impl< shift_right_impl< Tag1,Tag1 >,Tag1, Tag2 >
+        , aux::cast1st_impl< shift_right_impl< Tag2,Tag2 >,Tag1, Tag2 >
         >::type
 {
 };
 
 /// for Digital Mars C++/compilers with no CTPS/TTP support
-template<> struct shift_left_impl< na,na >
+template<> struct shift_right_impl< na,na >
 {
     template< typename U1, typename U2 > struct apply
     {
@@ -38,7 +38,7 @@ template<> struct shift_left_impl< na,na >
     };
 };
 
-template< typename Tag > struct shift_left_impl< na,Tag >
+template< typename Tag > struct shift_right_impl< na,Tag >
 {
     template< typename U1, typename U2 > struct apply
     {
@@ -47,7 +47,7 @@ template< typename Tag > struct shift_left_impl< na,Tag >
     };
 };
 
-template< typename Tag > struct shift_left_impl< Tag,na >
+template< typename Tag > struct shift_right_impl< Tag,na >
 {
     template< typename U1, typename U2 > struct apply
     {
@@ -56,7 +56,7 @@ template< typename Tag > struct shift_left_impl< Tag,na >
     };
 };
 
-template< typename T > struct shift_left_tag
+template< typename T > struct shift_right_tag
 {
     typedef typename T::tag type;
 };
@@ -65,29 +65,31 @@ template<
       typename BOOST_MPL_AUX_NA_PARAM(N1)
     , typename BOOST_MPL_AUX_NA_PARAM(N2)
     >
-struct shift_left
+struct shift_right
 
-    : shift_left_impl<
-          typename shift_left_tag<N1>::type
-        , typename shift_left_tag<N2>::type
+    : shift_right_impl<
+          typename shift_right_tag<N1>::type
+        , typename shift_right_tag<N2>::type
         >::template apply< N1,N2 >::type
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, shift_right, (N1, N2))
+
 };
 
-BOOST_MPL_AUX_NA_SPEC2(2, 2, shift_left)
+BOOST_MPL_AUX_NA_SPEC2(2, 2, shift_right)
 
 }}
 
 namespace boost { namespace mpl {
 template<>
-struct shift_left_impl< integral_c_tag,integral_c_tag >
+struct shift_right_impl< integral_c_tag,integral_c_tag >
 {
     template< typename N, typename S > struct apply
 
         : integral_c<
               typename N::value_type
             , ( BOOST_MPL_AUX_VALUE_WKND(N)::value
-                  << BOOST_MPL_AUX_VALUE_WKND(S)::value
+                  >> BOOST_MPL_AUX_VALUE_WKND(S)::value
                 )
             >
     {

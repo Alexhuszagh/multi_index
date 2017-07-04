@@ -212,6 +212,7 @@ struct lambda
 
     typedef typename l_::type type;
     typedef typename l_::is_le is_le;
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(3, lambda, (T, Tag, Protect))
 };
 
 BOOST_MPL_AUX_NA_SPEC2(1, 3, lambda)

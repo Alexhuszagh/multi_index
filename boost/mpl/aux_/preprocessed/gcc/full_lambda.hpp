@@ -33,7 +33,7 @@ struct lambda_or< false,false,false,false,false >
 template<
       typename T
     , typename Tag
-   
+    , typename Arity
     >
 struct lambda
 {
@@ -51,7 +51,7 @@ struct is_lambda_expression
 };
 
 template< int N, typename Tag >
-struct lambda< arg<N>, Tag >
+struct lambda< arg<N>,Tag, int_< -1 > >
 {
     typedef true_ is_le;
     typedef mpl::arg<N> result_; // qualified for the sake of MIPSpro 7.41
@@ -65,7 +65,7 @@ template<
 struct lambda<
           bind0<F>
         , Tag
-       
+        , int_<1>
         >
 {
     typedef false_ is_le;
@@ -117,7 +117,7 @@ template<
 struct lambda<
           F<T1>
         , Tag
-       
+        , int_<1>
         >
 {
     typedef lambda< T1,Tag > l1;
@@ -141,7 +141,7 @@ template<
 struct lambda<
           bind1< F,T1 >
         , Tag
-       
+        , int_<2>
         >
 {
     typedef false_ is_le;
@@ -194,7 +194,7 @@ template<
 struct lambda<
           F< T1,T2 >
         , Tag
-       
+        , int_<2>
         >
 {
     typedef lambda< T1,Tag > l1;
@@ -223,7 +223,7 @@ template<
 struct lambda<
           bind2< F,T1,T2 >
         , Tag
-       
+        , int_<3>
         >
 {
     typedef false_ is_le;
@@ -276,7 +276,7 @@ template<
 struct lambda<
           F< T1,T2,T3 >
         , Tag
-       
+        , int_<3>
         >
 {
     typedef lambda< T1,Tag > l1;
@@ -307,7 +307,7 @@ template<
 struct lambda<
           bind3< F,T1,T2,T3 >
         , Tag
-       
+        , int_<4>
         >
 {
     typedef false_ is_le;
@@ -362,7 +362,7 @@ template<
 struct lambda<
           F< T1,T2,T3,T4 >
         , Tag
-       
+        , int_<4>
         >
 {
     typedef lambda< T1,Tag > l1;
@@ -395,7 +395,7 @@ template<
 struct lambda<
           bind4< F,T1,T2,T3,T4 >
         , Tag
-       
+        , int_<5>
         >
 {
     typedef false_ is_le;
@@ -454,7 +454,7 @@ template<
 struct lambda<
           F< T1,T2,T3,T4,T5 >
         , Tag
-       
+        , int_<5>
         >
 {
     typedef lambda< T1,Tag > l1;
@@ -491,7 +491,7 @@ template<
 struct lambda<
           bind5< F,T1,T2,T3,T4,T5 >
         , Tag
-       
+        , int_<6>
         >
 {
     typedef false_ is_le;
@@ -505,7 +505,7 @@ struct lambda<
 
 /// special case for 'protect'
 template< typename T, typename Tag >
-struct lambda< mpl::protect<T>, Tag >
+struct lambda< mpl::protect<T>,Tag, int_<1> >
 {
     typedef false_ is_le;
     typedef mpl::protect<T> result_;
@@ -522,7 +522,7 @@ template<
 struct lambda<
           bind< F,T1,T2,T3,T4,T5 >
         , Tag
-       
+        , int_<6>
         >
 {
     typedef false_ is_le;
@@ -530,25 +530,29 @@ struct lambda<
     typedef result_ type;
 };
 
-/// workaround for MWCW 8.3+/EDG < 303, leads to ambiguity on Digital Mars
-
 template<
-      typename F, typename Tag1, typename Tag2
+      typename F
+    , typename Tag1
+    , typename Tag2
+    , typename Arity
     >
 struct lambda<
-          lambda< F,Tag1 >
+          lambda< F,Tag1,Arity >
         , Tag2
+        , int_<3>
         >
 {
     typedef lambda< F,Tag2 > l1;
     typedef lambda< Tag1,Tag2 > l2;
     typedef typename l1::is_le is_le;
-    typedef aux::le_result2<is_le, Tag2, mpl::lambda, l1, l2> le_result_;
+    typedef bind1< quote1<aux::template_arity>, typename l1::result_ > arity_;
+    typedef lambda< typename if_< is_le,arity_,Arity >::type, Tag2 > l3;
+    typedef aux::le_result3<is_le, Tag2, mpl::lambda, l1, l2, l3> le_result_;
     typedef typename le_result_::result_ result_;
     typedef typename le_result_::type type;
 };
 
-BOOST_MPL_AUX_NA_SPEC(2, lambda)
+BOOST_MPL_AUX_NA_SPEC2(2, 3, lambda)
 
 }}
 

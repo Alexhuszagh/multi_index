@@ -19,6 +19,7 @@ struct inherit2
     : T1, T2
 {
     typedef inherit2 type;
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(2, inherit2, (T1, T2))
 };
 
 template< typename T1 >
@@ -55,6 +56,11 @@ struct inherit3
         , T3
         >
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(
+          3
+        , inherit3
+        , ( T1, T2, T3)
+        )
 };
 
 BOOST_MPL_AUX_NA_SPEC(3, inherit3)
@@ -70,6 +76,11 @@ struct inherit4
         , T4
         >
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(
+          4
+        , inherit4
+        , ( T1, T2, T3, T4)
+        )
 };
 
 BOOST_MPL_AUX_NA_SPEC(4, inherit4)
@@ -86,6 +97,11 @@ struct inherit5
         , T5
         >
 {
+    BOOST_MPL_AUX_LAMBDA_SUPPORT(
+          5
+        , inherit5
+        , ( T1, T2, T3, T4, T5)
+        )
 };
 
 BOOST_MPL_AUX_NA_SPEC(5, inherit5)

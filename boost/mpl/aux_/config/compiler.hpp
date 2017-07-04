@@ -23,7 +23,7 @@
 #   include <boost/mpl/aux_/config/gcc.hpp>
 #   include <boost/mpl/aux_/config/workaround.hpp>
 
-#       define BOOST_MPL_CFG_COMPILER_DIR plain
+#   define BOOST_MPL_CFG_COMPILER_DIR gcc
 
 #endif // BOOST_MPL_CFG_COMPILER_DIR
 
