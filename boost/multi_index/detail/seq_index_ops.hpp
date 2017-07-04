@@ -97,10 +97,9 @@ void sequenced_index_collate(
  * also inside sequenced_index_sort.
  */
 
-BOOST_STATIC_CONSTANT(
-  std::size_t,
-  sequenced_index_sort_max_fill=
-    (std::size_t)std::numeric_limits<std::size_t>::digits+1);
+static const
+  std::size_t sequenced_index_sort_max_fill=
+    (std::size_t)std::numeric_limits<std::size_t>::digits+1;
 
 template<typename Node,typename Compare>
 void sequenced_index_sort(Node* header,Compare comp)

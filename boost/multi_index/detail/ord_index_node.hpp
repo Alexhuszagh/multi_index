@@ -36,14 +36,9 @@
 #pragma once
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <cstddef>
 #include <boost/detail/allocator_utilities.hpp>
 #include <boost/multi_index/detail/raw_ptr.hpp>
-
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/multi_index/detail/uintptr_type.hpp>
-#include <boost/type_traits/alignment_of.hpp>
+#include <cstddef>
 #include <type_traits>
 
 namespace boost{
@@ -53,6 +48,7 @@ namespace multi_index{
 namespace detail{
 
 /* definition of red-black nodes for ordered_index */
+typedef unsigned int uintptr_type;
 
 enum ordered_index_color{red=false,black=true};
 enum ordered_index_side{to_left=false,to_right=true};
@@ -64,15 +60,13 @@ template<typename AugmentPolicy,typename Allocator>
 struct ordered_index_node_std_base
 {
   typedef typename
-  boost::detail::allocator::rebind_to<
-    Allocator,
+  Allocator::template rebind<
     ordered_index_node_impl<AugmentPolicy,Allocator>
-  >::type::pointer                                   pointer;
+  >::other::pointer                                   pointer;
   typedef typename
-  boost::detail::allocator::rebind_to<
-    Allocator,
+  Allocator::template rebind<
     ordered_index_node_impl<AugmentPolicy,Allocator>
-  >::type::const_pointer                             const_pointer;
+  >::other::const_pointer                             const_pointer;
   typedef ordered_index_color&                       color_ref;
   typedef pointer&                                   parent_ref;
 
@@ -187,20 +181,7 @@ template<typename AugmentPolicy,typename Allocator>
 struct ordered_index_node_impl_base:
 
   AugmentPolicy::template augmented_node<
-    typename mpl::if_c<
-      !(has_uintptr_type::value)||
-      (alignment_of<
-        ordered_index_node_compressed_base<AugmentPolicy,Allocator>
-       >::value%2)||
-      !(std::is_same<
-        typename boost::detail::allocator::rebind_to<
-          Allocator,
-          ordered_index_node_impl<AugmentPolicy,Allocator>
-        >::type::pointer,
-        ordered_index_node_impl<AugmentPolicy,Allocator>*>::value),
-      ordered_index_node_std_base<AugmentPolicy,Allocator>,
-      ordered_index_node_compressed_base<AugmentPolicy,Allocator>
-    >::type
+    ordered_index_node_std_base<AugmentPolicy,Allocator>
   >::type
 
 {};
