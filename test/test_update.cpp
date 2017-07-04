@@ -117,8 +117,8 @@ void test_update()
     typedef multi_index_container<
       pair_of_ints,
       indexed_by<
-        ordered_unique<BOOST_MULTI_INDEX_MEMBER(pair_of_ints,int,first)>,
-        hashed_unique<BOOST_MULTI_INDEX_MEMBER(pair_of_ints,int,second)>,
+        ordered_unique<::boost::multi_index::member<pair_of_ints,int,&pair_of_ints::first>>,
+        hashed_unique<::boost::multi_index::member<pair_of_ints,int,&pair_of_ints::second>>,
         sequenced<> > >
     int_int_set;
 
@@ -191,9 +191,9 @@ void test_update()
     typedef multi_index_container<
       pair_of_ints,
       indexed_by<
-        hashed_unique<BOOST_MULTI_INDEX_MEMBER(pair_of_ints,int,first)>,
+        hashed_unique<::boost::multi_index::member<pair_of_ints,int,&pair_of_ints::first>>,
         random_access<>,
-        ordered_unique<BOOST_MULTI_INDEX_MEMBER(pair_of_ints,int,second)> > >
+        ordered_unique<::boost::multi_index::member<pair_of_ints,int,&pair_of_ints::second>> > >
     int_int_set;
 
     int_int_set iis;

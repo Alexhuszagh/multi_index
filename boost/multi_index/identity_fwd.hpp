@@ -12,7 +12,8 @@ namespace boost{
 
 namespace multi_index{
 
-template<class Type> struct identity;
+template <typename Type>
+struct identity;
 
 } /* namespace multi_index */
 

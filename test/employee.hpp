@@ -108,15 +108,15 @@ struct employee_set_indices:
       boost::multi_index::identity<employee> >,
     boost::multi_index::hashed_non_unique<
       boost::multi_index::tag<name,by_name>,
-      BOOST_MULTI_INDEX_MEMBER(employee,std::string,name)>,
+      ::boost::multi_index::member<employee,std::string,&employee::name>>,
     boost::multi_index::ordered_non_unique<
       boost::multi_index::tag<age>,
-      BOOST_MULTI_INDEX_MEMBER(employee,int,age)>,
+      ::boost::multi_index::member<employee,int,&employee::age>>,
     boost::multi_index::sequenced<
       boost::multi_index::tag<as_inserted> >,
     boost::multi_index::hashed_unique<
       boost::multi_index::tag<ssn>,
-      BOOST_MULTI_INDEX_MEMBER(employee,int,ssn)>,
+      ::boost::multi_index::member<employee,int,&employee::ssn>>,
     boost::multi_index::random_access<
       boost::multi_index::tag<randomly> > >
 {};
@@ -127,26 +127,14 @@ typedef
     employee_set_indices,
     non_std_allocator<employee> >        employee_set;
 
-#if defined(BOOST_NO_MEMBER_TEMPLATES)
-typedef boost::multi_index::nth_index<
-  employee_set,1>::type                  employee_set_by_name;
-#else
 typedef employee_set::nth_index<1>::type employee_set_by_name;
-#endif
-
 typedef boost::multi_index::index<
          employee_set,age>::type         employee_set_by_age;
 typedef boost::multi_index::index<
          employee_set,as_inserted>::type employee_set_as_inserted;
 typedef boost::multi_index::index<
          employee_set,ssn>::type         employee_set_by_ssn;
-
-#if defined(BOOST_NO_MEMBER_TEMPLATES)
-typedef boost::multi_index::index<
-         employee_set,randomly>::type    employee_set_randomly;
-#else
 typedef employee_set::index<
           randomly>::type                employee_set_randomly;
-#endif
 
 #endif

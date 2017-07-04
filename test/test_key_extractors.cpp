@@ -63,12 +63,12 @@ struct test_derived_class:test_class
 
 typedef identity<test_class>                                       idn;
 typedef identity<const test_class>                                 cidn;
-typedef BOOST_MULTI_INDEX_MEMBER(test_class,int,int_member)        key_m;
-typedef BOOST_MULTI_INDEX_MEMBER(test_class,const int,int_member)  ckey_m;
-typedef BOOST_MULTI_INDEX_MEMBER(test_class,const int,int_cmember) key_cm;
-typedef BOOST_MULTI_INDEX_CONST_MEM_FUN(
-          test_class,bool,bool_mem_fun_const)                      key_cmf;
-typedef BOOST_MULTI_INDEX_MEM_FUN(test_class,bool,bool_mem_fun)    key_mf;
+typedef ::boost::multi_index::member<test_class,int,&test_class::int_member>        key_m;
+typedef ::boost::multi_index::member<test_class,const int,&test_class::int_member>  ckey_m;
+typedef ::boost::multi_index::member<test_class,const int,&test_class::int_cmember> key_cm;
+typedef ::boost::multi_index::const_mem_fun<
+          test_class,bool,&test_class::bool_mem_fun_const>                      key_cmf;
+typedef ::boost::multi_index::mem_fun<test_class,bool,&test_class::bool_mem_fun>    key_mf;
 typedef global_fun<test_class,bool,&test_class::bool_global_fun>   key_gf;
 typedef global_fun<
           const test_class&,bool,
@@ -132,13 +132,13 @@ struct test_nc_derived_class:test_nc_class
 
 typedef identity<test_nc_class>                                nc_idn;
 typedef identity<const test_nc_class>                          nc_cidn;
-typedef BOOST_MULTI_INDEX_MEMBER(test_nc_class,int,int_member) nc_key_m;
-typedef BOOST_MULTI_INDEX_MEMBER(
-          test_nc_class,const int,int_member)                  nc_ckey_m;
-typedef BOOST_MULTI_INDEX_CONST_MEM_FUN(
-          test_nc_class,bool,bool_mem_fun_const)               nc_key_cmf;
-typedef BOOST_MULTI_INDEX_MEM_FUN(
-          test_nc_class,bool,bool_mem_fun)                     nc_key_mf;
+typedef ::boost::multi_index::member<test_nc_class,int,&test_nc_class::int_member> nc_key_m;
+typedef ::boost::multi_index::member<
+          test_nc_class,const int,&test_nc_class::int_member>                  nc_ckey_m;
+typedef ::boost::multi_index::const_mem_fun<
+          test_nc_class,bool,&test_nc_class::bool_mem_fun_const>               nc_key_cmf;
+typedef ::boost::multi_index::mem_fun<
+          test_nc_class,bool,&test_nc_class::bool_mem_fun>                     nc_key_mf;
 typedef global_fun<
           const test_nc_class&,bool,
           &test_nc_class::bool_global_fun_const_ref

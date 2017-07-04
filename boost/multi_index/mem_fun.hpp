@@ -8,18 +8,10 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/utility/enable_if.hpp>
-
-#if !defined(BOOST_NO_SFINAE)
-#include <boost/type_traits/is_convertible.hpp>
-#endif
+#include <functional>
+#include <type_traits>
 
 namespace boost{
-
-template<class T> class reference_wrapper; /* fwd decl. */
 
 namespace multi_index{
 
@@ -37,16 +29,12 @@ namespace multi_index{
 template<class Class,typename Type,Type (Class::*PtrToMemberFunction)()const>
 struct const_mem_fun
 {
-  typedef typename remove_reference<Type>::type result_type;
+  typedef typename std::remove_reference<Type>::type result_type;
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<const ChainedPtr&,const Class&>,Type>::type
-#else
-  Type
-#endif
+  typename std::enable_if<
+    !std::is_convertible<const ChainedPtr&,const Class&>::value,Type>::type
 
   operator()(const ChainedPtr& x)const
   {
@@ -58,12 +46,12 @@ struct const_mem_fun
     return (x.*PtrToMemberFunction)();
   }
 
-  Type operator()(const reference_wrapper<const Class>& x)const
+  Type operator()(const std::reference_wrapper<const Class>& x)const
   {
     return operator()(x.get());
   }
 
-  Type operator()(const reference_wrapper<Class>& x)const
+  Type operator()(const std::reference_wrapper<Class>& x)const
   {
     return operator()(x.get());
   }
@@ -72,16 +60,12 @@ struct const_mem_fun
 template<class Class,typename Type,Type (Class::*PtrToMemberFunction)()>
 struct mem_fun
 {
-  typedef typename remove_reference<Type>::type result_type;
+  typedef typename std::remove_reference<Type>::type result_type;
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<ChainedPtr&,Class&>,Type>::type
-#else
-  Type
-#endif
+  typename std::enable_if<
+    !std::is_convertible<ChainedPtr&,Class&>::value,Type>::type
 
   operator()(const ChainedPtr& x)const
   {
@@ -93,7 +77,7 @@ struct mem_fun
     return (x.*PtrToMemberFunction)();
   }
 
-  Type operator()(const reference_wrapper<Class>& x)const
+  Type operator()(const std::reference_wrapper<Class>& x)const
   {
     return operator()(x.get());
   }
@@ -117,16 +101,12 @@ template<
   typename PtrToMemberFunctionType,PtrToMemberFunctionType PtrToMemberFunction>
 struct const_mem_fun_explicit
 {
-  typedef typename remove_reference<Type>::type result_type;
+  typedef typename std::remove_reference<Type>::type result_type;
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<const ChainedPtr&,const Class&>,Type>::type
-#else
-  Type
-#endif
+  typename std::enable_if<
+    !std::is_convertible<const ChainedPtr&,const Class&>::value,Type>::type
 
   operator()(const ChainedPtr& x)const
   {
@@ -138,12 +118,12 @@ struct const_mem_fun_explicit
     return (x.*PtrToMemberFunction)();
   }
 
-  Type operator()(const reference_wrapper<const Class>& x)const
+  Type operator()(const std::reference_wrapper<const Class>& x)const
   {
     return operator()(x.get());
   }
 
-  Type operator()(const reference_wrapper<Class>& x)const
+  Type operator()(const std::reference_wrapper<Class>& x)const
   {
     return operator()(x.get());
   }
@@ -154,16 +134,12 @@ template<
   typename PtrToMemberFunctionType,PtrToMemberFunctionType PtrToMemberFunction>
 struct mem_fun_explicit
 {
-  typedef typename remove_reference<Type>::type result_type;
+  typedef typename std::remove_reference<Type>::type result_type;
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<ChainedPtr&,Class&>,Type>::type
-#else
-  Type
-#endif
+  typename std::enable_if<
+    !std::is_convertible<ChainedPtr&,Class&>::value,Type>::type
 
   operator()(const ChainedPtr& x)const
   {
@@ -175,23 +151,11 @@ struct mem_fun_explicit
     return (x.*PtrToMemberFunction)();
   }
 
-  Type operator()(const reference_wrapper<Class>& x)const
+  Type operator()(const std::reference_wrapper<Class>& x)const
   {
     return operator()(x.get());
   }
 };
-
-/* BOOST_MULTI_INDEX_CONST_MEM_FUN and BOOST_MULTI_INDEX_MEM_FUN used to
- * resolve to [const_]mem_fun_explicit for MSVC++ 6.0 and to
- * [const_]mem_fun otherwise. Support for this compiler having been dropped,
- * they are now just wrappers over [const_]mem_fun kept for backwards-
- * compatibility reasons.
- */
-
-#define BOOST_MULTI_INDEX_CONST_MEM_FUN(Class,Type,MemberFunName) \
-::boost::multi_index::const_mem_fun< Class,Type,&Class::MemberFunName >
-#define BOOST_MULTI_INDEX_MEM_FUN(Class,Type,MemberFunName) \
-::boost::multi_index::mem_fun< Class,Type,&Class::MemberFunName >
 
 } /* namespace multi_index */
 

@@ -80,7 +80,7 @@ void test_comparison()
   multi_index_container<
     pair_of_ints,
     indexed_by<
-      hashed_non_unique<BOOST_MULTI_INDEX_MEMBER(pair_of_ints,int,first)>
+      hashed_non_unique<::boost::multi_index::member<pair_of_ints,int,&pair_of_ints::first>>
     >
   > hc1,hc2;
   hc1.insert(pair_of_ints(0,0));

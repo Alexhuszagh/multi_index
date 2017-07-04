@@ -362,9 +362,9 @@ void test_composite_key_template()
 {
   typedef composite_key<
     xyz,
-    BOOST_MULTI_INDEX_MEMBER(xyz,int,x),
-    BOOST_MULTI_INDEX_MEMBER(xyz,int,y),
-    BOOST_MULTI_INDEX_MEMBER(xyz,int,z)
+    ::boost::multi_index::member<xyz,int,&xyz::x>,
+    ::boost::multi_index::member<xyz,int,&xyz::y>,
+    ::boost::multi_index::member<xyz,int,&xyz::z>
   > ckey_t1;
 
   typedef multi_index_container<
@@ -409,9 +409,9 @@ void test_composite_key_template()
   ckey_t1 ck2(ck1);
   ckey_t1 ck3(
     boost::make_tuple(
-      BOOST_MULTI_INDEX_MEMBER(xyz,int,x)(),
-      BOOST_MULTI_INDEX_MEMBER(xyz,int,y)(),
-      BOOST_MULTI_INDEX_MEMBER(xyz,int,z)()));
+      ::boost::multi_index::member<xyz,int,&xyz::x>(),
+      ::boost::multi_index::member<xyz,int,&xyz::y>(),
+      ::boost::multi_index::member<xyz,int,&xyz::z>()));
   ckey_t1 ck4(get<0>(ck1.key_extractors()));
 
   ck3=ck3; /* prevent unused var */
@@ -561,8 +561,8 @@ void test_composite_key_template()
 
   typedef composite_key<
     xyz,
-    BOOST_MULTI_INDEX_MEMBER(xyz,int,y), /* members reversed */
-    BOOST_MULTI_INDEX_MEMBER(xyz,int,x)
+    ::boost::multi_index::member<xyz,int,&xyz::y>, /* members reversed */
+    ::boost::multi_index::member<xyz,int,&xyz::x>
   > ckey_t2;
 
   ckey_t2 ck5;
@@ -615,9 +615,9 @@ void test_composite_key_template()
 
   typedef composite_key<
     xystr,
-    BOOST_MULTI_INDEX_MEMBER(xystr,std::string,str),
-    BOOST_MULTI_INDEX_MEMBER(xystr,int,x),
-    BOOST_MULTI_INDEX_MEMBER(xystr,int,y)
+    ::boost::multi_index::member<xystr,std::string,&xystr::str>,
+    ::boost::multi_index::member<xystr,int,&xystr::x>,
+    ::boost::multi_index::member<xystr,int,&xystr::y>
   > ckey_t3;
 
   ckey_t3 ck6;

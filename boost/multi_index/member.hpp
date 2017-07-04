@@ -8,19 +8,11 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_const.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <cstddef>
-
-#if !defined(BOOST_NO_SFINAE)
-#include <boost/type_traits/is_convertible.hpp>
-#endif
+#include <functional>
+#include <type_traits>
 
 namespace boost{
-
-template<class T> class reference_wrapper; /* fwd decl. */
 
 namespace multi_index{
 
@@ -43,12 +35,8 @@ struct const_member_base
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<const ChainedPtr&,const Class&>,Type&>::type
-#else
-  Type&
-#endif
+  typename std::enable_if<
+    !std::is_convertible<const ChainedPtr&,const Class&>::value,Type&>::type
 
   operator()(const ChainedPtr& x)const
   {
@@ -60,12 +48,12 @@ struct const_member_base
     return x.*PtrToMember;
   }
 
-  Type& operator()(const reference_wrapper<const Class>& x)const
+  Type& operator()(const std::reference_wrapper<const Class>& x)const
   {
     return operator()(x.get());
   }
 
-  Type& operator()(const reference_wrapper<Class>& x)const
+  Type& operator()(const std::reference_wrapper<Class>& x)const
   {
     return operator()(x.get());
   }
@@ -78,12 +66,8 @@ struct non_const_member_base
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<const ChainedPtr&,const Class&>,Type&>::type
-#else
-  Type&
-#endif
+  typename std::enable_if<
+    !std::is_convertible<const ChainedPtr&,const Class&>::value,Type&>::type
 
   operator()(const ChainedPtr& x)const
   {
@@ -100,12 +84,12 @@ struct non_const_member_base
     return x.*PtrToMember;
   }
 
-  const Type& operator()(const reference_wrapper<const Class>& x)const
+  const Type& operator()(const std::reference_wrapper<const Class>& x)const
   {
     return operator()(x.get());
   }
 
-  Type& operator()(const reference_wrapper<Class>& x)const
+  Type& operator()(const std::reference_wrapper<Class>& x)const
   {
     return operator()(x.get());
   }
@@ -115,8 +99,8 @@ struct non_const_member_base
 
 template<class Class,typename Type,Type Class::*PtrToMember>
 struct member:
-  mpl::if_c<
-    is_const<Type>::value,
+  std::conditional<
+    std::is_const<Type>::value,
     detail::const_member_base<Class,Type,PtrToMember>,
     detail::non_const_member_base<Class,Type,PtrToMember>
   >::type
@@ -149,12 +133,8 @@ struct const_member_offset_base
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<const ChainedPtr&,const Class&>,Type&>::type
-#else
-  Type&
-#endif
+  typename std::enable_if<
+    !std::is_convertible<const ChainedPtr&,const Class&>::value,Type&>::type
 
   operator()(const ChainedPtr& x)const
   {
@@ -169,12 +149,12 @@ struct const_member_offset_base
           static_cast<const void *>(&x))+OffsetOfMember));
   }
 
-  Type& operator()(const reference_wrapper<const Class>& x)const
+  Type& operator()(const std::reference_wrapper<const Class>& x)const
   {
     return operator()(x.get());
   }
 
-  Type& operator()(const reference_wrapper<Class>& x)const
+  Type& operator()(const std::reference_wrapper<Class>& x)const
   {
     return operator()(x.get());
   }
@@ -187,12 +167,8 @@ struct non_const_member_offset_base
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<const ChainedPtr&,const Class&>,Type&>::type
-#else
-  Type&
-#endif
+  typename std::enable_if<
+    !std::is_convertible<const ChainedPtr&,const Class&>::value,Type&>::type
 
   operator()(const ChainedPtr& x)const
   {
@@ -214,12 +190,12 @@ struct non_const_member_offset_base
         static_cast<char*>(static_cast<void *>(&x))+OffsetOfMember));
   }
 
-  const Type& operator()(const reference_wrapper<const Class>& x)const
+  const Type& operator()(const std::reference_wrapper<const Class>& x)const
   {
     return operator()(x.get());
   }
 
-  Type& operator()(const reference_wrapper<Class>& x)const
+  Type& operator()(const std::reference_wrapper<Class>& x)const
   {
     return operator()(x.get());
   }
@@ -229,26 +205,13 @@ struct non_const_member_offset_base
 
 template<class Class,typename Type,std::size_t OffsetOfMember>
 struct member_offset:
-  mpl::if_c<
-    is_const<Type>::value,
+  std::conditional<
+    std::is_const<Type>::value,
     detail::const_member_offset_base<Class,Type,OffsetOfMember>,
     detail::non_const_member_offset_base<Class,Type,OffsetOfMember>
   >::type
 {
 };
-
-/* BOOST_MULTI_INDEX_MEMBER resolves to member in the normal cases,
- * and to member_offset as a workaround in those defective compilers for
- * which BOOST_NO_POINTER_TO_MEMBER_TEMPLATE_PARAMETERS is defined.
- */
-
-#if defined(BOOST_NO_POINTER_TO_MEMBER_TEMPLATE_PARAMETERS)
-#define BOOST_MULTI_INDEX_MEMBER(Class,Type,MemberName) \
-::boost::multi_index::member_offset< Class,Type,offsetof(Class,MemberName) >
-#else
-#define BOOST_MULTI_INDEX_MEMBER(Class,Type,MemberName) \
-::boost::multi_index::member< Class,Type,&Class::MemberName >
-#endif
 
 } /* namespace multi_index */
 

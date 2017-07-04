@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <boost/config.hpp>
 #include <boost/multi_index/identity_fwd.hpp>
 #include <functional>
 #include <type_traits>
