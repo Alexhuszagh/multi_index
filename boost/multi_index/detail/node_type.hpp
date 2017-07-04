@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_NODE_TYPE_HPP
-#define BOOST_MULTI_INDEX_DETAIL_NODE_TYPE_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/workaround.hpp>
@@ -42,7 +37,7 @@ struct index_node_applier
     typedef typename mpl::deref<IndexSpecifierIterator>::type index_specifier;
     typedef typename index_specifier::
       BOOST_NESTED_TEMPLATE node_class<Super>::type type;
-  }; 
+  };
 };
 
 template<typename Value,typename IndexSpecifierList,typename Allocator>
@@ -62,5 +57,3 @@ struct multi_index_node_type
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

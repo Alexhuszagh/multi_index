@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_CONVERTER_HPP
-#define BOOST_MULTI_INDEX_DETAIL_CONVERTER_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 namespace boost{
 
@@ -48,5 +43,3 @@ struct converter
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_CONS_STDTUPLE_HPP
-#define BOOST_MULTI_INDEX_DETAIL_CONS_STDTUPLE_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/if.hpp>
@@ -68,12 +63,12 @@ struct cons_stdtuple
   typedef typename std::tuple_element<N,StdTuple>::type head_type;
   typedef cons_stdtuple_ctor<StdTuple,N+1>              tail_ctor;
   typedef typename tail_ctor::result_type               tail_type;
-  
+
   cons_stdtuple(const StdTuple& t_):t(t_){}
 
   const head_type& get_head()const{return std::get<N>(t);}
   tail_type get_tail()const{return tail_ctor::create(t);}
-    
+
   const StdTuple& t;
 };
 
@@ -89,5 +84,3 @@ make_cons_stdtuple(const StdTuple& t)
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

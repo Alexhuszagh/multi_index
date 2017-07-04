@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_HASH_INDEX_NODE_HPP
-#define BOOST_MULTI_INDEX_DETAIL_HASH_INDEX_NODE_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/allocator_utilities.hpp>
@@ -44,7 +39,7 @@ namespace detail{
  *              |   |               |   |
  *              | +-+               | +-+
  *              | |                 | |
- *              v |                 v |  
+ *              v |                 v |
  *       --+---+---+---+--   --+---+---+---+--
  *     ... |   | B1|   |  ...  |   | B2|   | ...
  *       --+---+---+---+--   --+---+---+---+--
@@ -71,7 +66,7 @@ namespace detail{
  *   +---+   +---+       +---+ | +---+
  *     ^                       |
  *     +-----------------------+
- * 
+ *
  * F, S, P and L are the first, second, penultimate and last node in the
  * group, respectively (S and P can coincide if the group has size 3.) This
  * arrangement is used to skip equivalent elements in O(1) when doing lookup,
@@ -85,7 +80,7 @@ namespace detail{
  *   second node of a group: Npn != N && Nppnn == N
  *   n-1 node of a group:    Nnp != N && Nnnpp == N
  *   last node of a group:   Npn != N && Npnnp == N
- * 
+ *
  * The memory overhead is one pointer per bucket plus two pointers per node,
  * probably unbeatable. The resulting structure is bidirectonally traversable,
  * though currently we are just providing forward iteration.
@@ -133,7 +128,7 @@ struct hashed_index_node_impl:hashed_index_base_node_impl<Allocator>
 private:
   typedef hashed_index_base_node_impl<Allocator> super;
 
-public:  
+public:
   typedef typename super::base_pointer           base_pointer;
   typedef typename super::const_base_pointer     const_base_pointer;
   typedef typename super::pointer                pointer;
@@ -605,7 +600,7 @@ private:
   {
     assign(x->prior()->next(),x->next());
   }
-  
+
   template<typename Assigner>
   static void right_unlink(pointer x,Assigner& assign)
   {
@@ -750,7 +745,7 @@ public:
 
   static const hashed_index_node* from_impl(const_impl_pointer x)
   {
-    return 
+    return
       static_cast<const hashed_index_node*>(
         static_cast<const trampoline*>(
           raw_ptr<const impl_type*>(x)));
@@ -774,5 +769,3 @@ public:
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

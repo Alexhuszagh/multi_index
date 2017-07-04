@@ -12,10 +12,8 @@ enable_testing()
 set(CMAKE_CXX_STANDARD 11)
 set(CXX_STANDARD TRUE)
 
-# OPTIONS
-#option(BUILD_TESTS "Build pycpp library tests" OFF)
-
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_definitions(-DBOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
 
 # TESTS
 # -----
@@ -33,6 +31,15 @@ set(TEST_FILES
     test/test_key_extractors.cpp
     test/test_list_ops.cpp
     test/test_modifiers.cpp
+    test/test_mpl_ops.cpp
+    test/test_observers.cpp
+    test/test_projection.cpp
+    test/test_range.cpp
+    test/test_rearrange.cpp
+    test/test_safe_mode.cpp
+    test/test_set_ops.cpp
+    test/test_special_set_ops.cpp
+    test/test_update.cpp
 )
 
 add_executable(multi_index_tests ${TEST_FILES})

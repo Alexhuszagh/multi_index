@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_SEQUENCED_INDEX_HPP
-#define BOOST_MULTI_INDEX_SEQUENCED_INDEX_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/bind.hpp>
@@ -46,10 +41,6 @@
 #include<initializer_list>
 #endif
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-#include <boost/bind.hpp>
-#endif
-
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
 #define BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT_OF(x)                    \
   detail::scope_guard BOOST_JOIN(check_invariant_,__LINE__)=                 \
@@ -79,7 +70,7 @@ class sequenced_index:
     sequenced_index<SuperMeta,TagList> >
 #endif
 
-{ 
+{
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)&&\
     BOOST_WORKAROUND(__MWERKS__,<=0x3003)
 /* The "ISO C++ Template Parser" option in CW8.3 has a problem with the
@@ -98,7 +89,7 @@ protected:
 
 private:
   typedef typename node_type::impl_type               node_impl_type;
- 
+
 public:
   /* types */
 
@@ -118,7 +109,7 @@ public:
 
   typedef iterator                                    const_iterator;
 
-  typedef std::size_t                                 size_type;      
+  typedef std::size_t                                 size_type;
   typedef std::ptrdiff_t                              difference_type;
   typedef typename allocator_type::pointer            pointer;
   typedef typename allocator_type::const_pointer      const_pointer;
@@ -131,7 +122,7 @@ public:
 protected:
   typedef typename super::final_node_type     final_node_type;
   typedef tuples::cons<
-    ctor_args, 
+    ctor_args,
     typename super::ctor_args_list>           ctor_args_list;
   typedef typename mpl::push_front<
     typename super::index_type_list,
@@ -143,11 +134,6 @@ protected:
     typename super::const_iterator_type_list,
     const_iterator>::type                     const_iterator_type_list;
   typedef typename super::copy_map_type       copy_map_type;
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  typedef typename super::index_saver_type    index_saver_type;
-  typedef typename super::index_loader_type   index_loader_type;
-#endif
 
 private:
 #if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
@@ -205,7 +191,7 @@ public:
     clear();
     for(size_type i=0;i<n;++i)push_back(value);
   }
-    
+
   allocator_type get_allocator()const BOOST_NOEXCEPT
   {
     return this->final().get_allocator();
@@ -332,7 +318,7 @@ public:
     BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT;
     for(size_type i=0;i<n;++i)insert(position,x);
   }
- 
+
   template<typename InputIterator>
   void insert(iterator position,InputIterator first,InputIterator last)
   {
@@ -355,7 +341,7 @@ public:
     this->final_erase_(static_cast<final_node_type*>(position++.get_node()));
     return position;
   }
-  
+
   iterator erase(iterator first,iterator last)
   {
     BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(first);
@@ -595,7 +581,7 @@ public:
     if(position!=last)relink(
       position.get_node(),first.get_node(),last.get_node());
   }
-    
+
   template<typename InputIterator>
   void rearrange(InputIterator first)
   {
@@ -771,29 +757,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     return super::modify_rollback_(x);
   }
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  /* serialization */
-
-  template<typename Archive>
-  void save_(
-    Archive& ar,const unsigned int version,const index_saver_type& sm)const
-  {
-    sm.save(begin(),end(),ar,version);
-    super::save_(ar,version,sm);
-  }
-
-  template<typename Archive>
-  void load_(
-    Archive& ar,const unsigned int version,const index_loader_type& lm)
-  {
-    lm.load(
-      ::boost::bind(
-        &sequenced_index::rearranger,this,::boost::arg<1>(),::boost::arg<2>()),
-      ar,version);
-    super::load_(ar,version,lm);
-  }
-#endif
-
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
   /* invariant stuff */
 
@@ -851,15 +814,6 @@ private:
     node_impl_type::relink(
       position->impl(),first->impl(),last->impl());
   }
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  void rearranger(node_type* position,node_type *x)
-  {
-    if(!position)position=header();
-    node_type::increment(position);
-    if(position!=x)relink(position,x);
-  }
-#endif
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
   void detach_iterators(node_type* x)
@@ -1058,5 +1012,3 @@ inline boost::mpl::true_* boost_foreach_is_noncopyable(
 
 #undef BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT
 #undef BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT_OF
-
-#endif

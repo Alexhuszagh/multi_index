@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_INDEX_LOADER_HPP
-#define BOOST_MULTI_INDEX_DETAIL_INDEX_LOADER_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
@@ -20,7 +15,7 @@
 #include <boost/multi_index/detail/auto_space.hpp>
 #include <boost/multi_index/detail/raw_ptr.hpp>
 #include <boost/serialization/nvp.hpp>
-#include <boost/throw_exception.hpp> 
+#include <boost/throw_exception.hpp>
 #include <cstddef>
 
 namespace boost{
@@ -135,5 +130,3 @@ private:
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

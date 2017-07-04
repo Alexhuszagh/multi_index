@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_RANKED_INDEX_HPP
-#define BOOST_MULTI_INDEX_RANKED_INDEX_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/ord_index_impl.hpp>
@@ -378,5 +373,3 @@ struct ranked_non_unique
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

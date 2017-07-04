@@ -20,16 +20,15 @@
 #include "test_key_extractors.hpp"
 #include "test_list_ops.hpp"
 #include "test_modifiers.hpp"
-//#include "test_mpl_ops.hpp"
-//#include "test_observers.hpp"
-//#include "test_projection.hpp"
-//#include "test_range.hpp"
-//#include "test_rearrange.hpp"
-//#include "test_safe_mode.hpp"
-//#include "test_serialization.hpp"
-//#include "test_set_ops.hpp"
-//#include "test_special_set_ops.hpp"
-//#include "test_update.hpp"
+#include "test_mpl_ops.hpp"
+#include "test_observers.hpp"
+#include "test_projection.hpp"
+#include "test_range.hpp"
+#include "test_rearrange.hpp"
+#include "test_safe_mode.hpp"
+#include "test_set_ops.hpp"
+#include "test_special_set_ops.hpp"
+#include "test_update.hpp"
 
 int main()
 {
@@ -44,16 +43,15 @@ int main()
   test_key_extractors();
   test_list_ops();
   test_modifiers();
-//  test_mpl_ops();
-//  test_observers();
-//  test_projection();
-//  test_range();
-//  test_rearrange();
-//  test_safe_mode();
-//  test_serialization();
-//  test_set_ops();
-//  test_special_set_ops();
-//  test_update();
+  test_mpl_ops();
+  test_observers();
+  test_projection();
+  test_range();
+  test_rearrange();
+  test_safe_mode();
+  test_set_ops();
+  test_special_set_ops();
+  test_update();
 
   return boost::report_errors();
 }

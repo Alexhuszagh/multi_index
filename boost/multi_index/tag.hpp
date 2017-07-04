@@ -6,21 +6,16 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_TAG_HPP
-#define BOOST_MULTI_INDEX_TAG_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/no_duplicate_tags.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/preprocessor/facilities/intercept.hpp> 
-#include <boost/preprocessor/repetition/enum_binary_params.hpp> 
-#include <boost/preprocessor/repetition/enum_params.hpp> 
+#include <boost/preprocessor/facilities/intercept.hpp>
+#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/type_traits/is_base_and_derived.hpp>
 
@@ -63,7 +58,7 @@ template<
   BOOST_PP_ENUM_BINARY_PARAMS(
     BOOST_MULTI_INDEX_TAG_SIZE,
     typename T,
-    =mpl::na BOOST_PP_INTERCEPT) 
+    =mpl::na BOOST_PP_INTERCEPT)
 >
 struct tag:private detail::tag_marker
 {
@@ -84,5 +79,3 @@ struct tag:private detail::tag_marker
 } /* namespace boost */
 
 #undef BOOST_MULTI_INDEX_TAG_SIZE
-
-#endif

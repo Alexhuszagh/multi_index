@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_SCOPE_GUARD_HPP
-#define BOOST_MULTI_INDEX_DETAIL_SCOPE_GUARD_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/detail/no_exceptions_support.hpp>
 #include <boost/mpl/if.hpp>
@@ -43,9 +38,9 @@ namespace detail{
  *
  * NB: CodeWarrior Pro 8 seems to have problems looking up safe_execute
  * without an explicit qualification.
- * 
+ *
  * We also define the following variants of the idiom:
- * 
+ *
  *   - make_guard_if_c<bool>( ... )
  *   - make_guard_if<IntegralConstant>( ... )
  *   - make_obj_guard_if_c<bool>( ... )
@@ -85,7 +80,7 @@ protected:
     BOOST_CATCH(...){}
     BOOST_CATCH_END
   }
-  
+
   mutable bool dismissed_;
 
 private:
@@ -136,21 +131,21 @@ protected:
   F fun_;
 };
 
-template<typename F> 
+template<typename F>
 inline scope_guard_impl0<F> make_guard(F fun)
 {
   return scope_guard_impl0<F>(fun);
 }
 
-template<bool cond, typename F> 
-inline typename null_guard_return<cond,scope_guard_impl0<F> >::type  
+template<bool cond, typename F>
+inline typename null_guard_return<cond,scope_guard_impl0<F> >::type
 make_guard_if_c(F fun)
 {
   return typename null_guard_return<cond,scope_guard_impl0<F> >::type(fun);
 }
 
-template<typename C, typename F> 
-inline typename null_guard_return<C::value,scope_guard_impl0<F> >::type  
+template<typename C, typename F>
+inline typename null_guard_return<C::value,scope_guard_impl0<F> >::type
 make_guard_if(F fun)
 {
   return make_guard_if<C::value>(fun);
@@ -169,21 +164,21 @@ protected:
   const P1 p1_;
 };
 
-template<typename F,typename P1> 
+template<typename F,typename P1>
 inline scope_guard_impl1<F,P1> make_guard(F fun,P1 p1)
 {
   return scope_guard_impl1<F,P1>(fun,p1);
 }
 
-template<bool cond, typename F,typename P1> 
-inline typename null_guard_return<cond,scope_guard_impl1<F,P1> >::type 
+template<bool cond, typename F,typename P1>
+inline typename null_guard_return<cond,scope_guard_impl1<F,P1> >::type
 make_guard_if_c(F fun,P1 p1)
 {
   return typename null_guard_return<cond,scope_guard_impl1<F,P1> >::type(fun,p1);
 }
 
-template<typename C, typename F,typename P1> 
-inline typename null_guard_return<C::value,scope_guard_impl1<F,P1> >::type 
+template<typename C, typename F,typename P1>
+inline typename null_guard_return<C::value,scope_guard_impl1<F,P1> >::type
 make_guard_if(F fun,P1 p1)
 {
   return make_guard_if_c<C::value>(fun,p1);
@@ -245,14 +240,14 @@ inline scope_guard_impl3<F,P1,P2,P3> make_guard(F fun,P1 p1,P2 p2,P3 p3)
 }
 
 template<bool cond,typename F,typename P1,typename P2,typename P3>
-inline typename null_guard_return<cond,scope_guard_impl3<F,P1,P2,P3> >::type 
+inline typename null_guard_return<cond,scope_guard_impl3<F,P1,P2,P3> >::type
 make_guard_if_c(F fun,P1 p1,P2 p2,P3 p3)
 {
   return typename null_guard_return<cond,scope_guard_impl3<F,P1,P2,P3> >::type(fun,p1,p2,p3);
 }
 
 template<typename C,typename F,typename P1,typename P2,typename P3>
-inline typename null_guard_return< C::value,scope_guard_impl3<F,P1,P2,P3> >::type 
+inline typename null_guard_return< C::value,scope_guard_impl3<F,P1,P2,P3> >::type
 make_guard_if(F fun,P1 p1,P2 p2,P3 p3)
 {
   return make_guard_if_c<C::value>(fun,p1,p2,p3);
@@ -283,7 +278,7 @@ inline scope_guard_impl4<F,P1,P2,P3,P4> make_guard(
 }
 
 template<bool cond, typename F,typename P1,typename P2,typename P3,typename P4>
-inline typename null_guard_return<cond,scope_guard_impl4<F,P1,P2,P3,P4> >::type 
+inline typename null_guard_return<cond,scope_guard_impl4<F,P1,P2,P3,P4> >::type
 make_guard_if_c(
   F fun,P1 p1,P2 p2,P3 p3,P4 p4)
 {
@@ -291,7 +286,7 @@ make_guard_if_c(
 }
 
 template<typename C, typename F,typename P1,typename P2,typename P3,typename P4>
-inline typename null_guard_return<C::value,scope_guard_impl4<F,P1,P2,P3,P4> >::type 
+inline typename null_guard_return<C::value,scope_guard_impl4<F,P1,P2,P3,P4> >::type
 make_guard_if(
   F fun,P1 p1,P2 p2,P3 p3,P4 p4)
 {
@@ -318,14 +313,14 @@ inline obj_scope_guard_impl0<Obj,MemFun> make_obj_guard(Obj& obj,MemFun mem_fun)
 }
 
 template<bool cond, class Obj,typename MemFun>
-inline typename null_guard_return<cond,obj_scope_guard_impl0<Obj,MemFun> >::type 
+inline typename null_guard_return<cond,obj_scope_guard_impl0<Obj,MemFun> >::type
 make_obj_guard_if_c(Obj& obj,MemFun mem_fun)
 {
   return typename null_guard_return<cond,obj_scope_guard_impl0<Obj,MemFun> >::type(obj,mem_fun);
 }
 
 template<typename C, class Obj,typename MemFun>
-inline typename null_guard_return<C::value,obj_scope_guard_impl0<Obj,MemFun> >::type 
+inline typename null_guard_return<C::value,obj_scope_guard_impl0<Obj,MemFun> >::type
 make_obj_guard_if(Obj& obj,MemFun mem_fun)
 {
   return make_obj_guard_if_c<C::value>(obj,mem_fun);
@@ -354,14 +349,14 @@ inline obj_scope_guard_impl1<Obj,MemFun,P1> make_obj_guard(
 }
 
 template<bool cond, class Obj,typename MemFun,typename P1>
-inline typename null_guard_return<cond,obj_scope_guard_impl1<Obj,MemFun,P1> >::type 
+inline typename null_guard_return<cond,obj_scope_guard_impl1<Obj,MemFun,P1> >::type
 make_obj_guard_if_c(  Obj& obj,MemFun mem_fun,P1 p1)
 {
   return typename null_guard_return<cond,obj_scope_guard_impl1<Obj,MemFun,P1> >::type(obj,mem_fun,p1);
 }
 
 template<typename C, class Obj,typename MemFun,typename P1>
-inline typename null_guard_return<C::value,obj_scope_guard_impl1<Obj,MemFun,P1> >::type 
+inline typename null_guard_return<C::value,obj_scope_guard_impl1<Obj,MemFun,P1> >::type
 make_obj_guard_if( Obj& obj,MemFun mem_fun,P1 p1)
 {
   return make_obj_guard_if_c<C::value>(obj,mem_fun,p1);
@@ -449,5 +444,3 @@ make_obj_guard_if(Obj& obj,MemFun mem_fun,P1 p1,P2 p2,P3 p3)
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

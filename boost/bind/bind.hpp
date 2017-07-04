@@ -66,7 +66,7 @@ template<class R, class F> struct result_traits
     typedef R type;
 };
 
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 struct unspecified {};
 
@@ -214,7 +214,7 @@ public:
 };
 
 #ifdef BOOST_MSVC
-// MSVC is bright enough to realise that the parameter rhs 
+// MSVC is bright enough to realise that the parameter rhs
 // in operator==may be unused for some template argument types:
 #pragma warning(push)
 #pragma warning(disable:4100)
@@ -411,7 +411,7 @@ public:
     bool operator==(list3 const & rhs) const
     {
         return
-            
+
             ref_compare( base_type::a1_, rhs.a1_, 0 ) &&
             ref_compare( base_type::a2_, rhs.a2_, 0 ) &&
             ref_compare( base_type::a3_, rhs.a3_, 0 );
@@ -766,7 +766,7 @@ public:
     bool operator==(list8 const & rhs) const
     {
         return
-            
+
             ref_compare( base_type::a1_, rhs.a1_, 0 ) &&
             ref_compare( base_type::a2_, rhs.a2_, 0 ) &&
             ref_compare( base_type::a3_, rhs.a3_, 0 ) &&
@@ -1512,21 +1512,10 @@ public:
 
 // put overloads in _bi, rely on ADL
 
-# ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
 template<class R, class F, class L> bool function_equal( bind_t<R, F, L> const & a, bind_t<R, F, L> const & b )
 {
     return a.compare(b);
 }
-
-# else
-
-template<class R, class F, class L> bool function_equal_impl( bind_t<R, F, L> const & a, bind_t<R, F, L> const & b, int )
-{
-    return a.compare(b);
-}
-
-# endif // #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 #else // BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP
 
@@ -1534,21 +1523,10 @@ template<class R, class F, class L> bool function_equal_impl( bind_t<R, F, L> co
 
 } // namespace _bi
 
-# ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
-
 template<class R, class F, class L> bool function_equal( _bi::bind_t<R, F, L> const & a, _bi::bind_t<R, F, L> const & b )
 {
     return a.compare(b);
 }
-
-# else
-
-template<class R, class F, class L> bool function_equal_impl( _bi::bind_t<R, F, L> const & a, _bi::bind_t<R, F, L> const & b, int )
-{
-    return a.compare(b);
-}
-
-# endif // #ifndef BOOST_NO_FUNCTION_TEMPLATE_ORDERING
 
 namespace _bi
 {
@@ -2032,7 +2010,7 @@ template<class R, class F, class A1, class A2, class A3, class A4, class A5, cla
     return _bi::bind_t<R, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7, a8, a9));
 }
 
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 // adaptable function objects
 
@@ -2116,7 +2094,7 @@ template<class F, class A1, class A2, class A3, class A4, class A5, class A6, cl
     return _bi::bind_t<_bi::unspecified, F, list_type>(f, list_type(a1, a2, a3, a4, a5, a6, a7, a8, a9));
 }
 
-#endif // !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING)
+#endif // !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
 
 // function pointers
 
@@ -2216,7 +2194,7 @@ template<class F, class A1, class A2, class A3, class A4, class A5, class A6, cl
 
 // data member pointers
 
-#if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) || defined(BOOST_NO_FUNCTION_TEMPLATE_ORDERING) \
+#if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
     || ( defined(__BORLANDC__) && BOOST_WORKAROUND( __BORLANDC__, BOOST_TESTED_AT( 0x620 ) ) )
 
 template<class R, class T, class A1>

@@ -6,7 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  *
  * The internal implementation of red-black trees is based on that of SGI STL
- * stl_tree.h file: 
+ * stl_tree.h file:
  *
  * Copyright (c) 1996,1997
  * Silicon Graphics Computer Systems, Inc.
@@ -33,12 +33,7 @@
  *
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_ORD_INDEX_NODE_HPP
-#define BOOST_MULTI_INDEX_DETAIL_ORD_INDEX_NODE_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <cstddef>
@@ -93,7 +88,7 @@ struct ordered_index_node_std_base
   pointer              right()const{return right_;}
 
 private:
-  ordered_index_color color_; 
+  ordered_index_color color_;
   pointer             parent_;
   pointer             left_;
   pointer             right_;
@@ -128,43 +123,43 @@ struct ordered_index_node_compressed_base
   struct color_ref
   {
     color_ref(uintptr_type* r_):r(r_){}
-    
+
     operator ordered_index_color()const
     {
       return ordered_index_color(*r&uintptr_type(1));
     }
-    
+
     color_ref& operator=(ordered_index_color c)
     {
       *r&=~uintptr_type(1);
       *r|=uintptr_type(c);
       return *this;
     }
-    
+
     color_ref& operator=(const color_ref& x)
     {
       return operator=(x.operator ordered_index_color());
     }
-    
+
   private:
     uintptr_type* r;
   };
-  
+
   struct parent_ref
   {
     parent_ref(uintptr_type* r_):r(r_){}
-    
+
     operator pointer()const
     {
       return (pointer)(void*)(*r&~uintptr_type(1));
     }
-    
+
     parent_ref& operator=(pointer p)
     {
       *r=((uintptr_type)(void*)p)|(*r&uintptr_type(1));
       return *this;
     }
-    
+
     parent_ref& operator=(const parent_ref& x)
     {
       return operator=(x.operator pointer());
@@ -178,7 +173,7 @@ struct ordered_index_node_compressed_base
   private:
     uintptr_type* r;
   };
-  
+
   color_ref           color(){return color_ref(&parentcolor_);}
   ordered_index_color color()const
   {
@@ -292,7 +287,7 @@ public:
     x->right()=y->left();
     if(y->left()!=pointer(0))y->left()->parent()=x;
     y->parent()=x->parent();
-    
+
     if(x==root)                    root=y;
     else if(x==x->parent()->left())x->parent()->left()=y;
     else                           x->parent()->right()=y;
@@ -444,7 +439,7 @@ public:
     }
     else{                     /* y==z */
       x_parent=y->parent();
-      if(x!=pointer(0))x->parent()=y->parent();   
+      if(x!=pointer(0))x->parent()=y->parent();
       if(root==z){
         root=x;
       }
@@ -456,7 +451,7 @@ public:
         if(z->right()==pointer(0)){ /* z->left() must be null also */
           leftmost=z->parent();
         }
-        else{              
+        else{
           leftmost=minimum(x);      /* makes leftmost==header if z==root */
         }
       }
@@ -484,7 +479,7 @@ public:
             w->color()=red;
             x=x_parent;
             x_parent=x_parent->parent();
-          } 
+          }
           else{
             if(w->right()==pointer(0 )
                 || w->right()->color()==black){
@@ -499,7 +494,7 @@ public:
             rotate_left(x_parent,root);
             break;
           }
-        } 
+        }
         else{                   /* same as above,with right <-> left */
           pointer w=x_parent->left();
           if(w->color()==red){
@@ -556,7 +551,7 @@ public:
       if(node->color()==black)++sum;
       if(node==root)break;
       node=node->parent();
-    } 
+    }
     return sum;
   }
 #endif
@@ -654,5 +649,3 @@ public:
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

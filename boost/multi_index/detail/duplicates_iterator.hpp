@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_DUPLICATES_ITERATOR_HPP
-#define BOOST_MULTI_INDEX_DETAIL_DUPLICATES_ITERATOR_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <cstddef>
@@ -116,5 +111,3 @@ bool operator!=(
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

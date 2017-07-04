@@ -6,7 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  *
  * The internal implementation of red-black trees is based on that of SGI STL
- * stl_tree.h file: 
+ * stl_tree.h file:
  *
  * Copyright (c) 1996,1997
  * Silicon Graphics Computer Systems, Inc.
@@ -33,12 +33,7 @@
  *
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_ORD_INDEX_OPS_HPP
-#define BOOST_MULTI_INDEX_DETAIL_ORD_INDEX_OPS_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/and.hpp>
@@ -104,7 +99,7 @@ inline Node* ordered_index_find(
     }
     else top=Node::from_impl(top->right());
   }
-    
+
   return (y==y0||comp(x,key(y->value())))?y0:y;
 }
 
@@ -262,5 +257,3 @@ inline std::pair<Node*,Node*> ordered_index_equal_range(
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

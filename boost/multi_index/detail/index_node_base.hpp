@@ -6,22 +6,11 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_INDEX_NODE_BASE_HPP
-#define BOOST_MULTI_INDEX_DETAIL_INDEX_NODE_BASE_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/type_traits/aligned_storage.hpp>
-#include <boost/type_traits/alignment_of.hpp> 
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-#include <boost/archive/archive_exception.hpp>
-#include <boost/serialization/access.hpp>
-#include <boost/throw_exception.hpp> 
-#endif
+#include <boost/type_traits/alignment_of.hpp>
 
 namespace boost{
 
@@ -67,23 +56,10 @@ struct index_node_base:private pod_value_holder<Value>
   {
     return static_cast<index_node_base *>(
       reinterpret_cast<pod_value_holder<Value>*>( /* std 9.2.17 */
-        const_cast<value_type*>(p))); 
+        const_cast<value_type*>(p)));
   }
 
 private:
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  friend class boost::serialization::access;
-  
-  /* nodes do not emit any kind of serialization info. They are
-   * fed to Boost.Serialization so that pointers to nodes are
-   * tracked correctly.
-   */
-
-  template<class Archive>
-  void serialize(Archive&,const unsigned int)
-  {
-  }
-#endif
 };
 
 template<typename Node,typename Value>
@@ -98,38 +74,4 @@ Node* node_from_value(const Value* p)
 
 } /* namespace multi_index */
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-/* Index nodes never get constructed directly by Boost.Serialization,
- * as archives are always fed pointers to previously existent
- * nodes. So, if this is called it means we are dealing with a
- * somehow invalid archive.
- */
-
-#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
-namespace serialization{
-#else
-namespace multi_index{
-namespace detail{
-#endif
-
-template<class Archive,typename Value,typename Allocator>
-inline void load_construct_data(
-  Archive&,boost::multi_index::detail::index_node_base<Value,Allocator>*,
-  const unsigned int)
-{
-  throw_exception(
-    archive::archive_exception(archive::archive_exception::other_exception));
-}
-
-#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
-} /* namespace serialization */
-#else
-} /* namespace multi_index::detail */
-} /* namespace multi_index */
-#endif
-
-#endif
-
 } /* namespace boost */
-
-#endif

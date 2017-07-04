@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_INDEX_BASE_HPP
-#define BOOST_MULTI_INDEX_DETAIL_INDEX_BASE_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/allocator_utilities.hpp>
@@ -27,11 +22,6 @@
 #include <boost/multi_index_container_fwd.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <utility>
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-#include <boost/multi_index/detail/index_loader.hpp>
-#include <boost/multi_index/detail/index_saver.hpp>
-#endif
 
 namespace boost{
 
@@ -61,7 +51,7 @@ protected:
   typedef multi_index_container<
     Value,IndexSpecifierList,Allocator>       final_type;
   typedef tuples::null_type                   ctor_args_list;
-  typedef typename 
+  typedef typename
   boost::detail::allocator::rebind_to<
     Allocator,
     typename Allocator::value_type
@@ -72,16 +62,6 @@ protected:
   typedef copy_map<
     final_node_type,
     final_allocator_type>                     copy_map_type;
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  typedef index_saver<
-    node_type,
-    final_allocator_type>                     index_saver_type;
-  typedef index_loader<
-    node_type,
-    final_node_type,
-    final_allocator_type>                     index_loader_type;
-#endif
 
 private:
   typedef Value                               value_type;
@@ -117,7 +97,7 @@ protected:
     x=final().allocate_node();
     BOOST_TRY{
       /* This shoud have used a modified, T&&-compatible version of
-       * boost::detail::allocator::construct, but 
+       * boost::detail::allocator::construct, but
        * <boost/detail/allocator_utilities.hpp> is too old and venerable to
        * mess with; besides, it is a general internal utility and the imperfect
        * perfect forwarding emulation of Boost.Move might break other libs.
@@ -187,16 +167,6 @@ protected:
   bool modify_(node_type*){return true;}
 
   bool modify_rollback_(node_type*){return true;}
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  /* serialization */
-
-  template<typename Archive>
-  void save_(Archive&,const unsigned int,const index_saver_type&)const{}
-
-  template<typename Archive>
-  void load_(Archive&,const unsigned int,const index_loader_type&){}
-#endif
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
   /* invariant stuff */
@@ -289,5 +259,3 @@ protected:
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

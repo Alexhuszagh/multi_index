@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_ACCESS_SPECIFIER_HPP
-#define BOOST_MULTI_INDEX_DETAIL_ACCESS_SPECIFIER_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
@@ -49,6 +44,4 @@
 #define BOOST_MULTI_INDEX_PRIVATE_IF_USING_DECL_FOR_TEMPL_FUNCTIONS public
 #else
 #define BOOST_MULTI_INDEX_PRIVATE_IF_USING_DECL_FOR_TEMPL_FUNCTIONS private
-#endif
-
 #endif

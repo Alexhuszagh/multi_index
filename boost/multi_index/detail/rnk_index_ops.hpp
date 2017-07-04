@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_RNK_INDEX_OPS_HPP
-#define BOOST_MULTI_INDEX_DETAIL_RNK_INDEX_OPS_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/and.hpp>
@@ -121,7 +116,7 @@ inline std::size_t ranked_index_find_rank(
     }
     else top=Node::from_impl(top->right());
   }while(top);
-    
+
   return (y==y0||comp(x,key(y->value())))?s0:s;
 }
 
@@ -296,5 +291,3 @@ inline std::pair<std::size_t,std::size_t> ranked_index_equal_range_rank(
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

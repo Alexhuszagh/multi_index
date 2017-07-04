@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_PROMOTES_ARG_HPP
-#define BOOST_MULTI_INDEX_DETAIL_PROMOTES_ARG_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/workaround.hpp>
@@ -54,7 +49,7 @@ namespace boost{
 namespace multi_index{
 
 namespace detail{
-  
+
 template<typename F,typename Arg1,typename Arg2>
 struct promotes_1st_arg:
   mpl::and_<
@@ -79,5 +74,4 @@ struct promotes_2nd_arg:
 
 } /* namespace boost */
 
-#endif
 #endif

@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_MEMBER_HPP
-#define BOOST_MULTI_INDEX_MEMBER_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/if.hpp>
@@ -54,7 +49,7 @@ struct const_member_base
 #else
   Type&
 #endif
-  
+
   operator()(const ChainedPtr& x)const
   {
     return operator()(*x);
@@ -71,7 +66,7 @@ struct const_member_base
   }
 
   Type& operator()(const reference_wrapper<Class>& x)const
-  { 
+  {
     return operator()(x.get());
   }
 };
@@ -101,7 +96,7 @@ struct non_const_member_base
   }
 
   Type& operator()(Class& x)const
-  { 
+  {
     return x.*PtrToMember;
   }
 
@@ -111,7 +106,7 @@ struct non_const_member_base
   }
 
   Type& operator()(const reference_wrapper<Class>& x)const
-  { 
+  {
     return operator()(x.get());
   }
 };
@@ -159,8 +154,8 @@ struct const_member_offset_base
     is_convertible<const ChainedPtr&,const Class&>,Type&>::type
 #else
   Type&
-#endif 
-    
+#endif
+
   operator()(const ChainedPtr& x)const
   {
     return operator()(*x);
@@ -197,8 +192,8 @@ struct non_const_member_offset_base
     is_convertible<const ChainedPtr&,const Class&>,Type&>::type
 #else
   Type&
-#endif 
-  
+#endif
+
   operator()(const ChainedPtr& x)const
   {
     return operator()(*x);
@@ -213,7 +208,7 @@ struct non_const_member_offset_base
   }
 
   Type& operator()(Class& x)const
-  { 
+  {
     return *static_cast<Type*>(
       static_cast<void*>(
         static_cast<char*>(static_cast<void *>(&x))+OffsetOfMember));
@@ -258,5 +253,3 @@ struct member_offset:
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

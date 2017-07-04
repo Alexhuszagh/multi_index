@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_AUTO_SPACE_HPP
-#define BOOST_MULTI_INDEX_DETAIL_AUTO_SPACE_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
@@ -68,7 +63,7 @@ struct auto_space:private noncopyable
     std::swap(n_,x.n_);
     std::swap(data_,x.data_);
   }
-    
+
 private:
   typename boost::detail::allocator::rebind_to<
     Allocator,T>::type                          al_;
@@ -87,5 +82,3 @@ void swap(auto_space<T,Allocator>& x,auto_space<T,Allocator>& y)
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

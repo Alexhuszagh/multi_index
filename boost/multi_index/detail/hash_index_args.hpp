@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_HASH_INDEX_ARGS_HPP
-#define BOOST_MULTI_INDEX_DETAIL_HASH_INDEX_ARGS_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/functional/hash.hpp>
@@ -101,5 +96,3 @@ struct hashed_index_args
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

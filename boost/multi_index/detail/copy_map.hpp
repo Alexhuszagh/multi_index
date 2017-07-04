@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_COPY_MAP_HPP
-#define BOOST_MULTI_INDEX_DETAIL_COPY_MAP_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
@@ -138,5 +133,3 @@ private:
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

@@ -6,19 +6,14 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_INDEXED_BY_HPP
-#define BOOST_MULTI_INDEX_INDEXED_BY_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/vector.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp> 
+#include <boost/preprocessor/repetition/enum_params.hpp>
 
 /* An alias to mpl::vector used to hide MPL from the user.
  * indexed_by contains the index specifiers for instantiation
@@ -64,5 +59,3 @@ struct indexed_by:
 
 #undef BOOST_MULTI_INDEX_INDEXED_BY_TEMPLATE_PARM
 #undef BOOST_MULTI_INDEX_INDEXED_BY_SIZE
-
-#endif

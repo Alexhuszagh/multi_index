@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_BUCKET_ARRAY_HPP
-#define BOOST_MULTI_INDEX_DETAIL_BUCKET_ARRAY_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
@@ -24,12 +19,6 @@
 #include <boost/preprocessor/seq/size.hpp>
 #include <cstddef>
 #include <limits.h>
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-#include <boost/archive/archive_exception.hpp>
-#include <boost/serialization/access.hpp>
-#include <boost/throw_exception.hpp> 
-#endif
 
 namespace boost{
 
@@ -180,20 +169,6 @@ private:
   {
     return spc.data();
   }
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  friend class boost::serialization::access;
-  
-  /* bucket_arrays do not emit any kind of serialization info. They are
-   * fed to Boost.Serialization as hashed index iterators need to track
-   * them during serialization.
-   */
-
-  template<class Archive>
-  void serialize(Archive&,const unsigned int)
-  {
-  }
-#endif
 };
 
 template<typename Allocator>
@@ -206,38 +181,4 @@ void swap(bucket_array<Allocator>& x,bucket_array<Allocator>& y)
 
 } /* namespace multi_index */
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-/* bucket_arrays never get constructed directly by Boost.Serialization,
- * as archives are always fed pointers to previously existent
- * arrays. So, if this is called it means we are dealing with a
- * somehow invalid archive.
- */
-
-#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
-namespace serialization{
-#else
-namespace multi_index{
-namespace detail{
-#endif
-
-template<class Archive,typename Allocator>
-inline void load_construct_data(
-  Archive&,boost::multi_index::detail::bucket_array<Allocator>*,
-  const unsigned int)
-{
-  throw_exception(
-    archive::archive_exception(archive::archive_exception::other_exception));
-}
-
-#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
-} /* namespace serialization */
-#else
-} /* namespace multi_index::detail */
-} /* namespace multi_index */
-#endif
-
-#endif
-
 } /* namespace boost */
-
-#endif

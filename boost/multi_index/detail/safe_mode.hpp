@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_SAFE_MODE_HPP
-#define BOOST_MULTI_INDEX_DETAIL_SAFE_MODE_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 /* Safe mode machinery, in the spirit of Cay Hortmann's "Safe STL"
  * (http://www.horstmann.com/safestl.html).
@@ -114,11 +109,6 @@
 #include <boost/multi_index/safe_mode_errors.hpp>
 #include <boost/noncopyable.hpp>
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-#include <boost/serialization/split_member.hpp>
-#include <boost/serialization/version.hpp>
-#endif
-
 #if defined(BOOST_HAS_THREADS)
 #include <boost/detail/lightweight_mutex.hpp>
 #endif
@@ -202,9 +192,9 @@ inline bool check_outside_range(
     Iterator first=it0;
     for(;first!=last;++first){
       if(first==it1)break;
-    
+
       /* crucial that this check goes after previous break */
-    
+
       if(first==it)found=true;
     }
     if(first!=it1)return false;
@@ -403,7 +393,7 @@ namespace safe_mode{
  *   - iterators must be generated via safe_iterator, which adapts a
  *     preexistent unsafe iterator class.
  */
- 
+
 template<typename Container>
 class safe_container;
 
@@ -499,40 +489,6 @@ private:
     BOOST_MULTI_INDEX_CHECK_SAME_OWNER(*this,x);
     return x.base_reference()-this->base_reference();
   }
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  /* Serialization. Note that Iterator::save and Iterator:load
-   * are assumed to be defined and public: at first sight it seems
-   * like we could have resorted to the public serialization interface
-   * for doing the forwarding to the adapted iterator class:
-   *   ar<<base_reference();
-   *   ar>>base_reference();
-   * but this would cause incompatibilities if a saving
-   * program is in safe mode and the loading program is not, or
-   * viceversa --in safe mode, the archived iterator data is one layer
-   * deeper, this is especially relevant with XML archives.
-   * It'd be nice if Boost.Serialization provided some forwarding
-   * facility for use by adaptor classes.
-   */ 
-
-  friend class boost::serialization::access;
-
-  BOOST_SERIALIZATION_SPLIT_MEMBER()
-
-  template<class Archive>
-  void save(Archive& ar,const unsigned int version)const
-  {
-    BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(*this);
-    this->base_reference().save(ar,version);
-  }
-
-  template<class Archive>
-  void load(Archive& ar,const unsigned int version)
-  {
-    this->base_reference().load(ar,version);
-    safe_super::uncheck();
-  }
-#endif
 };
 
 template<typename Container>
@@ -568,21 +524,6 @@ public:
 
 } /* namespace multi_index */
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-namespace serialization{
-template<typename Iterator,typename Container>
-struct version<
-  boost::multi_index::safe_mode::safe_iterator<Iterator,Container>
->
-{
-  BOOST_STATIC_CONSTANT(
-    int,value=boost::serialization::version<Iterator>::value);
-};
-} /* namespace serialization */
-#endif
-
 } /* namespace boost */
 
 #endif /* BOOST_MULTI_INDEX_ENABLE_SAFE_MODE */
-
-#endif

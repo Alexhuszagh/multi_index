@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_HASHED_INDEX_HPP
-#define BOOST_MULTI_INDEX_HASHED_INDEX_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
@@ -47,10 +42,6 @@
 
 #if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
 #include <initializer_list>
-#endif
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-#include <boost/serialization/nvp.hpp>
 #endif
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
@@ -90,7 +81,7 @@ class hashed_index:
     hashed_index<KeyFromValue,Hash,Pred,SuperMeta,TagList,Category> >
 #endif
 
-{ 
+{
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)&&\
     BOOST_WORKAROUND(__MWERKS__,<=0x3003)
 /* The "ISO C++ Template Parser" option in CW8.3 has a problem with the
@@ -130,7 +121,7 @@ public:
   typedef typename allocator_type::const_pointer     const_pointer;
   typedef typename allocator_type::reference         reference;
   typedef typename allocator_type::const_reference   const_reference;
-  typedef std::size_t                                size_type;      
+  typedef std::size_t                                size_type;
   typedef std::ptrdiff_t                             difference_type;
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
@@ -157,7 +148,7 @@ public:
 protected:
   typedef typename super::final_node_type     final_node_type;
   typedef tuples::cons<
-    ctor_args, 
+    ctor_args,
     typename super::ctor_args_list>           ctor_args_list;
   typedef typename mpl::push_front<
     typename super::index_type_list,
@@ -169,11 +160,6 @@ protected:
     typename super::const_iterator_type_list,
     const_iterator>::type                     const_iterator_type_list;
   typedef typename super::copy_map_type       copy_map_type;
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  typedef typename super::index_saver_type    index_saver_type;
-  typedef typename super::index_loader_type   index_loader_type;
-#endif
 
 private:
 #if defined(BOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
@@ -277,7 +263,7 @@ public:
       x,static_cast<final_node_type*>(position.get_node()));
     return make_iterator(p.first);
   }
-    
+
   iterator insert(iterator position,BOOST_RV_REF(value_type) x)
   {
     BOOST_MULTI_INDEX_CHECK_VALID_ITERATOR(position);
@@ -453,7 +439,7 @@ public:
   key_from_value key_extractor()const{return key;}
   hasher         hash_function()const{return hash_;}
   key_equal      key_eq()const{return eq_;}
-  
+
   /* lookup */
 
   /* Internally, these ops rely on const_iterator being the same
@@ -722,7 +708,7 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
 
     super::copy_(x,map);
   }
-  
+
   void copy_(
     const hashed_index<KeyFromValue,Hash,Pred,SuperMeta,TagList,Category>& x,
     const copy_map_type& map,hashed_non_unique_tag)
@@ -900,7 +886,7 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     if(eq_(key(v),key(x->value()))){
       return super::replace_(v,x,variant);
     }
-      
+
     unlink_undo undo;
     unlink(x,undo);
 
@@ -924,7 +910,7 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
   bool modify_(node_type* x)
   {
     std::size_t buc;
-    bool        b; 
+    bool        b;
     BOOST_TRY{
       buc=find_bucket(x->value());
       b=in_place(x->impl(),key(x->value()),buc);
@@ -1063,25 +1049,6 @@ BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
     return true;
   }
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  /* serialization */
-
-  template<typename Archive>
-  void save_(
-    Archive& ar,const unsigned int version,const index_saver_type& sm)const
-  {
-    ar<<serialization::make_nvp("position",buckets);
-    super::save_(ar,version,sm);
-  }
-
-  template<typename Archive>
-  void load_(Archive& ar,const unsigned int version,const index_loader_type& lm)
-  {
-    ar>>serialization::make_nvp("position",buckets);
-    super::load_(ar,version,lm);
-  }
-#endif
-
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
   /* invariant stuff */
 
@@ -1198,7 +1165,7 @@ private:
     }
     else if(z->prior()==x)               /* last of bucket */
       return x;
-    else                                /* group of size>2 */        
+    else                                /* group of size>2 */
       return z;
   }
 
@@ -1228,7 +1195,7 @@ private:
     }
     else if(z->prior()==x)               /* last of bucket */
       return z;
-    else                                /* group of size>2 */        
+    else                                /* group of size>2 */
       return z->next()->prior()==z?
                node_impl_type::pointer_from(z->next()):
                z->next()->prior();
@@ -1602,7 +1569,7 @@ private:
   bucket_array_type            buckets;
   float                        mlf;
   size_type                    max_load;
-      
+
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)&&\
     BOOST_WORKAROUND(__MWERKS__,<=0x3003)
 #pragma parse_mfunc_templ reset
@@ -1721,5 +1688,3 @@ inline boost::mpl::true_* boost_foreach_is_noncopyable(
 
 #undef BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT
 #undef BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT_OF
-
-#endif

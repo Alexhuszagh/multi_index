@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_MEM_FUN_HPP
-#define BOOST_MULTI_INDEX_MEM_FUN_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/if.hpp>
@@ -64,12 +59,12 @@ struct const_mem_fun
   }
 
   Type operator()(const reference_wrapper<const Class>& x)const
-  { 
+  {
     return operator()(x.get());
   }
 
   Type operator()(const reference_wrapper<Class>& x)const
-  { 
+  {
     return operator()(x.get());
   }
 };
@@ -99,7 +94,7 @@ struct mem_fun
   }
 
   Type operator()(const reference_wrapper<Class>& x)const
-  { 
+  {
     return operator()(x.get());
   }
 };
@@ -109,7 +104,7 @@ struct mem_fun
  * workarounds this deficiency by accepting an extra type parameter that
  * specifies the signature of the member function. The workaround was found at:
  *   Daniel, C.:"Re: weird typedef problem in VC",
- *   news:microsoft.public.vc.language, 21st nov 2002, 
+ *   news:microsoft.public.vc.language, 21st nov 2002,
  *   http://groups.google.com/groups?
  *     hl=en&lr=&ie=UTF-8&selm=ukwvg3O0BHA.1512%40tkmsftngp05
  *
@@ -144,12 +139,12 @@ struct const_mem_fun_explicit
   }
 
   Type operator()(const reference_wrapper<const Class>& x)const
-  { 
+  {
     return operator()(x.get());
   }
 
   Type operator()(const reference_wrapper<Class>& x)const
-  { 
+  {
     return operator()(x.get());
   }
 };
@@ -181,7 +176,7 @@ struct mem_fun_explicit
   }
 
   Type operator()(const reference_wrapper<Class>& x)const
-  { 
+  {
     return operator()(x.get());
   }
 };
@@ -201,5 +196,3 @@ struct mem_fun_explicit
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

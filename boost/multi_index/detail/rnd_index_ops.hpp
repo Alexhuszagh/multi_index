@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_RND_INDEX_OPS_HPP
-#define BOOST_MULTI_INDEX_DETAIL_RND_INDEX_OPS_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
@@ -176,7 +171,7 @@ void random_access_index_sort(
   typedef typename Node::impl_ptr_pointer   impl_ptr_pointer;
   typedef random_access_index_sort_compare<
     Node,Compare>                           ptr_compare;
-  
+
   impl_ptr_pointer   first=ptrs.begin();
   impl_ptr_pointer   last=ptrs.end();
   auto_space<
@@ -199,5 +194,3 @@ void random_access_index_sort(
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

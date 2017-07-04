@@ -6,20 +6,10 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_RND_NODE_ITERATOR_HPP
-#define BOOST_MULTI_INDEX_DETAIL_RND_NODE_ITERATOR_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/operators.hpp>
-
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-#include <boost/serialization/nvp.hpp>
-#include <boost/serialization/split_member.hpp>
-#endif
 
 namespace boost{
 
@@ -72,31 +62,6 @@ public:
     return *this;
   }
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_SERIALIZATION)
-  /* Serialization. As for why the following is public,
-   * see explanation in safe_mode_iterator notes in safe_mode.hpp.
-   */
-
-  BOOST_SERIALIZATION_SPLIT_MEMBER()
-
-  typedef typename Node::base_type node_base_type;
-
-  template<class Archive>
-  void save(Archive& ar,const unsigned int)const
-  {
-    node_base_type* bnode=node;
-    ar<<serialization::make_nvp("pointer",bnode);
-  }
-
-  template<class Archive>
-  void load(Archive& ar,const unsigned int)
-  {
-    node_base_type* bnode;
-    ar>>serialization::make_nvp("pointer",bnode);
-    node=static_cast<Node*>(bnode);
-  }
-#endif
-
   /* get_node is not to be used by the user */
 
   typedef Node node_type;
@@ -136,5 +101,3 @@ std::ptrdiff_t operator-(
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

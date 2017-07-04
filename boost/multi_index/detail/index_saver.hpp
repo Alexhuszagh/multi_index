@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_INDEX_SAVER_HPP
-#define BOOST_MULTI_INDEX_DETAIL_INDEX_SAVER_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/index_matcher.hpp>
@@ -79,13 +74,13 @@ public:
      * sequence
      *
      *   a,B,c,D
-     * 
+     *
      * where B and D are displaced, but c is in its correct position.
      * Applying the schema described above we would serialize 6 pointers:
      *
      *  p(a),p(B),0
      *  p(c),p(D),0
-     * 
+     *
      * but this can be reduced to 5 pointers by treating c as a displaced
      * element:
      *
@@ -131,5 +126,3 @@ private:
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif

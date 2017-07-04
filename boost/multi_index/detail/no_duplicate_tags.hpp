@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_DETAIL_NO_DUPLICATE_TAGS_HPP
-#define BOOST_MULTI_INDEX_DETAIL_NO_DUPLICATE_TAGS_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/fold.hpp>
@@ -55,7 +50,7 @@ struct no_duplicate_tags
     mpl::set0<>,
     duplicate_tag_marker
   >::type aux;
- 
+
   BOOST_STATIC_CONSTANT(
     bool,value=!(mpl::has_key<aux,duplicate_tag_mark>::value));
 };
@@ -83,7 +78,7 @@ struct no_duplicate_tags_in_index_list
     mpl::set0<>,
     duplicate_tag_list_marker
   >::type aux;
- 
+
   BOOST_STATIC_CONSTANT(
     bool,value=!(mpl::has_key<aux,duplicate_tag_mark>::value));
 };
@@ -93,5 +88,3 @@ struct no_duplicate_tags_in_index_list
 } /* namespace multi_index */
 
 } /* namespace boost */
-
-#endif
