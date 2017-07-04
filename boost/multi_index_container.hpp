@@ -34,19 +34,6 @@
 #include <boost/utility/base_from_member.hpp>
 #include <initializer_list>
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-#include <boost/multi_index/detail/invariant_assert.hpp>
-#define BOOST_MULTI_INDEX_CHECK_INVARIANT_OF(x)                              \
-  detail::scope_guard BOOST_JOIN(check_invariant_,__LINE__)=                 \
-    detail::make_obj_guard(x,&multi_index_container::check_invariant_);      \
-  BOOST_JOIN(check_invariant_,__LINE__).touch();
-#define BOOST_MULTI_INDEX_CHECK_INVARIANT                                    \
-  BOOST_MULTI_INDEX_CHECK_INVARIANT_OF(*this)
-#else
-#define BOOST_MULTI_INDEX_CHECK_INVARIANT_OF(x)
-#define BOOST_MULTI_INDEX_CHECK_INVARIANT
-#endif
-
 namespace boost{
 
 namespace multi_index{
@@ -119,7 +106,6 @@ public:
     super(args_list,bfm_allocator::member),
     node_count(0)
   {
-    BOOST_MULTI_INDEX_CHECK_INVARIANT;
   }
 
   explicit multi_index_container(const allocator_type& al):
@@ -127,7 +113,6 @@ public:
     super(ctor_args_list(),bfm_allocator::member),
     node_count(0)
   {
-    BOOST_MULTI_INDEX_CHECK_INVARIANT;
   }
 
   template<typename InputIterator>
@@ -141,7 +126,6 @@ public:
     super(args_list,bfm_allocator::member),
     node_count(0)
   {
-    BOOST_MULTI_INDEX_CHECK_INVARIANT;
     try {
       iterator hint=super::end();
       for(;first!=last;++first){
@@ -164,7 +148,6 @@ public:
     super(args_list,bfm_allocator::member),
     node_count(0)
   {
-    BOOST_MULTI_INDEX_CHECK_INVARIANT;
     try {
       typedef const Value* init_iterator;
 
@@ -200,7 +183,6 @@ public:
      * hence the position of the invariant checker.
      */
 
-    BOOST_MULTI_INDEX_CHECK_INVARIANT;
   }
 
   multi_index_container(BOOST_RV_REF(multi_index_container) x):
@@ -209,8 +191,6 @@ public:
     super(x,detail::do_not_copy_elements_tag()),
     node_count(0)
   {
-    BOOST_MULTI_INDEX_CHECK_INVARIANT;
-    BOOST_MULTI_INDEX_CHECK_INVARIANT_OF(x);
     swap_elements_(x);
   }
 
@@ -251,7 +231,6 @@ public:
   multi_index_container<Value,IndexSpecifierList,Allocator>& operator=(
     std::initializer_list<Value> list)
   {
-    BOOST_MULTI_INDEX_CHECK_INVARIANT;
     typedef const Value* init_iterator;
 
     multi_index_container x(*this,detail::do_not_copy_elements_tag());
@@ -389,7 +368,6 @@ protected:
     super(x,detail::do_not_copy_elements_tag()),
     node_count(0)
   {
-    BOOST_MULTI_INDEX_CHECK_INVARIANT;
   }
 
   node_type* header()const
@@ -486,14 +464,13 @@ protected:
     return insert_(x);
   }
 
-  template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
-  std::pair<node_type*,bool> emplace_(
-    BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
+  template<typename... Args>
+  std::pair<node_type*,bool> emplace_(Args&&... args)
   {
     node_type* x=allocate_node();
     try {
       detail::vartempl_placement_new(
-        &x->value(),BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
+        &x->value(),std::forward<Args>(args)...);
       try {
         node_type* res=super::insert_(x->value(),x,detail::emplaced_tag());
         if(res==x){
@@ -585,15 +562,13 @@ protected:
     return insert_(x,position);
   }
 
-  template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
-  std::pair<node_type*,bool> emplace_hint_(
-    node_type* position,
-    BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
+  template<typename... Args>
+  std::pair<node_type*,bool> emplace_hint_(node_type* position,Args&&... args)
   {
     node_type* x=allocate_node();
     try {
       detail::vartempl_placement_new(
-        &x->value(),BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
+        &x->value(),std::forward<Args>(args)...);
       try {
         node_type* res=super::insert_(
           x->value(),position,x,detail::emplaced_tag());
@@ -723,20 +698,6 @@ protected:
       throw;
     }
   }
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-  /* invariant stuff */
-
-  bool invariant_()const
-  {
-    return super::invariant_();
-  }
-
-  void check_invariant_()const
-  {
-    BOOST_MULTI_INDEX_INVARIANT_ASSERT(invariant_());
-  }
-#endif
 
 private:
   std::size_t node_count;
@@ -1048,6 +1009,3 @@ using multi_index::get;
 using multi_index::project;
 
 } /* namespace boost */
-
-#undef BOOST_MULTI_INDEX_CHECK_INVARIANT
-#undef BOOST_MULTI_INDEX_CHECK_INVARIANT_OF

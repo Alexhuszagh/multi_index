@@ -929,22 +929,21 @@ private:
     return y==header()||!comp_(key(y->value()),key(v));
   }
 
-  template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
-  std::pair<iterator,bool> emplace_impl(BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
+  template<typename... Args>
+  std::pair<iterator,bool> emplace_impl(Args&&... args)
   {
     std::pair<final_node_type*,bool>p=
-      this->final_emplace_(BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
+      this->final_emplace_(std::forward<Args>(args)...);
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
   }
 
-  template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
-  iterator emplace_hint_impl(
-    iterator position,BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
+  template<typename... Args>
+  iterator emplace_hint_impl(iterator position,Args&&... args)
   {
     std::pair<final_node_type*,bool>p=
       this->final_emplace_hint_(
         static_cast<final_node_type*>(position.get_node()),
-        BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
+        std::forward<Args>(args)...);
     return make_iterator(p.first);
   }
 

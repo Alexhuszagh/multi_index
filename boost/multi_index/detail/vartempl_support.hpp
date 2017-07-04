@@ -36,13 +36,7 @@
 
 #pragma once
 
-#include <boost/config.hpp>
 #include <utility>
-
-#define BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK typename... Args
-#define BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK Args&&... args
-#define BOOST_MULTI_INDEX_FORWARD_PARAM_PACK  std::forward<Args>(args)...
-#define BOOST_MULTI_INDEX_NULL_PARAM_PACK
 
 #define BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL(                     \
   ret,name_from,name_to)                                             \

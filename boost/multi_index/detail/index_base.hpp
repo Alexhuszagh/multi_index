@@ -187,11 +187,11 @@ protected:
   std::pair<final_node_type*,bool> final_insert_ref_(T& t)
     {return final().insert_ref_(t);}
 
-  template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
+  template<typename... Args>
   std::pair<final_node_type*,bool> final_emplace_(
-    BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
+    Args&&... args)
   {
-    return final().emplace_(BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
+    return final().emplace_(std::forward<Args>(args)...);
   }
 
   std::pair<final_node_type*,bool> final_insert_(
@@ -209,12 +209,11 @@ protected:
     T& t,final_node_type* position)
     {return final().insert_ref_(t,position);}
 
-  template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
+  template<typename... Args>
   std::pair<final_node_type*,bool> final_emplace_hint_(
-    final_node_type* position,BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
+    final_node_type* position,Args&&... args)
   {
-    return final().emplace_hint_(
-      position,BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
+    return final().emplace_hint_(position,std::forward<Args>(args)...);
   }
 
   void final_erase_(final_node_type* x){final().erase_(x);}

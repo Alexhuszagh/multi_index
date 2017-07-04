@@ -213,7 +213,7 @@ public:
   {
     if(n>size())
       for(size_type m=n-size();m--;)
-        this->final_emplace_(BOOST_MULTI_INDEX_NULL_PARAM_PACK);
+        this->final_emplace_();
     else if(n<size())erase(begin()+n,end());
   }
 
@@ -710,26 +710,23 @@ private:
     relocate(position,end()-s,end());
   }
 
-  template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
-  std::pair<iterator,bool> emplace_front_impl(
-    BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
+  template<typename... Args>
+  std::pair<iterator,bool> emplace_front_impl(Args&&... args)
   {
-    return emplace_impl(begin(),BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
+    return emplace_impl(begin(),std::forward<Args>(args)...);
   }
 
-  template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
-  std::pair<iterator,bool> emplace_back_impl(
-    BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
+  template<typename... Args>
+  std::pair<iterator,bool> emplace_back_impl(Args&&... args)
   {
-    return emplace_impl(end(),BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
+    return emplace_impl(end(),std::forward<Args>(args)...);
   }
 
-  template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
-  std::pair<iterator,bool> emplace_impl(
-    iterator position,BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
+  template<typename... Args>
+  std::pair<iterator,bool> emplace_impl(iterator position,Args&&... args)
   {
     std::pair<final_node_type*,bool> p=
-      this->final_emplace_(BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
+      this->final_emplace_(std::forward<Args>(args)...);
     if(p.second&&position.get_node()!=header()){
       relocate(position.get_node(),p.first);
     }
