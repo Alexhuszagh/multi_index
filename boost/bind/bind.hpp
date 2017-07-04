@@ -1496,11 +1496,11 @@ public:
 
 };
 
-template<class R2, class F, class L> class bind_t: public bind_t_generator<R2>::BOOST_NESTED_TEMPLATE implementation<F, L>
+template<class R2, class F, class L> class bind_t: public bind_t_generator<R2>::template implementation<F, L>
 {
 public:
 
-    bind_t(F f, L const & l): bind_t_generator<R2>::BOOST_NESTED_TEMPLATE implementation<F, L>(f, l) {}
+    bind_t(F f, L const & l): bind_t_generator<R2>::template implementation<F, L>(f, l) {}
 
 };
 

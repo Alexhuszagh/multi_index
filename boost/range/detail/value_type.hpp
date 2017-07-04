@@ -19,10 +19,10 @@
 // missing partial specialization  workaround.
 //////////////////////////////////////////////////////////////////////////////
 
-namespace boost 
+namespace boost
 {
-    namespace range_detail 
-    {        
+    namespace range_detail
+    {
         template< typename T >
         struct range_value_type_;
 
@@ -48,22 +48,22 @@ namespace boost
 
         template<>
         struct range_value_type_<array_>
-        { 
+        {
             template< typename T >
             struct pts
             {
                 typedef BOOST_DEDUCED_TYPENAME remove_extent<T>::type type;
             };
         };
-        
-    } 
-    
+
+    }
+
     template< typename C >
     class range_value
     {
         typedef BOOST_DEDUCED_TYPENAME range_detail::range<C>::type c_type;
     public:
-        typedef BOOST_DEDUCED_TYPENAME range_detail::range_value_type_<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type; 
+        typedef BOOST_DEDUCED_TYPENAME range_detail::range_value_type_<c_type>::template pts<C>::type type;
     };
 
 }

@@ -23,7 +23,7 @@ namespace boost_optional_detail
   template <class T, class Factory>
   inline void construct(Factory const& factory, void* address)
   {
-    factory.BOOST_NESTED_TEMPLATE apply<T>(address);
+    factory.template apply<T>(address);
   }
 }
 

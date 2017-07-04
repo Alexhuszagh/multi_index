@@ -96,7 +96,7 @@ template<int N>
 struct drop_front {
     template<class Tuple>
     struct apply {
-        typedef BOOST_DEDUCED_TYPENAME drop_front<N-1>::BOOST_NESTED_TEMPLATE
+        typedef BOOST_DEDUCED_TYPENAME drop_front<N-1>::template
             apply<Tuple> next;
         typedef BOOST_DEDUCED_TYPENAME next::type::tail_type type;
         static const type& call(const Tuple& tup) {
@@ -129,7 +129,7 @@ struct drop_front<0> {
 template<int N, class T>
 struct element
 {
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::BOOST_NESTED_TEMPLATE
+  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
       apply<T>::type::head_type type;
 };
 
@@ -137,7 +137,7 @@ template<int N, class T>
 struct element<N, const T>
 {
 private:
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::BOOST_NESTED_TEMPLATE
+  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
       apply<T>::type::head_type unqualified_type;
 public:
 #if BOOST_WORKAROUND(__BORLANDC__,<0x600)
@@ -153,14 +153,14 @@ namespace detail {
 template<int N, class T, bool IsConst>
 struct element_impl
 {
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::BOOST_NESTED_TEMPLATE
+  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
       apply<T>::type::head_type type;
 };
 
 template<int N, class T>
 struct element_impl<N, T, true /* IsConst */>
 {
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::BOOST_NESTED_TEMPLATE
+  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
       apply<T>::type::head_type unqualified_type;
   typedef const unqualified_type type;
 };
@@ -214,7 +214,7 @@ inline typename access_traits<
                   typename element<N, cons<HT, TT> >::type
                 >::non_const_type
 get(cons<HT, TT>& c) {
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::BOOST_NESTED_TEMPLATE
+  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
       apply<cons<HT, TT> > impl;
   typedef BOOST_DEDUCED_TYPENAME impl::type cons_element;
   return const_cast<cons_element&>(impl::call(c)).head;
@@ -228,7 +228,7 @@ inline typename access_traits<
                   typename element<N, cons<HT, TT> >::type
                 >::const_type
 get(const cons<HT, TT>& c) {
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::BOOST_NESTED_TEMPLATE
+  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
       apply<cons<HT, TT> > impl;
   return impl::call(c).head;
 }

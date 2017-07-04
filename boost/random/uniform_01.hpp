@@ -212,9 +212,9 @@ struct select_uniform_01<Num, true>
 // conversion plus float multiplication
 template<class UniformRandomNumberGenerator = double, class RealType = double>
 class uniform_01
-  : public detail::select_uniform_01<UniformRandomNumberGenerator>::BOOST_NESTED_TEMPLATE apply<RealType>::type
+  : public detail::select_uniform_01<UniformRandomNumberGenerator>::template apply<RealType>::type
 {
-  typedef typename detail::select_uniform_01<UniformRandomNumberGenerator>::BOOST_NESTED_TEMPLATE apply<RealType>::type impl_type;
+  typedef typename detail::select_uniform_01<UniformRandomNumberGenerator>::template apply<RealType>::type impl_type;
   typedef boost::random::detail::ptr_helper<UniformRandomNumberGenerator> traits;
 public:
 

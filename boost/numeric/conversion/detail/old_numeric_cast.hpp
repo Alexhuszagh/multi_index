@@ -96,7 +96,7 @@ namespace boost
       template <class T, bool specialized>
       struct fixed_numeric_limits_base
           : public if_true< std::numeric_limits<T>::is_signed >
-           ::BOOST_NESTED_TEMPLATE then< signed_numeric_limits<T>,
+           ::template then< signed_numeric_limits<T>,
                             std::numeric_limits<T>
                    >::type
       {};

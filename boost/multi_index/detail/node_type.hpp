@@ -36,7 +36,7 @@ struct index_node_applier
   {
     typedef typename mpl::deref<IndexSpecifierIterator>::type index_specifier;
     typedef typename index_specifier::
-      BOOST_NESTED_TEMPLATE node_class<Super>::type type;
+      template node_class<Super>::type type;
   };
 };
 

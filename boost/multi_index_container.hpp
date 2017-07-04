@@ -74,11 +74,9 @@ class multi_index_container:
 private:
   BOOST_COPYABLE_AND_MOVABLE(multi_index_container)
 
-#if !defined(BOOST_NO_MEMBER_TEMPLATE_FRIENDS)
   template <typename,typename,typename> friend class  detail::index_base;
   template <typename,typename>          friend struct detail::header_holder;
   template <typename,typename>          friend struct detail::converter;
-#endif
 
   typedef typename detail::multi_index_base_type<
       Value,IndexSpecifierList,Allocator>::type   super;
@@ -92,7 +90,6 @@ private:
   typedef detail::header_holder<
     typename node_allocator::pointer,
     multi_index_container>                        bfm_header;
-
 
 public:
   /* All types are inherited from super, a few are explicitly
@@ -281,7 +278,6 @@ public:
 
   /* retrieval of indices by number */
 
-#if !defined(BOOST_NO_MEMBER_TEMPLATES)
   template<int N>
   struct nth_index
   {
@@ -302,11 +298,9 @@ public:
     BOOST_STATIC_ASSERT(N>=0&&N<mpl::size<index_type_list>::type::value);
     return *this;
   }
-#endif
 
   /* retrieval of indices by tag */
 
-#if !defined(BOOST_NO_MEMBER_TEMPLATES)
   template<typename Tag>
   struct index
   {
@@ -333,11 +327,9 @@ public:
   {
     return *this;
   }
-#endif
 
   /* projection of iterators by number */
 
-#if !defined(BOOST_NO_MEMBER_TEMPLATES)
   template<int N>
   struct nth_index_iterator
   {
@@ -363,11 +355,9 @@ public:
     typedef typename nth_index<N>::type index_type;
     return index_type::make_iterator(static_cast<node_type*>(it.get_node()));
   }
-#endif
 
   /* projection of iterators by tag */
 
-#if !defined(BOOST_NO_MEMBER_TEMPLATES)
   template<typename Tag>
   struct index_iterator
   {
@@ -393,7 +383,6 @@ public:
     typedef typename index<Tag>::type index_type;
     return index_type::make_iterator(static_cast<node_type*>(it.get_node()));
   }
-#endif
 
 protected:
   typedef typename super::copy_map_type copy_map_type;

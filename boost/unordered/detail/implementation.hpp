@@ -289,7 +289,7 @@ template <typename T, int Index> struct uncompressed_base
 
 template <typename T, int Index>
 struct generate_base
-    : boost::detail::if_true<boost::is_empty<T>::value>::BOOST_NESTED_TEMPLATE
+    : boost::detail::if_true<boost::is_empty<T>::value>::template
           then<boost::unordered::detail::compressed_base<T, Index>,
               boost::unordered::detail::uncompressed_base<T, Index> >
 {
@@ -788,7 +788,7 @@ template <typename Alloc, typename T> struct rebind_wrap
 {
     template <typename X>
     static choice1::type test(
-        choice1, typename X::BOOST_NESTED_TEMPLATE rebind<T>::other* = 0);
+        choice1, typename X::template rebind<T>::other* = 0);
     template <typename X> static choice2::type test(choice2, void* = 0);
 
     enum
@@ -804,8 +804,8 @@ template <typename Alloc, typename T> struct rebind_wrap
         };
     };
 
-    typedef typename boost::detail::if_true<value>::BOOST_NESTED_TEMPLATE then<
-        Alloc, fallback>::type::BOOST_NESTED_TEMPLATE rebind<T>::other type;
+    typedef typename boost::detail::if_true<value>::template then<
+        Alloc, fallback>::type::template rebind<T>::other type;
 };
 
 #if defined(BOOST_MSVC) && BOOST_MSVC <= 1400
@@ -829,7 +829,7 @@ template <typename Alloc, typename T> struct rebind_wrap
             value = (1 == sizeof(test<Tp>(choose())))                          \
         };                                                                     \
                                                                                \
-        typedef typename boost::detail::if_true<value>::BOOST_NESTED_TEMPLATE  \
+        typedef typename boost::detail::if_true<value>::template  \
             then<Tp, DefaultWrap>::type::tname type;                           \
     }
 
@@ -859,7 +859,7 @@ template <typename T, typename T2> struct sfinae : T2
             value = (1 == sizeof(test<Tp>(choose())))                          \
         };                                                                     \
                                                                                \
-        typedef typename boost::detail::if_true<value>::BOOST_NESTED_TEMPLATE  \
+        typedef typename boost::detail::if_true<value>::template  \
             then<Tp, DefaultWrap>::type::tname type;                           \
     }
 
@@ -2476,7 +2476,7 @@ template <typename T> struct rv_ref_impl
 
 template <typename T>
 struct rv_ref
-    : boost::detail::if_true<boost::is_class<T>::value>::BOOST_NESTED_TEMPLATE
+    : boost::detail::if_true<boost::is_class<T>::value>::template
           then<boost::unordered::detail::rv_ref_impl<T>,
               please_ignore_this_overload>::type
 {
@@ -3307,7 +3307,7 @@ template <typename Key, typename T> struct is_key
                 sizeof(choice2::type)
     };
 
-    typedef typename boost::detail::if_true<value>::BOOST_NESTED_TEMPLATE
+    typedef typename boost::detail::if_true<value>::template
         then<Key const&, no_key>::type type;
 };
 

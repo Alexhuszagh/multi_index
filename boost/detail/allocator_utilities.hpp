@@ -54,56 +54,13 @@ public:
   {
   };
 
-#if defined(BOOST_DINKUMWARE_STDLIB)
-  /* Dinkumware guys didn't provide a means to call allocate() without
-   * supplying a hint, in disagreement with the standard.
-   */
-
-  Type* allocate(std::size_t n,const void* hint=0)
-  {
-    std::allocator<Type>& a=*this;
-    return a.allocate(n,hint);
-  }
-#endif
-
 };
-
-/* Detects whether a given allocator belongs to a defective stdlib not
- * having the required member templates.
- * Note that it does not suffice to check the Boost.Config stdlib
- * macros, as the user might have passed a custom, compliant allocator.
- * The checks also considers partial_std_allocator_wrapper to be
- * a standard defective allocator.
- */
-
-#if defined(BOOST_NO_STD_ALLOCATOR)&&\
-  (defined(BOOST_HAS_PARTIAL_STD_ALLOCATOR)||defined(BOOST_DINKUMWARE_STDLIB))
-
-template<typename Allocator>
-struct is_partial_std_allocator
-{
-  BOOST_STATIC_CONSTANT(bool,
-    value=
-      (is_same<
-        std::allocator<BOOST_DEDUCED_TYPENAME Allocator::value_type>,
-        Allocator
-      >::value)||
-      (is_same<
-        partial_std_allocator_wrapper<
-          BOOST_DEDUCED_TYPENAME Allocator::value_type>,
-        Allocator
-      >::value));
-};
-
-#else
 
 template<typename Allocator>
 struct is_partial_std_allocator
 {
   BOOST_STATIC_CONSTANT(bool,value=false);
 };
-
-#endif
 
 /* rebind operations for defective std allocators */
 
@@ -121,7 +78,7 @@ struct rebinder
   template<typename Type>
   struct result
   {
-      typedef typename Allocator::BOOST_NESTED_TEMPLATE 
+      typedef typename Allocator::template
           rebind<Type>::other other;
   };
 };
@@ -130,7 +87,7 @@ template<typename Allocator,typename Type>
 struct compliant_allocator_rebind_to
 {
   typedef typename rebinder<Allocator>::
-      BOOST_NESTED_TEMPLATE result<Type>::other type;
+      template result<Type>::other type;
 };
 
 /* rebind front-end */
@@ -153,30 +110,12 @@ void construct(void* p,const Type& t)
   new (p) Type(t);
 }
 
-#if BOOST_WORKAROUND(BOOST_MSVC,BOOST_TESTED_AT(1500))
-/* MSVC++ issues spurious warnings about unreferencend formal parameters
- * in destroy<Type> when Type is a class with trivial dtor.
- */
-
-#pragma warning(push)
-#pragma warning(disable:4100)  
-#endif
-
 template<typename Type>
 void destroy(const Type* p)
 {
-
-#if BOOST_WORKAROUND(__SUNPRO_CC,BOOST_TESTED_AT(0x590))
-  const_cast<Type*>(p)->~Type();
-#else
   p->~Type();
-#endif
 
 }
-
-#if BOOST_WORKAROUND(BOOST_MSVC,BOOST_TESTED_AT(1500))
-#pragma warning(pop)
-#endif
 
 } /* namespace boost::detail::allocator */
 

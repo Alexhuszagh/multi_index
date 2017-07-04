@@ -51,10 +51,6 @@
 #    define BOOST_HAS_PARTIAL_STD_ALLOCATOR
 #endif
 
-#if (__HP_aCC >= 50000 ) && (__HP_aCC <= 53800 ) || (__HP_aCC < 31300 )
-#    define BOOST_NO_MEMBER_TEMPLATE_KEYWORD
-#endif
-
 // This macro should not be defined when compiling in strict ansi
 // mode, but, currently, we don't have the ability to determine
 // what standard mode we are compiling with. Some future version

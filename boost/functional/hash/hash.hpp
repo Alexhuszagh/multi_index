@@ -5,7 +5,7 @@
 
 //  Based on Peter Dimov's proposal
 //  http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2005/n1756.pdf
-//  issue 6.18. 
+//  issue 6.18.
 //
 //  This also contains public domain code from MurmurHash. From the
 //  MurmurHash header:
@@ -416,11 +416,11 @@ namespace boost
     //
     // boost::hash
     //
-    
+
     // Define the specializations required by the standard. The general purpose
     // boost::hash is defined later in extensions.hpp if
     // BOOST_HASH_NO_EXTENSIONS is not defined.
-    
+
     // BOOST_HASH_SPECIALIZE - define a specialization for a type which is
     // passed by copy.
     //
@@ -547,7 +547,7 @@ namespace boost
 
     template <class T> struct hash
         : public boost::hash_detail::hash_impl<boost::is_pointer<T>::value>
-            ::BOOST_NESTED_TEMPLATE inner<T>
+            ::template inner<T>
     {
     };
 

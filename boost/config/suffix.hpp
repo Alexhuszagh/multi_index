@@ -423,22 +423,6 @@ namespace std {
 #  define BOOST_HAS_FACET(Type, loc) std::has_facet< Type >(loc)
 #endif
 
-// BOOST_NESTED_TEMPLATE workaround ------------------------------------------//
-// Member templates are supported by some compilers even though they can't use
-// the A::template member<U> syntax, as a workaround replace:
-//
-// typedef typename A::template rebind<U> binder;
-//
-// with:
-//
-// typedef typename A::BOOST_NESTED_TEMPLATE rebind<U> binder;
-
-#ifndef BOOST_NO_MEMBER_TEMPLATE_KEYWORD
-#  define BOOST_NESTED_TEMPLATE template
-#else
-#  define BOOST_NESTED_TEMPLATE
-#endif
-
 // BOOST_UNREACHABLE_RETURN(x) workaround -------------------------------------//
 // Normally evaluates to nothing, unless BOOST_NO_UNREACHABLE_RETURN_DETECTION
 // is defined, in which case it evaluates to return x; Use when you have a return
@@ -647,7 +631,7 @@ namespace std{ using ::type_info; }
 #    if __has_attribute(noreturn)
 #      define BOOST_NORETURN [[noreturn]]
 #    endif
-#  elif defined(__has_cpp_attribute) 
+#  elif defined(__has_cpp_attribute)
 #    if __has_cpp_attribute(noreturn)
 #      define BOOST_NORETURN [[noreturn]]
 #    endif

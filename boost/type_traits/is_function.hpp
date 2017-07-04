@@ -51,7 +51,7 @@ struct is_function_chooser<false>
 template <typename T>
 struct is_function_impl
     : public is_function_chooser< ::boost::is_reference<T>::value >
-        ::BOOST_NESTED_TEMPLATE result_<T>
+        ::template result_<T>
 {
 };
 

@@ -852,13 +852,9 @@ protected:
 
   /* comparison */
 
-#if !defined(BOOST_NO_MEMBER_TEMPLATE_FRIENDS)
-  /* defect macro refers to class, not function, templates, but anyway */
-
   template<typename K,typename H,typename P,typename S,typename T,typename C>
   friend bool operator==(
     const hashed_index<K,H,P,S,T,C>&,const hashed_index<K,H,P,S,T,C>& y);
-#endif
 
   bool equals(const hashed_index& x)const{return equals(x,Category());}
 

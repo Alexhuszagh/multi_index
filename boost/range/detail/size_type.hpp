@@ -47,7 +47,7 @@ namespace boost
     {
         typedef typename range_detail::range<C>::type c_type;
     public:
-        typedef typename range_detail::range_size_type_<c_type>::BOOST_NESTED_TEMPLATE pts<C>::type type;
+        typedef typename range_detail::range_size_type_<c_type>::template pts<C>::type type;
     };
 }
 
