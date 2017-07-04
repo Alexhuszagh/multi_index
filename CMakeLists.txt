@@ -16,6 +16,13 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 # TODO: need to remove later...
 add_definitions(-DBOOST_MULTI_INDEX_DISABLE_SERIALIZATION -UBOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
 
+# Need to manually set compiler flags for Travis CI & Appveyor
+if(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++14")
+else()
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+endif()
+
 # TESTS
 # -----
 
