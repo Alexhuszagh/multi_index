@@ -9,7 +9,6 @@
 #pragma once
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/bind.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/detail/allocator_utilities.hpp>
 #include <boost/move/core.hpp>
@@ -362,7 +361,7 @@ public:
   {
     sequenced_index_remove(
       *this,
-      ::boost::bind(std::equal_to<value_type>(),::boost::arg<1>(),value));
+      ::std::bind(std::equal_to<value_type>(),std::placeholders::_1,value));
   }
 
   template<typename Predicate>

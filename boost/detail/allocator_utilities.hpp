@@ -6,16 +6,12 @@
  * See Boost website at http://www.boost.org/
  */
 
-#ifndef BOOST_DETAIL_ALLOCATOR_UTILITIES_HPP
-#define BOOST_DETAIL_ALLOCATOR_UTILITIES_HPP
+#pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/detail/workaround.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/type_traits/is_same.hpp>
 #include <cstddef>
 #include <memory>
 #include <new>
+#include <type_traits>
 
 namespace boost{
 
@@ -94,11 +90,11 @@ struct compliant_allocator_rebind_to
 
 template<typename Allocator,typename Type>
 struct rebind_to:
-  mpl::eval_if_c<
+  std::conditional<
     is_partial_std_allocator<Allocator>::value,
     partial_std_allocator_rebind_to<Allocator,Type>,
     compliant_allocator_rebind_to<Allocator,Type>
-  >
+  >::type
 {
 };
 
@@ -122,5 +118,3 @@ void destroy(const Type* p)
 } /* namespace boost::detail */
 
 } /* namespace boost */
-
-#endif

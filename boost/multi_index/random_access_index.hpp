@@ -10,7 +10,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
-#include <boost/bind.hpp>
 #include <boost/call_traits.hpp>
 #include <boost/move/core.hpp>
 #include <boost/move/utility.hpp>
@@ -422,7 +421,7 @@ public:
       end()-make_iterator(
         random_access_index_remove<node_type>(
           ptrs,
-          ::boost::bind(std::equal_to<value_type>(),::boost::arg<1>(),value)));
+          ::std::bind(std::equal_to<value_type>(),std::placeholders::_1,value)));
     while(n--)pop_back();
   }
 
