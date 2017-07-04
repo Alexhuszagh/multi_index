@@ -9,16 +9,16 @@
 #include <boost/config.hpp>
 #include <boost/type_traits/integral_constant.hpp>
 #include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/is_enum.hpp>
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/remove_cv.hpp>
+#include <type_traits>
 
 namespace boost {
 
 namespace type_traits { namespace detail {
 
 // 4.5/2
-template <class T> struct need_promotion : public boost::is_enum<T> {};
+template <class T> struct need_promotion : public std::is_enum<T> {};
 
 // 4.5/1
 template<> struct need_promotion<char              > : public true_type {};

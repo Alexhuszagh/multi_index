@@ -9,17 +9,11 @@
 #ifndef BOOST_TT_IS_POD_HPP_INCLUDED
 #define BOOST_TT_IS_POD_HPP_INCLUDED
 
-#include <cstddef> // size_t
 #include <boost/type_traits/detail/config.hpp>
-#include <boost/type_traits/is_void.hpp>
-#include <boost/type_traits/is_scalar.hpp>
 #include <boost/type_traits/intrinsics.hpp>
 
-#ifdef __SUNPRO_CC
-#include <boost/type_traits/is_function.hpp>
-#endif
-
 #include <cstddef>
+#include <type_traits>
 
 #ifndef BOOST_IS_POD
 #define BOOST_INTERNAL_IS_POD(T) false
@@ -33,7 +27,7 @@ namespace boost {
 template< typename T > struct is_POD;
 
 template <typename T> struct is_pod
-: public integral_constant<bool, ::boost::is_scalar<T>::value || ::boost::is_void<T>::value || BOOST_INTERNAL_IS_POD(T)>
+: public integral_constant<bool, std::is_scalar<T>::value || std::is_void<T>::value || BOOST_INTERNAL_IS_POD(T)>
 {};
 
 #if !defined(BOOST_NO_ARRAY_TYPE_SPECIALIZATIONS)

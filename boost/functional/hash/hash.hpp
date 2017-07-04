@@ -17,18 +17,13 @@
 #define BOOST_FUNCTIONAL_HASH_HASH_HPP
 
 #include <boost/functional/hash/hash_fwd.hpp>
-#include <functional>
 #include <boost/functional/hash/detail/hash_float.hpp>
-#include <string>
-#include <limits>
-#include <boost/type_traits/is_enum.hpp>
-#include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/cstdint.hpp>
-
-#if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)
-#include <boost/type_traits/is_pointer.hpp>
-#endif
+#include <functional>
+#include <string>
+#include <limits>
+#include <type_traits>
 
 #if !defined(BOOST_NO_CXX11_HDR_TYPEINDEX)
 #include <typeindex>
@@ -145,7 +140,7 @@ namespace boost
     typename boost::hash_detail::ulong_numbers<T>::type hash_value(T);
 
     template <typename T>
-    typename boost::enable_if<boost::is_enum<T>, std::size_t>::type
+    typename boost::enable_if<std::is_enum<T>, std::size_t>::type
         hash_value(T);
 
 #if !BOOST_WORKAROUND(__DMC__, <= 0x848)
@@ -285,7 +280,7 @@ namespace boost
     }
 
     template <typename T>
-    typename boost::enable_if<boost::is_enum<T>, std::size_t>::type
+    typename boost::enable_if<std::is_enum<T>, std::size_t>::type
         hash_value(T v)
     {
         return static_cast<std::size_t>(v);
@@ -546,7 +541,7 @@ namespace boost
     }
 
     template <class T> struct hash
-        : public boost::hash_detail::hash_impl<boost::is_pointer<T>::value>
+        : public boost::hash_detail::hash_impl<std::is_pointer<T>::value>
             ::template inner<T>
     {
     };
