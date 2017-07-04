@@ -9,20 +9,11 @@
 #pragma once
 
 #include <boost/config.hpp>
-#include <boost/detail/workaround.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/multi_index/identity_fwd.hpp>
-#include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/remove_const.hpp>
-#include <boost/utility/enable_if.hpp>
-
-#if !defined(BOOST_NO_SFINAE)
-#include <boost/type_traits/is_convertible.hpp>
-#endif
+#include <functional>
+#include <type_traits>
 
 namespace boost{
-
-template<class Type> class reference_wrapper; /* fwd decl. */
 
 namespace multi_index{
 
@@ -45,11 +36,7 @@ struct const_identity_base
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
-  typename disable_if<is_convertible<const ChainedPtr&,Type&>,Type&>::type
-#else
-  Type&
-#endif
+  typename std::enable_if<!std::is_convertible<const ChainedPtr&,Type&>::value,Type&>::type
 
   operator()(const ChainedPtr& x)const
   {
@@ -61,18 +48,13 @@ struct const_identity_base
     return x;
   }
 
-  Type& operator()(const reference_wrapper<Type>& x)const
+  Type& operator()(const std::reference_wrapper<Type>& x)const
   {
     return x.get();
   }
 
   Type& operator()(
-    const reference_wrapper<typename remove_const<Type>::type>& x
-
-#if BOOST_WORKAROUND(BOOST_MSVC,==1310)
-/* http://lists.boost.org/Archives/boost/2015/10/226135.php */
-    ,int=0
-#endif
+    const std::reference_wrapper<typename std::remove_const<Type>::type>& x
 
   )const
   {
@@ -89,12 +71,8 @@ struct non_const_identity_base
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
-  typename disable_if<
-    is_convertible<const ChainedPtr&,const Type&>,Type&>::type
-#else
-  Type&
-#endif
+  typename std::enable_if<
+    !std::is_convertible<const ChainedPtr&,const Type&>::value,Type&>::type
 
   operator()(const ChainedPtr& x)const
   {
@@ -111,12 +89,12 @@ struct non_const_identity_base
     return x;
   }
 
-  const Type& operator()(const reference_wrapper<const Type>& x)const
+  const Type& operator()(const std::reference_wrapper<const Type>& x)const
   {
     return x.get();
   }
 
-  Type& operator()(const reference_wrapper<Type>& x)const
+  Type& operator()(const std::reference_wrapper<Type>& x)const
   {
     return x.get();
   }
@@ -126,8 +104,8 @@ struct non_const_identity_base
 
 template<class Type>
 struct identity:
-  mpl::if_c<
-    is_const<Type>::value,
+  std::conditional<
+    std::is_const<Type>::value,
     detail::const_identity_base<Type>,detail::non_const_identity_base<Type>
   >::type
 {

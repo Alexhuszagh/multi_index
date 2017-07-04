@@ -596,12 +596,8 @@ public:
 
   template<typename ChainedPtr>
 
-#if !defined(BOOST_NO_SFINAE)
   typename disable_if<
     std::is_convertible<const ChainedPtr&,const value_type&>,result_type>::type
-#else
-  result_type
-#endif
 
   operator()(const ChainedPtr& x)const
   {

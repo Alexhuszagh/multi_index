@@ -14,7 +14,6 @@
 #include <boost/detail/allocator_utilities.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/foreach_fwd.hpp>
-#include <boost/limits.hpp>
 #include <boost/move/core.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
@@ -35,6 +34,7 @@
 #include <functional>
 #include <initializer_list>
 #include <iterator>
+#include <limits>
 #include <type_traits>
 #include <utility>
 

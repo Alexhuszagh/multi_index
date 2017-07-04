@@ -10,10 +10,10 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/seq_index_node.hpp>
-#include <boost/limits.hpp>
 #include <boost/type_traits/aligned_storage.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <cstddef>
+#include <limits>
 
 namespace boost{
 

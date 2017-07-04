@@ -9,7 +9,6 @@
 // Revision History:
 //   05 May   2001: Workarounds for HP aCC from Thomas Matelich. (Jeremy Siek)
 //   02 April 2001: Removed limits header altogether. (Jeremy Siek)
-//   01 April 2001: Modified to use new <boost/limits.hpp> header. (JMaddock)
 //
 
 // See http://www.boost.org/libs/concept_check for documentation.

@@ -32,7 +32,6 @@
 #include <boost/multi_index/detail/no_duplicate_tags.hpp>
 #include <boost/multi_index/detail/scope_guard.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/utility/base_from_member.hpp>
 #include <initializer_list>
 
@@ -108,8 +107,7 @@ public:
   typedef typename super::iterator                 iterator;
   typedef typename super::const_iterator           const_iterator;
 
-  BOOST_STATIC_ASSERT(
-    detail::no_duplicate_tags_in_index_list<index_type_list>::value);
+  static_assert(detail::no_duplicate_tags_in_index_list<index_type_list>::value, "");
 
   /* global project() needs to see this publicly */
 
@@ -281,21 +279,21 @@ public:
   template<int N>
   struct nth_index
   {
-    BOOST_STATIC_ASSERT(N>=0&&N<mpl::size<index_type_list>::type::value);
+    static_assert(N>=0&&N<mpl::size<index_type_list>::type::value, "");
     typedef typename mpl::at_c<index_type_list,N>::type type;
   };
 
   template<int N>
   typename nth_index<N>::type& get()BOOST_NOEXCEPT
   {
-    BOOST_STATIC_ASSERT(N>=0&&N<mpl::size<index_type_list>::type::value);
+    static_assert(N>=0&&N<mpl::size<index_type_list>::type::value, "");
     return *this;
   }
 
   template<int N>
   const typename nth_index<N>::type& get()const BOOST_NOEXCEPT
   {
-    BOOST_STATIC_ASSERT(N>=0&&N<mpl::size<index_type_list>::type::value);
+    static_assert(N>=0&&N<mpl::size<index_type_list>::type::value, "");
     return *this;
   }
 
@@ -311,7 +309,7 @@ public:
 
     BOOST_STATIC_CONSTANT(
       bool,index_found=!(std::is_same<iter,typename mpl::end<index_type_list>::type >::value));
-    BOOST_STATIC_ASSERT(index_found);
+    static_assert(index_found, "");
 
     typedef typename mpl::deref<iter>::type    type;
   };
@@ -756,7 +754,7 @@ struct nth_index
   BOOST_STATIC_CONSTANT(
     int,
     M=mpl::size<typename MultiIndexContainer::index_type_list>::type::value);
-  BOOST_STATIC_ASSERT(N>=0&&N<M);
+  static_assert(N>=0&&N<M, "");
   typedef typename mpl::at_c<
     typename MultiIndexContainer::index_type_list,N>::type type;
 };
@@ -775,11 +773,11 @@ get(
     N
   >::type                                  index_type;
 
-  BOOST_STATIC_ASSERT(N>=0&&
+  static_assert(N>=0&&
     N<
     mpl::size<
       BOOST_DEDUCED_TYPENAME multi_index_type::index_type_list
-    >::type::value);
+    >::type::value, "");
 
   return detail::converter<multi_index_type,index_type>::index(m);
 }
@@ -799,11 +797,11 @@ get(
     N
   >::type                                  index_type;
 
-  BOOST_STATIC_ASSERT(N>=0&&
+  static_assert(N>=0&&
     N<
     mpl::size<
       BOOST_DEDUCED_TYPENAME multi_index_type::index_type_list
-    >::type::value);
+    >::type::value, "");
 
   return detail::converter<multi_index_type,index_type>::index(m);
 }
@@ -822,7 +820,7 @@ struct index
 
   BOOST_STATIC_CONSTANT(
     bool,index_found=!(std::is_same<iter,typename mpl::end<index_type_list>::type >::value));
-  BOOST_STATIC_ASSERT(index_found);
+  static_assert(index_found, "");
 
   typedef typename mpl::deref<iter>::type       type;
 };
