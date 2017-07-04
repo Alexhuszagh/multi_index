@@ -12,7 +12,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
-#include <boost/detail/allocator_utilities.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/move/core.hpp>
 #include <boost/mpl/at.hpp>
@@ -55,17 +54,15 @@ namespace multi_index{
 template<typename Value,typename IndexSpecifierList,typename Allocator>
 class multi_index_container:
   private ::boost::base_from_member<
-    typename boost::detail::allocator::rebind_to<
-      Allocator,
+    typename Allocator::template rebind<
       typename detail::multi_index_node_type<
         Value,IndexSpecifierList,Allocator>::type
-    >::type>,
+    >::other>,
   private detail::header_holder<
-    typename boost::detail::allocator::rebind_to<
-      Allocator,
+    typename Allocator::template rebind<
       typename detail::multi_index_node_type<
         Value,IndexSpecifierList,Allocator>::type
-    >::type::pointer,
+    >::other::pointer,
     multi_index_container<Value,IndexSpecifierList,Allocator> >,
   public detail::multi_index_base_type<
     Value,IndexSpecifierList,Allocator>::type
@@ -80,10 +77,9 @@ private:
   typedef typename detail::multi_index_base_type<
       Value,IndexSpecifierList,Allocator>::type   super;
   typedef typename
-  boost::detail::allocator::rebind_to<
-    Allocator,
+  Allocator::template rebind<
     typename super::node_type
-  >::type                                         node_allocator;
+  >::other                                         node_allocator;
   typedef ::boost::base_from_member<
     node_allocator>                               bfm_allocator;
   typedef detail::header_holder<

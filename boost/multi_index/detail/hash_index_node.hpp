@@ -95,23 +95,21 @@ template<typename Allocator>
 struct hashed_index_base_node_impl
 {
   typedef typename
-  boost::detail::allocator::rebind_to<
-      Allocator,hashed_index_base_node_impl
-  >::type::pointer                          base_pointer;
+  Allocator::template rebind<
+      hashed_index_base_node_impl
+  >::other::pointer                          base_pointer;
   typedef typename
-  boost::detail::allocator::rebind_to<
-    Allocator,hashed_index_base_node_impl
-  >::type::const_pointer                    const_base_pointer;
+  Allocator::template rebind<
+    hashed_index_base_node_impl
+  >::other::const_pointer                    const_base_pointer;
   typedef typename
-  boost::detail::allocator::rebind_to<
-    Allocator,
+  Allocator::template rebind<
     hashed_index_node_impl<Allocator>
-  >::type::pointer                          pointer;
+  >::other::pointer                          pointer;
   typedef typename
-  boost::detail::allocator::rebind_to<
-    Allocator,
+  Allocator::template rebind<
     hashed_index_node_impl<Allocator>
-  >::type::const_pointer                    const_pointer;
+  >::other::const_pointer                    const_pointer;
 
   pointer& prior(){return prior_;}
   pointer  prior()const{return prior_;}
