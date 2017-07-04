@@ -12,7 +12,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include "employee.hpp"
-#include "pair_of_ints.hpp"
 #include <boost/detail/lightweight_test.hpp>
 
 using namespace boost::multi_index;
@@ -76,75 +75,4 @@ void test_comparison()
   BOOST_TEST(i3!=i32&&i32<i3&&i3>i32&&!(i3<=i32)&&!(i32>=i3));
   BOOST_TEST(i4!=i42);
   BOOST_TEST(i5!=i52&&i52<i5&&i5>i52&&!(i5<=i52)&&!(i52>=i5));
-
-  multi_index_container<
-    pair_of_ints,
-    indexed_by<
-      hashed_non_unique<::boost::multi_index::member<pair_of_ints,int,&pair_of_ints::first>>
-    >
-  > hc1,hc2;
-  hc1.insert(pair_of_ints(0,0));
-  hc1.insert(pair_of_ints(0,1));
-  hc1.insert(pair_of_ints(0,2));
-  hc1.insert(pair_of_ints(0,3));
-  hc1.insert(pair_of_ints(1,0));
-  hc1.insert(pair_of_ints(1,1));
-
-  hc2.insert(pair_of_ints(0,2));
-  hc2.insert(pair_of_ints(0,1));
-  hc2.insert(pair_of_ints(1,1));
-  hc2.insert(pair_of_ints(1,0));
-  hc2.insert(pair_of_ints(0,3));
-  hc2.insert(pair_of_ints(0,0));
-  BOOST_TEST(hc1==hc2);
-
-  hc1.insert(pair_of_ints(0,4));
-  hc2.insert(pair_of_ints(0,5));
-  BOOST_TEST(hc1!=hc2);
-
-  lookup_list<int>::type    l1;
-  lookup_list<char>::type   l2;
-  lookup_vector<char>::type l3;
-  lookup_list<long>::type   l4;
-  lookup_vector<long>::type l5;
-
-  l1.push_back(3);
-  l1.push_back(4);
-  l1.push_back(5);
-  l1.push_back(1);
-  l1.push_back(2);
-
-  l2.push_back(char(3));
-  l2.push_back(char(4));
-  l2.push_back(char(5));
-  l2.push_back(char(1));
-  l2.push_back(char(2));
-
-  l3.push_back(char(3));
-  l3.push_back(char(4));
-  l3.push_back(char(5));
-  l3.push_back(char(1));
-  l3.push_back(char(2));
-
-  l4.push_back(long(3));
-  l4.push_back(long(4));
-  l4.push_back(long(5));
-  l4.push_back(long(1));
-
-  l5.push_back(long(3));
-  l5.push_back(long(4));
-  l5.push_back(long(5));
-  l5.push_back(long(1));
-
-  BOOST_TEST(l1==l2&&l1<=l2&&l1>=l2);
-  BOOST_TEST(
-    get<1>(l1)==get<1>(l2)&&get<1>(l1)<=get<1>(l2)&&get<1>(l1)>=get<1>(l2));
-  BOOST_TEST(
-    get<1>(l1)==get<1>(l3)&&get<1>(l1)<=get<1>(l3)&&get<1>(l1)>=get<1>(l3));
-  BOOST_TEST(l1!=l4&&l4<l1&&l1>l4);
-  BOOST_TEST(
-    get<1>(l1)!=get<1>(l4)&&get<1>(l1)<get<1>(l4)&&get<1>(l4)>get<1>(l1));
-  BOOST_TEST(l3!=l5&&l5<l3&&l3>l5);
-  BOOST_TEST(
-    get<1>(l3)!=get<1>(l5)&&get<1>(l3)<get<1>(l5)&&get<1>(l5)>get<1>(l3));
 }

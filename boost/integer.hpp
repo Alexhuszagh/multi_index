@@ -8,7 +8,7 @@
 
 //  Revision History
 //   22 Sep 01  Added value-based integer templates. (Daryle Walker)
-//   01 Apr 01  Modified to use new <boost/limits.hpp> header. (John Maddock)
+//   01 Apr 01  Modified to use new <limits> header. (John Maddock)
 //   30 Jul 00  Add typename syntax fix (Jens Maurer)
 //   28 Aug 99  Initial version
 
@@ -18,7 +18,7 @@
 #include <boost/integer_fwd.hpp>  // self include
 
 #include <boost/integer_traits.hpp>  // for boost::::boost::integer_traits
-#include <boost/limits.hpp>          // for ::std::numeric_limits
+#include <limits>          // for ::std::numeric_limits
 #include <boost/cstdint.hpp>         // for boost::int64_t and BOOST_NO_INTEGRAL_INT64_T
 #include <boost/static_assert.hpp>
 
@@ -114,7 +114,7 @@ namespace boost
   template< int Bits >   // bits (including sign) required
   struct int_t : public boost::detail::exact_signed_base_helper<Bits>
   {
-      BOOST_STATIC_ASSERT_MSG(Bits <= (int)(sizeof(boost::intmax_t) * CHAR_BIT),
+      BOOST_STATIC_ASSERT_MSG(Bits <= (int)(sizeof(intmax_t) * CHAR_BIT),
          "No suitable signed integer type with the requested number of bits is available.");
       typedef typename boost::detail::int_least_helper
         <
@@ -135,7 +135,7 @@ namespace boost
   template< int Bits >   // bits required
   struct uint_t : public boost::detail::exact_unsigned_base_helper<Bits>
   {
-     BOOST_STATIC_ASSERT_MSG(Bits <= (int)(sizeof(boost::uintmax_t) * CHAR_BIT),
+     BOOST_STATIC_ASSERT_MSG(Bits <= (int)(sizeof(uintmax_t) * CHAR_BIT),
          "No suitable unsigned integer type with the requested number of bits is available.");
 #if (defined(__BORLANDC__) || defined(__CODEGEAR__)) && defined(BOOST_NO_INTEGRAL_INT64_T)
      // It's really not clear why this workaround should be needed... shrug I guess!  JM

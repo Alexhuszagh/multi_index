@@ -22,7 +22,6 @@
 #include <iterator>
 #include <boost/assert.hpp>
 #include <boost/current_function.hpp>
-#include <boost/core/no_exceptions_support.hpp>
 #include <iostream>
 #include <cstring>
 
@@ -46,7 +45,7 @@ struct report_errors_reminder
 
     ~report_errors_reminder()
     {
-        BOOST_ASSERT(called_report_errors_function);  // verify report_errors() was called  
+        BOOST_ASSERT(called_report_errors_function);  // verify report_errors() was called
     }
 };
 

@@ -17,7 +17,7 @@
 #define BOOST_INTEGER_TRAITS_HPP
 
 #include <boost/config.hpp>
-#include <boost/limits.hpp>
+#include <limits>
 
 // These are an implementation detail and not part of the interface
 #include <limits.h>

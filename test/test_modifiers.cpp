@@ -12,12 +12,10 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/iterator/iterator_facade.hpp>
 #include <boost/move/core.hpp>
 #include <boost/next_prior.hpp>
-#include <boost/shared_ptr.hpp>
 #include <iterator>
+#include <memory>
 #include <vector>
 #include "employee.hpp"
 
@@ -71,9 +69,9 @@ inline std::size_t hash_value(const always_one& x)
 
 class linked_object
 {
-  struct impl:boost::enable_shared_from_this<impl>
+  struct impl:std::enable_shared_from_this<impl>
   {
-    typedef boost::shared_ptr<const impl> ptr;
+    typedef std::shared_ptr<const impl> ptr;
 
     impl(int n_,ptr next_=ptr()):n(n_),next(next_){}
 
@@ -121,19 +119,6 @@ private:
 };
 
 linked_object::impl_repository_t linked_object::impl_repository;
-
-struct tempvalue_iterator:
-  boost::iterator_facade<
-    tempvalue_iterator,int,boost::forward_traversal_tag,int>
-{
-  tempvalue_iterator(int n_):n(n_){}
-
-  void increment(){++n;}
-  bool equal(const tempvalue_iterator& x)const{return n==x.n;}
-  int dereference()const{return n;}
-
-  int n;
-};
 
 void test_modifiers()
 {
@@ -474,22 +459,4 @@ void test_modifiers()
     linked_object o2(2,o1);
     o1=o2;
   }
-
-  /* testcases for bug reported at
-   * https://svn.boost.org/trac/boost/ticket/9665
-   */
-
-  multi_index_container<
-    int,
-    indexed_by<hashed_unique<identity<int> > >
-  > hc;
-  hc.insert(tempvalue_iterator(0),tempvalue_iterator(10));
-  BOOST_TEST(hc.size()==10);
-
-  multi_index_container<
-    int,
-    indexed_by<ordered_unique<identity<int> > >
-  > oc;
-  oc.insert(tempvalue_iterator(0),tempvalue_iterator(10));
-  BOOST_TEST(oc.size()==10);
 }

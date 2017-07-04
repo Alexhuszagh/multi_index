@@ -26,7 +26,6 @@
 
 #include <boost/move/utility_core.hpp>
 #include <boost/move/detail/iterator_traits.hpp>
-#include <boost/detail/no_exceptions_support.hpp>
 
 namespace boost {
 
@@ -117,20 +116,19 @@ F uninitialized_move(I f, I l, F r
    typedef typename boost::movelib::iterator_traits<I>::value_type input_value_type;
 
    F back = r;
-   BOOST_TRY{
+   try{
       while (f != l) {
          void * const addr = static_cast<void*>(::boost::move_detail::addressof(*r));
          ::new(addr) input_value_type(::boost::move(*f));
          ++f; ++r;
       }
    }
-   BOOST_CATCH(...){
+   catch(...){
       for (; back != r; ++back){
          back->~input_value_type();
       }
-      BOOST_RETHROW;
+      throw;
    }
-   BOOST_CATCH_END
    return r;
 }
 

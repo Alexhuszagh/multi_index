@@ -20,7 +20,7 @@
 #include <functional>
 #include <boost/functional/hash/detail/hash_float.hpp>
 #include <string>
-#include <boost/limits.hpp>
+#include <limits>
 #include <boost/type_traits/is_enum.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>

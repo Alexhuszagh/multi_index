@@ -9,12 +9,9 @@
 #ifndef BOOST_INTEGER_FWD_HPP
 #define BOOST_INTEGER_FWD_HPP
 
-#include <climits>  // for UCHAR_MAX, etc.
-#include <cstddef>  // for std::size_t
-
 #include <boost/config.hpp>  // for BOOST_NO_INTRINSIC_WCHAR_T
-#include <boost/limits.hpp>  // for std::numeric_limits
-#include <boost/cstdint.hpp>  // For intmax_t
+#include <limits>  // for std::numeric_limits
+#include <cstdint>  // For intmax_t
 
 
 namespace boost
@@ -26,9 +23,9 @@ namespace boost
      typedef long          static_min_max_signed_type;
      typedef unsigned long static_min_max_unsigned_type;
 #else
-     typedef boost::uintmax_t static_min_max_unsigned_type;
-     typedef boost::intmax_t  static_min_max_signed_type;
-     typedef boost::uintmax_t static_log2_argument_type;
+     typedef ::uintmax_t static_min_max_unsigned_type;
+     typedef ::intmax_t  static_min_max_signed_type;
+     typedef ::uintmax_t static_log2_argument_type;
      typedef int              static_log2_result_type;
 #endif
 
@@ -164,7 +161,7 @@ template <static_min_max_unsigned_type Value1, static_min_max_unsigned_type Valu
 #ifdef BOOST_NO_INTEGRAL_INT64_T
      typedef unsigned long static_gcd_type;
 #else
-     typedef boost::uintmax_t static_gcd_type;
+     typedef uintmax_t static_gcd_type;
 #endif
 
 template < static_gcd_type Value1, static_gcd_type Value2 >

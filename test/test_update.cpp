@@ -14,7 +14,6 @@
 #include <algorithm>
 #include <cstddef>
 #include "employee.hpp"
-#include "pair_of_ints.hpp"
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/next_prior.hpp>
 
@@ -113,128 +112,6 @@ void test_update()
                 "Albert");
   BOOST_TEST(!r.replace(it2,employee(4,"John",57,5601)));
 
-  {
-    typedef multi_index_container<
-      pair_of_ints,
-      indexed_by<
-        ordered_unique<::boost::multi_index::member<pair_of_ints,int,&pair_of_ints::first>>,
-        hashed_unique<::boost::multi_index::member<pair_of_ints,int,&pair_of_ints::second>>,
-        sequenced<> > >
-    int_int_set;
-
-    int_int_set iis;
-    nth_index<int_int_set,1>::type& ii1=get<1>(iis);
-    nth_index<int_int_set,2>::type& ii2=get<2>(iis);
-    iis.insert(pair_of_ints(0,0));
-    iis.insert(pair_of_ints(5,5));
-    iis.insert(pair_of_ints(10,10));
-
-    BOOST_TEST(!iis.replace(iis.begin(),pair_of_ints(5,0)));
-    BOOST_TEST(!ii2.replace(ii2.begin(),pair_of_ints(0,5)));
-    BOOST_TEST(!ii1.replace(project<1>(iis,iis.begin()),pair_of_ints(5,11)));
-    BOOST_TEST(!iis.replace(iis.begin(),pair_of_ints(11,5)));
-    BOOST_TEST(!iis.replace(boost::next(iis.begin()),pair_of_ints(10,5)));
-    BOOST_TEST(!ii1.replace(
-      project<1>(iis,boost::next(iis.begin())),pair_of_ints(5,10)));
-    BOOST_TEST(!iis.replace(boost::prior(iis.end()),pair_of_ints(5,10)));
-    BOOST_TEST(!ii2.replace(boost::prior(ii2.end()),pair_of_ints(10,5)));
-
-    BOOST_TEST(iis.modify(iis.begin(),increment_first));
-    BOOST_TEST(ii2.modify(ii2.begin(),increment_first));
-    BOOST_TEST(ii1.modify(project<1>(iis,iis.begin()),increment_first));
-    BOOST_TEST(ii2.modify(ii2.begin(),increment_first,decrement_first));
-
-    BOOST_TEST(!iis.modify(iis.begin(),increment_first,decrement_first));
-    BOOST_TEST(iis.size()==3);
-
-    BOOST_TEST(!iis.modify(iis.begin(),increment_first));
-    BOOST_TEST(iis.size()==2);
-
-    iis.insert(pair_of_ints(0,0));
-    BOOST_TEST(ii2.modify(boost::prior(ii2.end()),increment_second));
-    BOOST_TEST(iis.modify(iis.begin(),increment_second));
-    BOOST_TEST(ii2.modify(boost::prior(ii2.end()),increment_second));
-    BOOST_TEST(iis.modify(iis.begin(),increment_second,decrement_second));
-
-    BOOST_TEST(!ii2.modify(
-      boost::prior(ii2.end()),increment_second,decrement_second));
-    BOOST_TEST(ii2.size()==3);
-
-    BOOST_TEST(!ii2.modify(boost::prior(ii2.end()),increment_second));
-    BOOST_TEST(ii2.size()==2);
-
-    iis.insert(pair_of_ints(0,0));
-    BOOST_TEST(iis.modify_key(iis.begin(),increment_int));
-    BOOST_TEST(iis.modify_key(iis.begin(),increment_int,decrement_int));
-    BOOST_TEST(iis.modify_key(iis.begin(),increment_int));
-    BOOST_TEST(iis.modify_key(iis.begin(),increment_int));
-
-    BOOST_TEST(!iis.modify_key(iis.begin(),increment_int,decrement_int));
-    BOOST_TEST(iis.size()==3);
-
-    BOOST_TEST(!iis.modify_key(iis.begin(),increment_int));
-    BOOST_TEST(iis.size()==2);
-
-    nth_index_iterator<int_int_set,1>::type it_=ii1.find(5);
-    BOOST_TEST(ii1.modify_key(it_,increment_int));
-    BOOST_TEST(ii1.modify_key(it_,increment_int));
-    BOOST_TEST(ii1.modify_key(it_,increment_int,decrement_int));
-    BOOST_TEST(ii1.modify_key(it_,increment_int));
-
-    BOOST_TEST(!ii1.modify_key(it_,increment_int,decrement_int));
-    BOOST_TEST(ii1.size()==2);
-
-    BOOST_TEST(!ii1.modify_key(it_,increment_int));
-    BOOST_TEST(ii1.size()==1);
-  }
-  {
-    typedef multi_index_container<
-      pair_of_ints,
-      indexed_by<
-        hashed_unique<::boost::multi_index::member<pair_of_ints,int,&pair_of_ints::first>>,
-        random_access<>,
-        ordered_unique<::boost::multi_index::member<pair_of_ints,int,&pair_of_ints::second>> > >
-    int_int_set;
-
-    int_int_set iis;
-    nth_index<int_int_set,1>::type& ii1=get<1>(iis);
-    int_int_set::iterator p1=iis.insert(pair_of_ints(0,0)).first;
-    int_int_set::iterator p2=iis.insert(pair_of_ints(5,5)).first;
-    int_int_set::iterator p3=iis.insert(pair_of_ints(10,10)).first;
-
-    BOOST_TEST(!iis.replace(p1,pair_of_ints(5,0)));
-    BOOST_TEST(!ii1.replace(ii1.begin(),pair_of_ints(0,5)));
-    BOOST_TEST(!iis.replace(p1,pair_of_ints(5,11)));
-    BOOST_TEST(!iis.replace(p1,pair_of_ints(11,5)));
-    BOOST_TEST(!iis.replace(p2,pair_of_ints(10,5)));
-    BOOST_TEST(!iis.replace(p2,pair_of_ints(5,10)));
-    BOOST_TEST(!iis.replace(p3,pair_of_ints(5,10)));
-    BOOST_TEST(!ii1.replace(boost::prior(ii1.end()),pair_of_ints(10,5)));
-
-    BOOST_TEST(iis.modify(p1,increment_first));
-    BOOST_TEST(ii1.modify(ii1.begin(),increment_first));
-    BOOST_TEST(iis.modify(p1,increment_first));
-    BOOST_TEST(ii1.modify(ii1.begin(),increment_first,decrement_first));
-
-    BOOST_TEST(!iis.modify(p1,increment_first,decrement_first));
-    BOOST_TEST(iis.size()==3);
-
-    BOOST_TEST(!iis.modify(p1,increment_first));
-    BOOST_TEST(iis.size()==2);
-
-    p1=iis.insert(pair_of_ints(0,0)).first;
-    BOOST_TEST(ii1.modify(boost::prior(ii1.end()),increment_second));
-    BOOST_TEST(iis.modify(p1,increment_second,decrement_second));
-    BOOST_TEST(ii1.modify(boost::prior(ii1.end()),increment_second));
-    BOOST_TEST(iis.modify(p1,increment_second));
-
-    BOOST_TEST(!ii1.modify(
-      boost::prior(ii1.end()),increment_second,decrement_second));
-    BOOST_TEST(ii1.size()==3);
-
-    BOOST_TEST(!ii1.modify(boost::prior(ii1.end()),increment_second));
-    BOOST_TEST(ii1.size()==2);
-  }
   {
     typedef multi_index_container<
       int,

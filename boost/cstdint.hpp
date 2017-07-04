@@ -69,7 +69,7 @@
 
 # endif
 
-#if defined(__QNX__) && defined(__EXT_QNX) 
+#if defined(__QNX__) && defined(__EXT_QNX)
 
 // QNX (Dinkumware stdlib) defines these as non-standard names.
 // Reflect to the standard names.
@@ -190,7 +190,7 @@ namespace boost {
 
 #else  // BOOST_HAS_STDINT_H
 
-# include <boost/limits.hpp> // implementation artifact; not part of interface
+# include <limits> // implementation artifact; not part of interface
 # include <limits.h>         // needed for limits macros
 
 

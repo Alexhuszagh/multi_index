@@ -17,7 +17,7 @@
 #include <boost/integer/static_log2.hpp>
 #include <boost/cstdint.hpp>
 #include <boost/assert.hpp>
-#include <boost/limits.hpp>
+#include <limits>
 #include <cstring>
 
 #if defined(BOOST_MSVC)
