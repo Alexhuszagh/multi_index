@@ -1,7 +1,7 @@
-//  (C) Copyright John Maddock 2001. 
-//  (C) Copyright Darin Adler 2001. 
-//  Use, modification and distribution are subject to the 
-//  Boost Software License, Version 1.0. (See accompanying file 
+//  (C) Copyright John Maddock 2001.
+//  (C) Copyright Darin Adler 2001.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org for most recent version.
@@ -9,7 +9,7 @@
 //  Metrowerks standard library:
 
 #ifndef __MSL_CPP__
-#  include <boost/config/no_tr1/utility.hpp>
+#  include <utility>
 #  ifndef __MSL_CPP__
 #     error This is not the MSL standard library!
 #  endif

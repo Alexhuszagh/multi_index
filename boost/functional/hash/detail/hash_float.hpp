@@ -197,7 +197,7 @@ namespace boost
 
 #if BOOST_HASH_USE_FPCLASSIFY
 
-#include <boost/config/no_tr1/cmath.hpp>
+#include <cmath>
 
 namespace boost
 {

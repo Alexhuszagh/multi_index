@@ -1,6 +1,6 @@
 //  Boost compiler configuration selection header file
 
-//  (C) Copyright John Maddock 2001 - 2003. 
+//  (C) Copyright John Maddock 2001 - 2003.
 //  (C) Copyright Martin Wille 2003.
 //  (C) Copyright Guillaume Melquiond 2003.
 //
@@ -11,7 +11,7 @@
 //  See http://www.boost.org/ for most recent version.
 
 // locate which compiler we are using and define
-// BOOST_COMPILER_CONFIG as needed: 
+// BOOST_COMPILER_CONFIG as needed:
 
 #if defined __CUDACC__
 //  NVIDIA CUDA C++ compiler for GPU
@@ -100,10 +100,6 @@
 //  IBM Visual Age or IBM XL C/C++ for Linux (Big Endian)
 #   define BOOST_COMPILER_CONFIG "boost/config/compiler/vacpp.hpp"
 
-#elif defined(__PGI)
-//  Portland Group Inc.
-#   define BOOST_COMPILER_CONFIG "boost/config/compiler/pgi.hpp"
-
 #elif defined _MSC_VER
 //  Microsoft Visual C++
 //
@@ -141,8 +137,6 @@
 #include <boost/config/compiler/hp_acc.hpp>
 #include <boost/config/compiler/mpw.hpp>
 #include <boost/config/compiler/vacpp.hpp>
-#include <boost/config/compiler/pgi.hpp>
-#include <boost/config/compiler/visualc.hpp>
 
 #endif
 

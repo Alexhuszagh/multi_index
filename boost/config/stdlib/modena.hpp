@@ -1,6 +1,6 @@
-//  (C) Copyright Jens Maurer 2001. 
-//  Use, modification and distribution are subject to the 
-//  Boost Software License, Version 1.0. (See accompanying file 
+//  (C) Copyright Jens Maurer 2001.
+//  Use, modification and distribution are subject to the
+//  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org for most recent version.
@@ -8,7 +8,7 @@
 //  Modena C++ standard library (comes with KAI C++)
 
 #if !defined(MSIPL_COMPILE_H)
-#  include <boost/config/no_tr1/utility.hpp>
+#  include <utility>
 #  if !defined(__MSIPL_COMPILE_H)
 #      error "This is not the Modena C++ library!"
 #  endif
