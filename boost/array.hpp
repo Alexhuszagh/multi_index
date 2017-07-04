@@ -32,14 +32,12 @@
 #pragma once
 #include <boost/detail/workaround.hpp>
 
+#include <cassert>
 #include <cstddef>
 #include <stdexcept>
-#include <boost/assert.hpp>
-#include <boost/static_assert.hpp>
+#include <iterator>
 #include <boost/swap.hpp>
 
-// Handles broken standard libraries better than <iterator>
-#include <boost/detail/iterator.hpp>
 #include <boost/throw_exception.hpp>
 #include <algorithm>
 
@@ -107,12 +105,12 @@ namespace boost {
         // operator[]
         reference operator[](size_type i)
         {
-            return BOOST_ASSERT_MSG( i < N, "out of range" ), elems[i];
+            return assert( i < N ), elems[i];
         }
 
         const_reference operator[](size_type i) const
         {
-            return BOOST_ASSERT_MSG( i < N, "out of range" ), elems[i];
+            return assert( i < N ), elems[i];
         }
 
         // at() with range check

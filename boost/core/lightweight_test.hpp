@@ -1,11 +1,4 @@
-#ifndef BOOST_CORE_LIGHTWEIGHT_TEST_HPP
-#define BOOST_CORE_LIGHTWEIGHT_TEST_HPP
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER)
-# pragma once
-#endif
+#pragma once
 
 //
 //  boost/core/lightweight_test.hpp - lightweight test library
@@ -19,16 +12,16 @@
 //  http://www.boost.org/LICENSE_1_0.txt
 //
 
-#include <iterator>
-#include <boost/assert.hpp>
 #include <boost/current_function.hpp>
-#include <iostream>
+#include <cassert>
 #include <cstring>
+#include <iostream>
+#include <iterator>
 
 //  IDE's like Visual Studio perform better if output goes to std::cout or
 //  some other stream, so allow user to configure output stream:
 #ifndef BOOST_LIGHTWEIGHT_TEST_OSTREAM
-# define BOOST_LIGHTWEIGHT_TEST_OSTREAM std::cerr
+#   define BOOST_LIGHTWEIGHT_TEST_OSTREAM std::cerr
 #endif
 
 namespace boost
@@ -45,7 +38,7 @@ struct report_errors_reminder
 
     ~report_errors_reminder()
     {
-        BOOST_ASSERT(called_report_errors_function);  // verify report_errors() was called
+        assert(called_report_errors_function);  // verify report_errors() was called
     }
 };
 
@@ -382,5 +375,3 @@ inline int report_errors()
 #else
    #define BOOST_TEST_THROWS( EXPR, EXCEP )
 #endif
-
-#endif // #ifndef BOOST_CORE_LIGHTWEIGHT_TEST_HPP
