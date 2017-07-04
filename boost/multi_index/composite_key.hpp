@@ -10,7 +10,6 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/functional/hash_fwd.hpp>
-#include <boost/multi_index/detail/access_specifier.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
@@ -1320,7 +1319,7 @@ composite_key_equal_to<                                                      \
 
 template<typename CompositeKeyResult>
 struct composite_key_result_equal_to:
-BOOST_MULTI_INDEX_PRIVATE_IF_USING_DECL_FOR_TEMPL_FUNCTIONS
+private
 BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER
 {
 private:
@@ -1346,7 +1345,7 @@ composite_key_compare<                                                       \
 
 template<typename CompositeKeyResult>
 struct composite_key_result_less:
-BOOST_MULTI_INDEX_PRIVATE_IF_USING_DECL_FOR_TEMPL_FUNCTIONS
+private
 BOOST_MULTI_INDEX_CK_RESULT_LESS_SUPER
 {
 private:
@@ -1372,7 +1371,7 @@ composite_key_compare<                                                       \
 
 template<typename CompositeKeyResult>
 struct composite_key_result_greater:
-BOOST_MULTI_INDEX_PRIVATE_IF_USING_DECL_FOR_TEMPL_FUNCTIONS
+private
 BOOST_MULTI_INDEX_CK_RESULT_GREATER_SUPER
 {
 private:
@@ -1398,7 +1397,7 @@ composite_key_hash<                                                          \
 
 template<typename CompositeKeyResult>
 struct composite_key_result_hash:
-BOOST_MULTI_INDEX_PRIVATE_IF_USING_DECL_FOR_TEMPL_FUNCTIONS
+private
 BOOST_MULTI_INDEX_CK_RESULT_HASH_SUPER
 {
 private:

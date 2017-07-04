@@ -20,7 +20,6 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/push_front.hpp>
-#include <boost/multi_index/detail/access_specifier.hpp>
 #include <boost/multi_index/detail/bidir_node_iterator.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
 #include <boost/multi_index/detail/index_node_base.hpp>
@@ -30,12 +29,11 @@
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/multi_index/sequenced_index_fwd.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/type_traits/is_integral.hpp>
 #include <cstddef>
-#include <functional>
-#include <utility>
-
 #include <initializer_list>
+#include <functional>
+#include <type_traits>
+#include <utility>
 
 #if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
 #define BOOST_MULTI_INDEX_SEQ_INDEX_CHECK_INVARIANT_OF(x)                    \
@@ -59,19 +57,9 @@ namespace detail{
 
 template<typename SuperMeta,typename TagList>
 class sequenced_index:
-  BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS SuperMeta::type
+  protected SuperMeta::type
 
 {
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)&&\
-    BOOST_WORKAROUND(__MWERKS__,<=0x3003)
-/* The "ISO C++ Template Parser" option in CW8.3 has a problem with the
- * lifetime of const references bound to temporaries --precisely what
- * scopeguards are.
- */
-
-#pragma parse_mfunc_templ off
-#endif
-
   typedef typename SuperMeta::type                    super;
 
 protected:
@@ -151,7 +139,7 @@ public:
   template <class InputIterator>
   void assign(InputIterator first,InputIterator last)
   {
-    assign_iter(first,last,mpl::not_<is_integral<InputIterator> >());
+    assign_iter(first,last,mpl::not_<std::is_integral<InputIterator> >());
   }
 
   void assign(std::initializer_list<value_type> list)
@@ -290,7 +278,7 @@ public:
   template<typename InputIterator>
   void insert(iterator position,InputIterator first,InputIterator last)
   {
-    insert_iter(position,first,last,mpl::not_<is_integral<InputIterator> >());
+    insert_iter(position,first,last,mpl::not_<std::is_integral<InputIterator> >());
   }
 
   void insert(iterator position,std::initializer_list<value_type> list)
@@ -482,7 +470,7 @@ public:
     }
   }
 
-BOOST_MULTI_INDEX_PROTECTED_IF_MEMBER_TEMPLATE_FRIENDS:
+protected:
   sequenced_index(const ctor_args_list& args_list,const allocator_type& al):
     super(args_list.get_tail(),al)
   {
@@ -724,11 +712,6 @@ private:
     }
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
   }
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)&&\
-    BOOST_WORKAROUND(__MWERKS__,<=0x3003)
-#pragma parse_mfunc_templ reset
-#endif
 };
 
 /* comparison */
