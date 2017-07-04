@@ -14,7 +14,6 @@
 #include <boost/mpl/size.hpp>
 #include <boost/multi_index/detail/index_base.hpp>
 #include <boost/multi_index/detail/is_index_list.hpp>
-#include <boost/static_assert.hpp>
 
 namespace boost{
 
@@ -40,7 +39,7 @@ struct index_applier
 template<int N,typename Value,typename IndexSpecifierList,typename Allocator>
 struct nth_layer
 {
-  BOOST_STATIC_CONSTANT(int,length=mpl::size<IndexSpecifierList>::value);
+  static const int length = mpl::size<IndexSpecifierList>::value;
 
   typedef typename  mpl::eval_if_c<
     N==length,
@@ -56,7 +55,7 @@ struct nth_layer
 template<typename Value,typename IndexSpecifierList,typename Allocator>
 struct multi_index_base_type:nth_layer<0,Value,IndexSpecifierList,Allocator>
 {
-  BOOST_STATIC_ASSERT(detail::is_index_list<IndexSpecifierList>::value);
+  static_assert(detail::is_index_list<IndexSpecifierList>::value, "");
 };
 
 } /* namespace multi_index::detail */

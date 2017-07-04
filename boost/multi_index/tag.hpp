@@ -16,7 +16,6 @@
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/type_traits/is_base_and_derived.hpp>
 
 /* A wrapper of mpl::vector used to hide MPL from the user.
@@ -49,7 +48,7 @@ struct tag_marker{};
 template<typename T>
 struct is_tag
 {
-  BOOST_STATIC_CONSTANT(bool,value=(is_base_and_derived<tag_marker,T>::value));
+    static const bool value = is_base_and_derived<tag_marker,T>::value;
 };
 
 } /* namespace multi_index::detail */
@@ -71,7 +70,7 @@ struct tag:private detail::tag_marker
     mpl::identity<mpl::_1>
   >::type type;
 
-  BOOST_STATIC_ASSERT(detail::no_duplicate_tags<type>::value);
+  static_assert(detail::no_duplicate_tags<type>::value, "");
 };
 
 } /* namespace multi_index */

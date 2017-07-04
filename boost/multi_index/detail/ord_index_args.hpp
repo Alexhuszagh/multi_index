@@ -14,7 +14,6 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/multi_index/tag.hpp>
-#include <boost/static_assert.hpp>
 #include <functional>
 
 namespace boost{
@@ -63,9 +62,9 @@ struct ordered_index_args
     mpl::identity<supplied_compare_type>
   >::type                                            compare_type;
 
-  BOOST_STATIC_ASSERT(is_tag<tag_list_type>::value);
-  BOOST_STATIC_ASSERT(!mpl::is_na<key_from_value_type>::value);
-  BOOST_STATIC_ASSERT(!mpl::is_na<compare_type>::value);
+  static_assert(is_tag<tag_list_type>::value, "");
+  static_assert(!mpl::is_na<key_from_value_type>::value, "");
+  static_assert(!mpl::is_na<compare_type>::value, "");
 };
 
 } /* namespace multi_index::detail */

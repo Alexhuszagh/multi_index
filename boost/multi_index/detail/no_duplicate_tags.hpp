@@ -51,8 +51,7 @@ struct no_duplicate_tags
     duplicate_tag_marker
   >::type aux;
 
-  BOOST_STATIC_CONSTANT(
-    bool,value=!(mpl::has_key<aux,duplicate_tag_mark>::value));
+  static const bool value = !mpl::has_key<aux,duplicate_tag_mark>::value;
 };
 
 /* Variant for an index list: duplication is checked
@@ -79,8 +78,7 @@ struct no_duplicate_tags_in_index_list
     duplicate_tag_list_marker
   >::type aux;
 
-  BOOST_STATIC_CONSTANT(
-    bool,value=!(mpl::has_key<aux,duplicate_tag_mark>::value));
+  static const bool value = !mpl::has_key<aux,duplicate_tag_mark>::value;
 };
 
 } /* namespace multi_index::detail */

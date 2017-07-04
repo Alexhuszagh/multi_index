@@ -21,9 +21,9 @@ namespace detail{
 template<typename T>
 struct is_index_list
 {
-  BOOST_STATIC_CONSTANT(bool,mpl_sequence=mpl::is_sequence<T>::value);
-  BOOST_STATIC_CONSTANT(bool,non_empty=!mpl::empty<T>::value);
-  BOOST_STATIC_CONSTANT(bool,value=mpl_sequence&&non_empty);
+  static const bool mpl_sequence = mpl::is_sequence<T>::value;
+  static const bool non_empty = !mpl::empty<T>::value;
+  static const bool value = mpl_sequence&&non_empty;
 };
 
 } /* namespace multi_index::detail */

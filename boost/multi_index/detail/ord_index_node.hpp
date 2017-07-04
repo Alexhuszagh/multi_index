@@ -40,13 +40,11 @@
 #include <boost/detail/allocator_utilities.hpp>
 #include <boost/multi_index/detail/raw_ptr.hpp>
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_COMPRESSED_ORDERED_INDEX_NODES)
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/multi_index/detail/uintptr_type.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <type_traits>
-#endif
 
 namespace boost{
 
@@ -94,23 +92,11 @@ private:
   pointer             right_;
 };
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_COMPRESSED_ORDERED_INDEX_NODES)
 /* If ordered_index_node_impl has even alignment, we can use the least
  * significant bit of one of the ordered_index_node_impl pointers to
  * store color information. This typically reduces the size of
  * ordered_index_node_impl by 25%.
  */
-
-#if defined(BOOST_MSVC)
-/* This code casts pointers to an integer type that has been computed
- * to be large enough to hold the pointer, however the metaprogramming
- * logic is not always spotted by the VC++ code analyser that issues a
- * long list of warnings.
- */
-
-#pragma warning(push)
-#pragma warning(disable:4312 4311)
-#endif
 
 template<typename AugmentPolicy,typename Allocator>
 struct ordered_index_node_compressed_base
@@ -196,15 +182,10 @@ private:
   pointer      left_;
   pointer      right_;
 };
-#if defined(BOOST_MSVC)
-#pragma warning(pop)
-#endif
-#endif
 
 template<typename AugmentPolicy,typename Allocator>
 struct ordered_index_node_impl_base:
 
-#if !defined(BOOST_MULTI_INDEX_DISABLE_COMPRESSED_ORDERED_INDEX_NODES)
   AugmentPolicy::template augmented_node<
     typename mpl::if_c<
       !(has_uintptr_type::value)||
@@ -221,11 +202,6 @@ struct ordered_index_node_impl_base:
       ordered_index_node_compressed_base<AugmentPolicy,Allocator>
     >::type
   >::type
-#else
-  AugmentPolicy::template augmented_node<
-    ordered_index_node_std_base<AugmentPolicy,Allocator>
-  >::type
-#endif
 
 {};
 
