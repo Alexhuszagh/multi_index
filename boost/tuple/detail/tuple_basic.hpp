@@ -33,6 +33,7 @@
 #define BOOST_TUPLE_BASIC_HPP
 
 
+#include <functional>
 #include <utility> // needed for the assignment from pair to tuple
 
 #include "boost/type_traits/cv_traits.hpp"
@@ -690,12 +691,12 @@ struct make_tuple_traits<const volatile T[n]> {
 };
 
 template<class T>
-struct make_tuple_traits<reference_wrapper<T> >{
+struct make_tuple_traits<std::reference_wrapper<T> >{
   typedef T& type;
 };
 
 template<class T>
-struct make_tuple_traits<const reference_wrapper<T> >{
+struct make_tuple_traits<const std::reference_wrapper<T> >{
   typedef T& type;
 };
 

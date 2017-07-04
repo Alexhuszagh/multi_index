@@ -53,7 +53,6 @@
 #include <boost/multi_index/detail/value_compare.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/multi_index/detail/ord_index_impl_fwd.hpp>
-#include <boost/ref.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <initializer_list>
 #include <iterator>

@@ -24,7 +24,6 @@
 #include <functional>
 #include <type_traits>
 
-#include <boost/ref.hpp>
 #include <boost/multi_index/detail/cons_stdtuple.hpp>
 
 /* A composite key stores n key extractors and "computes" the
@@ -87,8 +86,6 @@
   >::type
 
 namespace boost{
-
-template<class T> class reference_wrapper; /* fwd decl. */
 
 namespace multi_index{
 
@@ -609,12 +606,12 @@ public:
     return result_type(*this,x);
   }
 
-  result_type operator()(const reference_wrapper<const value_type>& x)const
+  result_type operator()(const std::reference_wrapper<const value_type>& x)const
   {
     return result_type(*this,x.get());
   }
 
-  result_type operator()(const reference_wrapper<value_type>& x)const
+  result_type operator()(const std::reference_wrapper<value_type>& x)const
   {
     return result_type(*this,x.get());
   }
@@ -1111,7 +1108,7 @@ public:
     const composite_key_result<CompositeKey>& x,
     const Value& y)const
   {
-    return operator()(x,boost::make_tuple(boost::cref(y)));
+    return operator()(x,boost::make_tuple(std::cref(y)));
   }
 
   template
@@ -1144,7 +1141,7 @@ public:
     const Value& x,
     const composite_key_result<CompositeKey>& y)const
   {
-    return operator()(boost::make_tuple(boost::cref(x)),y);
+    return operator()(boost::make_tuple(std::cref(x)),y);
   }
 
   template

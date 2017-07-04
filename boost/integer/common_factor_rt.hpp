@@ -152,19 +152,11 @@ namespace detail
             // Whittle down the values via their differences
             do
             {
-#if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x582))
-                while ( !(r[ which ] & 1u) )
-                {
-                    r[ which ] = (r[which] >> 1);
-                }
-#else
                 // Remove factors of two from the even one
                 while ( !(r[ which ] & 1u) )
                 {
                     r[ which ] >>= 1;
                 }
-#endif
-
                 // Replace the larger of the two with their difference
                 if ( r[!which] > r[which] )
                 {

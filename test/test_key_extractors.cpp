@@ -13,7 +13,7 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/multi_index/key_extractors.hpp>
-#include <boost/ref.hpp>
+#include <functional>
 #include <list>
 #include <memory>
 
@@ -90,7 +90,7 @@ typedef composite_key<
           ckey_m
         >                                                          ccompkey;
 typedef composite_key<
-          boost::reference_wrapper<test_class>,
+          std::reference_wrapper<test_class>,
           key_mf
         >                                                          ccompw_key;
 
@@ -189,8 +189,8 @@ void test_key_extractors()
   std::unique_ptr<test_class*>                 tap(new test_class*(tp));
   std::unique_ptr<const test_class*>           ctap(new const test_class*(ctp));
 
-  boost::reference_wrapper<test_class>       tw(tr);
-  boost::reference_wrapper<const test_class> ctw(tr);
+  std::reference_wrapper<test_class>       tw(tr);
+  std::reference_wrapper<const test_class> ctw(tr);
 
   id(tr).int_member=0;
   BOOST_TEST(id(tr).int_member==0);
@@ -448,7 +448,7 @@ void test_key_extractors()
   BOOST_TEST(nc_k_grf(nc_td));
 
   test_nc_class nc_t(1,0);
-  BOOST_TEST(nc_cmpk(nc_td)==make_tuple(boost::cref(nc_t),1,1,true));
+  BOOST_TEST(nc_cmpk(nc_td)==make_tuple(std::cref(nc_t),1,1,true));
 #endif
 
   std::list<test_class> tl;

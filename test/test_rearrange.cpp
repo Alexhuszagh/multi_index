@@ -11,15 +11,15 @@
 #include "test_rearrange.hpp"
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <algorithm>
-#include <iterator>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/sequenced_index.hpp>
 #include <boost/multi_index/random_access_index.hpp>
 #include <boost/next_prior.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
-#include <boost/ref.hpp>
+#include <algorithm>
+#include <functional>
+#include <iterator>
 #include <vector>
 
 using namespace boost::multi_index;
@@ -88,9 +88,9 @@ static void local_test_rearrange()
   sc.relocate(boost::prior(sc.end()),it,it2);
   CHECK_EQUAL(sc,(3)(0)(2)(4)(5)(1));
 
-  std::vector<boost::reference_wrapper<const value_type> > v;
+  std::vector<std::reference_wrapper<const value_type> > v;
   for(iterator it3=sc.begin();it3!=sc.end();++it3){
-    v.push_back(boost::cref(*it3));
+    v.push_back(std::cref(*it3));
   }
 
   sc.rearrange(v.begin());
