@@ -6,12 +6,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_FWD_HPP
-#define BOOST_MULTI_INDEX_FWD_HPP
-
-#if defined(_MSC_VER)
 #pragma once
-#endif
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/identity.hpp>
@@ -117,5 +112,3 @@ void swap(
 using multi_index::multi_index_container;
 
 } /* namespace boost */
-
-#endif
