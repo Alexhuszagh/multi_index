@@ -16,8 +16,6 @@
 
 #include <boost/functional/hash/hash.hpp>
 #include <boost/detail/container_fwd.hpp>
-//#include <boost/preprocessor/repetition/repeat_from_to.hpp>
-//#include <boost/preprocessor/repetition/enum_params.hpp>
 
 #include <array>
 #include <tuple>
