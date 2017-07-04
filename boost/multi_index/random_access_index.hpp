@@ -25,7 +25,6 @@
 #include <boost/multi_index/detail/scope_guard.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/multi_index/random_access_index_fwd.hpp>
-#include <boost/throw_exception.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <cstddef>
 #include <functional>
@@ -231,7 +230,8 @@ public:
 
   const_reference at(size_type n)const
   {
-    if(n>=size())throw_exception(std::out_of_range("random access index"));
+    if(n>=size())
+      throw std::out_of_range("random access index");
     return node_type::from_impl(*ptrs.at(n))->value();
   }
 
