@@ -30,16 +30,16 @@
  */
 
 #pragma once
-#include <boost/detail/workaround.hpp>
 
+#include <algorithm>
 #include <cassert>
 #include <cstddef>
 #include <stdexcept>
 #include <iterator>
-#include <boost/swap.hpp>
+#include <utility>
 
+#include <boost/detail/workaround.hpp>
 #include <boost/throw_exception.hpp>
-#include <algorithm>
 
 // FIXES for broken compilers
 #include <boost/config.hpp>
@@ -147,7 +147,7 @@ namespace boost {
         // swap (note: linear complexity)
         void swap (array<T,N>& y) {
             for (size_type i = 0; i < N; ++i)
-                boost::swap(elems[i],y.elems[i]);
+                std::swap(elems[i],y.elems[i]);
         }
 
         // direct access to data (read-only)

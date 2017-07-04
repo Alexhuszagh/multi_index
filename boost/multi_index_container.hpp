@@ -21,7 +21,6 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/multi_index_container_fwd.hpp>
-#include <boost/multi_index/detail/adl_swap.hpp>
 #include <boost/multi_index/detail/base_type.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
 #include <boost/multi_index/detail/converter.hpp>
@@ -32,6 +31,7 @@
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/utility/base_from_member.hpp>
 #include <initializer_list>
+#include <utility>
 
 namespace boost{
 
@@ -619,7 +619,7 @@ protected:
   void swap_(multi_index_container<Value,IndexSpecifierList,Allocator>& x)
   {
     if(bfm_allocator::member!=x.bfm_allocator::member){
-      detail::adl_swap(bfm_allocator::member,x.bfm_allocator::member);
+      std::swap(bfm_allocator::member,x.bfm_allocator::member);
     }
     std::swap(bfm_header::member,x.bfm_header::member);
     super::swap_(x);

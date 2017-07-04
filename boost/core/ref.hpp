@@ -1,15 +1,8 @@
-#ifndef BOOST_CORE_REF_HPP
-#define BOOST_CORE_REF_HPP
-
-// MS compatible compilers support #pragma once
-
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
-# pragma once
-#endif
+#pragma once
 
 #include <boost/config.hpp>
-#include <boost/utility/addressof.hpp>
 #include <boost/detail/workaround.hpp>
+#include <memory>
 
 //
 //  ref.hpp - ref/cref, useful helper functions
@@ -70,11 +63,11 @@ public:
 
      @remark Does not throw.
     */
-    BOOST_FORCEINLINE explicit reference_wrapper(T& t): t_(boost::addressof(t)) {}
+    BOOST_FORCEINLINE explicit reference_wrapper(T& t): t_(std::addressof(t)) {}
 
 #if defined( BOOST_MSVC ) && BOOST_WORKAROUND( BOOST_MSVC, == 1600 )
 
-    BOOST_FORCEINLINE explicit reference_wrapper( T & t, ref_workaround_tag ): t_( boost::addressof( t ) ) {}
+    BOOST_FORCEINLINE explicit reference_wrapper( T & t, ref_workaround_tag ): t_( std::addressof( t ) ) {}
 
 #endif
 
@@ -297,5 +290,3 @@ template<class T> BOOST_FORCEINLINE T* get_pointer( reference_wrapper<T> const &
 */
 
 } // namespace boost
-
-#endif // #ifndef BOOST_CORE_REF_HPP

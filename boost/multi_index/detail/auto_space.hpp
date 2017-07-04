@@ -10,9 +10,8 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
-#include <boost/multi_index/detail/adl_swap.hpp>
 #include <boost/noncopyable.hpp>
-#include <memory>
+#include <utility>
 
 namespace boost{
 
@@ -57,7 +56,8 @@ struct auto_space:private noncopyable
 
   void swap(auto_space& x)
   {
-    if(al_!=x.al_)adl_swap(al_,x.al_);
+    if(al_!=x.al_)
+      std::swap(al_,x.al_);
     std::swap(n_,x.n_);
     std::swap(data_,x.data_);
   }
