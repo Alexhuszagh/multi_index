@@ -5,8 +5,8 @@
 // Copyright Eric Friedman 2002
 // Copyright Aleksey Gurtovoy 2004
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
@@ -22,8 +22,8 @@
 #include <boost/mpl/aux_/traits_lambda_spec.hpp>
 #include <boost/mpl/aux_/config/forwarding.hpp>
 #include <boost/mpl/aux_/config/static_constant.hpp>
+#include <type_traits>
 
-#include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace mpl {
 
@@ -31,26 +31,11 @@ template< typename Tag >
 struct contains_impl
 {
     template< typename Sequence, typename T > struct apply
-#if !defined(BOOST_MPL_CFG_NO_NESTED_FORWARDING)
-        : not_< is_same<
+        : not_< std::is_same<
               typename find<Sequence,T>::type
             , typename end<Sequence>::type
             > >
     {
-#else
-    {
-        typedef not_< is_same<
-              typename find<Sequence,T>::type
-            , typename end<Sequence>::type
-            > > type;
-
-        BOOST_STATIC_CONSTANT(bool, value = 
-              (not_< is_same<
-                  typename find<Sequence,T>::type
-                , typename end<Sequence>::type
-                > >::value)
-            );
-#endif
     };
 };
 
