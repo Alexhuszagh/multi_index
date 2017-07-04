@@ -9,12 +9,10 @@ enable_testing()
 # FLAGS
 # -----
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 set(CXX_STANDARD TRUE)
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-# TODO: need to remove later...
-add_definitions(-DBOOST_MULTI_INDEX_DISABLE_SERIALIZATION -UBOOST_MULTI_INDEX_ENABLE_SAFE_MODE)
 
 if(UNIX)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -32,7 +30,7 @@ endif()
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++14")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 endif()
 
 # TESTS

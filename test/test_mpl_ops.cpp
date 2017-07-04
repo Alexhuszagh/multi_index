@@ -30,12 +30,12 @@ void test_mpl_ops()
      >
   >                           indexed_t1;
 
-  BOOST_STATIC_ASSERT((boost::is_same<
+  static_assert((boost::is_same<
     boost::mpl::at_c<indexed_t1::index_specifier_type_list,0>::type,
-    ordered_unique<identity<int> > >::value));
-  BOOST_STATIC_ASSERT((boost::is_same<
+    ordered_unique<identity<int> > >::value), "");
+  static_assert((boost::is_same<
     boost::mpl::at_c<indexed_t1::index_specifier_type_list,1>::type,
-    ordered_non_unique<identity<int> > >::value));
+    ordered_non_unique<identity<int> > >::value), "");
 
   typedef boost::mpl::push_front<
     indexed_t1::index_specifier_type_list,
@@ -47,15 +47,15 @@ void test_mpl_ops()
     index_list_t
   >                           indexed_t2;
 
-  BOOST_STATIC_ASSERT((boost::is_same<
+  static_assert((boost::is_same<
     boost::mpl::at_c<indexed_t2::index_specifier_type_list,0>::type,
-    sequenced<> >::value));
-  BOOST_STATIC_ASSERT((boost::is_same<
+    sequenced<> >::value), "");
+  static_assert((boost::is_same<
     boost::mpl::at_c<indexed_t2::index_specifier_type_list,1>::type,
-    boost::mpl::at_c<indexed_t1::index_specifier_type_list,0>::type>::value));
-  BOOST_STATIC_ASSERT((boost::is_same<
+    boost::mpl::at_c<indexed_t1::index_specifier_type_list,0>::type>::value), "");
+  static_assert((boost::is_same<
     boost::mpl::at_c<indexed_t2::index_specifier_type_list,2>::type,
-    boost::mpl::at_c<indexed_t1::index_specifier_type_list,1>::type>::value));
+    boost::mpl::at_c<indexed_t1::index_specifier_type_list,1>::type>::value), "");
 
   typedef multi_index_container<
     int,
@@ -65,10 +65,10 @@ void test_mpl_ops()
     >
   >                           indexed_t3;
 
-  BOOST_STATIC_ASSERT((boost::is_same<
+  static_assert((boost::is_same<
     boost::mpl::at_c<indexed_t3::index_specifier_type_list,0>::type,
-    boost::mpl::at_c<indexed_t1::index_specifier_type_list,0>::type>::value));
-  BOOST_STATIC_ASSERT((boost::is_same<
+    boost::mpl::at_c<indexed_t1::index_specifier_type_list,0>::type>::value), "");
+  static_assert((boost::is_same<
     boost::mpl::at_c<indexed_t3::index_specifier_type_list,1>::type,
-    boost::mpl::at_c<indexed_t1::index_specifier_type_list,1>::type>::value));
+    boost::mpl::at_c<indexed_t1::index_specifier_type_list,1>::type>::value), "");
 }

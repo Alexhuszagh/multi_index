@@ -72,10 +72,6 @@
 //  CodeGear - must be checked for before Borland
 #   define BOOST_COMPILER_CONFIG "boost/config/compiler/codegear.hpp"
 
-#elif defined __BORLANDC__
-//  Borland
-#   define BOOST_COMPILER_CONFIG "boost/config/compiler/borland.hpp"
-
 #elif defined  __MWERKS__
 //  Metrowerks CodeWarrior
 #   define BOOST_COMPILER_CONFIG "boost/config/compiler/metrowerks.hpp"
@@ -131,7 +127,6 @@
 #include <boost/config/compiler/compaq_cxx.hpp>
 #include <boost/config/compiler/greenhills.hpp>
 #include <boost/config/compiler/codegear.hpp>
-#include <boost/config/compiler/borland.hpp>
 #include <boost/config/compiler/metrowerks.hpp>
 #include <boost/config/compiler/sunpro_cc.hpp>
 #include <boost/config/compiler/hp_acc.hpp>

@@ -20,7 +20,6 @@
 #include <boost/integer_traits.hpp>  // for boost::::boost::integer_traits
 #include <limits>          // for ::std::numeric_limits
 #include <boost/cstdint.hpp>         // for boost::int64_t and BOOST_NO_INTEGRAL_INT64_T
-#include <boost/static_assert.hpp>
 
 //
 // We simply cannot include this header on gcc without getting copious warnings of the kind:
@@ -57,20 +56,12 @@ namespace boost
   //  specializatons: 1=long, 2=int, 3=short, 4=signed char,
   //     6=unsigned long, 7=unsigned int, 8=unsigned short, 9=unsigned char
   //  no specializations for 0 and 5: requests for a type > long are in error
-#ifdef BOOST_HAS_LONG_LONG
   template<> struct int_least_helper<1> { typedef boost::long_long_type least; };
-#elif defined(BOOST_HAS_MS_INT64)
-  template<> struct int_least_helper<1> { typedef __int64 least; };
-#endif
   template<> struct int_least_helper<2> { typedef long least; };
   template<> struct int_least_helper<3> { typedef int least; };
   template<> struct int_least_helper<4> { typedef short least; };
   template<> struct int_least_helper<5> { typedef signed char least; };
-#ifdef BOOST_HAS_LONG_LONG
   template<> struct uint_least_helper<1> { typedef boost::ulong_long_type least; };
-#elif defined(BOOST_HAS_MS_INT64)
-  template<> struct uint_least_helper<1> { typedef unsigned __int64 least; };
-#endif
   template<> struct uint_least_helper<2> { typedef unsigned long least; };
   template<> struct uint_least_helper<3> { typedef unsigned int least; };
   template<> struct uint_least_helper<4> { typedef unsigned short least; };
@@ -114,15 +105,11 @@ namespace boost
   template< int Bits >   // bits (including sign) required
   struct int_t : public boost::detail::exact_signed_base_helper<Bits>
   {
-      BOOST_STATIC_ASSERT_MSG(Bits <= (int)(sizeof(intmax_t) * CHAR_BIT),
+      static_assert(Bits <= (int)(sizeof(intmax_t) * CHAR_BIT),
          "No suitable signed integer type with the requested number of bits is available.");
       typedef typename boost::detail::int_least_helper
         <
-#ifdef BOOST_HAS_LONG_LONG
           (Bits <= (int)(sizeof(boost::long_long_type) * CHAR_BIT)) +
-#else
-           1 +
-#endif
           (Bits-1 <= ::std::numeric_limits<long>::digits) +
           (Bits-1 <= ::std::numeric_limits<int>::digits) +
           (Bits-1 <= ::std::numeric_limits<short>::digits) +
@@ -135,31 +122,16 @@ namespace boost
   template< int Bits >   // bits required
   struct uint_t : public boost::detail::exact_unsigned_base_helper<Bits>
   {
-     BOOST_STATIC_ASSERT_MSG(Bits <= (int)(sizeof(uintmax_t) * CHAR_BIT),
+     static_assert(Bits <= (int)(sizeof(uintmax_t) * CHAR_BIT),
          "No suitable unsigned integer type with the requested number of bits is available.");
-#if (defined(__BORLANDC__) || defined(__CODEGEAR__)) && defined(BOOST_NO_INTEGRAL_INT64_T)
-     // It's really not clear why this workaround should be needed... shrug I guess!  JM
-     BOOST_STATIC_CONSTANT(int, s =
-           6 +
-          (Bits <= ::std::numeric_limits<unsigned long>::digits) +
-          (Bits <= ::std::numeric_limits<unsigned int>::digits) +
-          (Bits <= ::std::numeric_limits<unsigned short>::digits) +
-          (Bits <= ::std::numeric_limits<unsigned char>::digits));
-     typedef typename detail::int_least_helper< ::boost::uint_t<Bits>::s>::least least;
-#else
       typedef typename boost::detail::uint_least_helper
         <
-#ifdef BOOST_HAS_LONG_LONG
           (Bits <= (int)(sizeof(boost::long_long_type) * CHAR_BIT)) +
-#else
-           1 +
-#endif
           (Bits <= ::std::numeric_limits<unsigned long>::digits) +
           (Bits <= ::std::numeric_limits<unsigned int>::digits) +
           (Bits <= ::std::numeric_limits<unsigned short>::digits) +
           (Bits <= ::std::numeric_limits<unsigned char>::digits)
         >::least  least;
-#endif
       typedef typename int_fast_t<least>::type  fast;
       // int_fast_t<> works correctly for unsigned too, in spite of the name.
   };

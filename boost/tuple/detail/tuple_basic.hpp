@@ -37,7 +37,6 @@
 #include <type_traits>
 #include <utility> // needed for the assignment from pair to tuple
 
-#include "boost/type_traits/cv_traits.hpp"
 #include "boost/type_traits/function_traits.hpp"
 
 #include "boost/detail/workaround.hpp" // needed for BOOST_WORKAROUND
@@ -97,9 +96,9 @@ template<int N>
 struct drop_front {
     template<class Tuple>
     struct apply {
-        typedef BOOST_DEDUCED_TYPENAME drop_front<N-1>::template
+        typedef typename drop_front<N-1>::template
             apply<Tuple> next;
-        typedef BOOST_DEDUCED_TYPENAME next::type::tail_type type;
+        typedef typename next::type::tail_type type;
         static const type& call(const Tuple& tup) {
             return next::call(tup).tail;
         }
@@ -130,7 +129,7 @@ struct drop_front<0> {
 template<int N, class T>
 struct element
 {
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
+  typedef typename detail::drop_front<N>::template
       apply<T>::type::head_type type;
 };
 
@@ -138,14 +137,10 @@ template<int N, class T>
 struct element<N, const T>
 {
 private:
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
+  typedef typename detail::drop_front<N>::template
       apply<T>::type::head_type unqualified_type;
 public:
-#if BOOST_WORKAROUND(__BORLANDC__,<0x600)
-  typedef const unqualified_type type;
-#else
-  typedef BOOST_DEDUCED_TYPENAME boost::add_const<unqualified_type>::type type;
-#endif
+  typedef typename std::add_const<unqualified_type>::type type;
 };
 #else // def BOOST_NO_CV_SPECIALIZATIONS
 
@@ -154,14 +149,14 @@ namespace detail {
 template<int N, class T, bool IsConst>
 struct element_impl
 {
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
+  typedef typename detail::drop_front<N>::template
       apply<T>::type::head_type type;
 };
 
 template<int N, class T>
 struct element_impl<N, T, true /* IsConst */>
 {
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
+  typedef typename detail::drop_front<N>::template
       apply<T>::type::head_type unqualified_type;
   typedef const unqualified_type type;
 };
@@ -191,7 +186,7 @@ template <class T> struct access_traits {
   typedef const T& const_type;
   typedef T& non_const_type;
 
-  typedef const typename boost::remove_cv<T>::type& parameter_type;
+  typedef const typename std::remove_cv<T>::type& parameter_type;
 
 // used as the tuple constructors parameter types
 // Rationale: non-reference tuple element types can be cv-qualified.
@@ -215,9 +210,9 @@ inline typename access_traits<
                   typename element<N, cons<HT, TT> >::type
                 >::non_const_type
 get(cons<HT, TT>& c) {
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
+  typedef typename detail::drop_front<N>::template
       apply<cons<HT, TT> > impl;
-  typedef BOOST_DEDUCED_TYPENAME impl::type cons_element;
+  typedef typename impl::type cons_element;
   return const_cast<cons_element&>(impl::call(c)).head;
 }
 
@@ -229,7 +224,7 @@ inline typename access_traits<
                   typename element<N, cons<HT, TT> >::type
                 >::const_type
 get(const cons<HT, TT>& c) {
-  typedef BOOST_DEDUCED_TYPENAME detail::drop_front<N>::template
+  typedef typename detail::drop_front<N>::template
       apply<cons<HT, TT> > impl;
   return impl::call(c).head;
 }
@@ -327,7 +322,7 @@ struct cons {
 
   template <class T1, class T2>
   cons& operator=( const std::pair<T1, T2>& u ) {
-    BOOST_STATIC_ASSERT(length<cons>::value == 2); // check length = 2
+    static_assert(length<cons>::value == 2, ""); // check length = 2
     head = u.first; tail.head = u.second; return *this;
   }
 
@@ -584,7 +579,7 @@ public:
 
   template <class U1, class U2>
   tuple& operator=(const std::pair<U1, U2>& k) {
-    BOOST_STATIC_ASSERT(length<tuple>::value == 2);// check_length = 2
+    static_assert(length<tuple>::value == 2, "");// check_length = 2
     this->head = k.first;
     this->tail.head = k.second;
     return *this;

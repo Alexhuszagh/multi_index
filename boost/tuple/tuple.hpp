@@ -14,7 +14,6 @@
 #define BOOST_TUPLE_HPP
 
 #include "boost/config.hpp"
-#include "boost/static_assert.hpp"
 
 // other compilers
 #include "boost/tuple/detail/tuple_basic.hpp"

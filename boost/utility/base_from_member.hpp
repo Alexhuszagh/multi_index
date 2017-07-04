@@ -15,11 +15,7 @@
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
-#include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/remove_cv.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/utility/enable_if.hpp>
-
+#include <type_traits>
 
 //  Base-from-member arity configuration macro  ------------------------------//
 
@@ -72,8 +68,8 @@ namespace detail
 template < typename T >
 struct remove_cv_ref
 {
-    typedef typename ::boost::remove_cv<typename
-     ::boost::remove_reference<T>::type>::type  type;
+    typedef typename std::remove_cv<typename
+     std::remove_reference<T>::type>::type  type;
 
 };  // boost::detail::remove_cv_ref
 
@@ -85,7 +81,7 @@ struct remove_cv_ref
 
 template < typename T, typename U >
 struct is_related
-    : public ::boost::is_same<
+    : public std::is_same<
      typename ::boost::detail::remove_cv_ref<T>::type,
      typename ::boost::detail::remove_cv_ref<U>::type >
 {};
@@ -99,12 +95,12 @@ struct is_related
 #ifndef BOOST_NO_CXX11_VARIADIC_TEMPLATES
 template<typename ...T>
 struct enable_if_unrelated
-    : public ::boost::enable_if_c<true>
+    : public std::enable_if<true>
 {};
 
 template<typename T, typename U, typename ...U2>
 struct enable_if_unrelated<T, U, U2...>
-    : public ::boost::disable_if< ::boost::detail::is_related<T, U> >
+    : public std::enable_if< !::boost::detail::is_related<T, U>::value >
 {};
 #endif
 

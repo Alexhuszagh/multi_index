@@ -20,7 +20,6 @@
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <functional>
 #include <type_traits>
 
@@ -593,8 +592,8 @@ public:
 
   template<typename ChainedPtr>
 
-  typename disable_if<
-    std::is_convertible<const ChainedPtr&,const value_type&>,result_type>::type
+  typename std::enable_if<
+    !std::is_convertible<const ChainedPtr&,const value_type&>::value,result_type>::type
 
   operator()(const ChainedPtr& x)const
   {

@@ -13,7 +13,6 @@
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/type_traits/function_traits.hpp>
-#include <boost/type_traits/is_final.hpp>
 #include <type_traits>
 #include <utility>
 
@@ -62,7 +61,7 @@ template<typename F,typename Arg1,typename Arg2>
 struct is_transparent<
   F,Arg1,Arg2,
   typename std::enable_if<
-    std::is_class<F>::value && !is_final<F>::value
+    std::is_class<F>::value && !std::is_final<F>::value
   >::type
 >:is_transparent_class<F,Arg1,Arg2>{};
 
