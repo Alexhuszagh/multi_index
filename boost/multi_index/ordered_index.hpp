@@ -39,13 +39,6 @@ struct null_augment_policy
   template<typename Pointer> static void copy(Pointer,Pointer){}
   template<typename Pointer> static void rotate_left(Pointer,Pointer){}
   template<typename Pointer> static void rotate_right(Pointer,Pointer){}
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-  /* invariant stuff */
-
-  template<typename Pointer> static bool invariant(Pointer){return true;}
-
-#endif
 };
 
 } /* namespace multi_index::detail */

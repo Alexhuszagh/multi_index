@@ -38,18 +38,6 @@
 #include <type_traits>
 #include <utility>
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-#define BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT_OF(x)                 \
-  detail::scope_guard BOOST_JOIN(check_invariant_,__LINE__)=                 \
-    detail::make_obj_guard(x,&hashed_index::check_invariant_);               \
-  BOOST_JOIN(check_invariant_,__LINE__).touch();
-#define BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT                       \
-  BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT_OF(*this)
-#else
-#define BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT_OF(x)
-#define BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT
-#endif
-
 namespace boost{
 
 namespace multi_index{
@@ -205,21 +193,18 @@ public:
 
   std::pair<iterator,bool> insert(const value_type& x)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_(x);
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
   }
 
   std::pair<iterator,bool> insert(BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_rv_(x);
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
   }
 
   iterator insert(iterator position,const value_type& x)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_(
       x,static_cast<final_node_type*>(position.get_node()));
     return make_iterator(p.first);
@@ -227,7 +212,6 @@ public:
 
   iterator insert(iterator position,BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_rv_(
       x,static_cast<final_node_type*>(position.get_node()));
     return make_iterator(p.first);
@@ -236,7 +220,6 @@ public:
   template<typename InputIterator>
   void insert(InputIterator first,InputIterator last)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     for(;first!=last;++first)this->final_insert_ref_(*first);
   }
 
@@ -247,14 +230,12 @@ public:
 
   iterator erase(iterator position)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     this->final_erase_(static_cast<final_node_type*>(position++.get_node()));
     return position;
   }
 
   size_type erase(key_param_type k)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
 
     std::size_t buc=buckets.position(hash_(k));
     for(node_impl_pointer x=buckets.at(buc)->prior();
@@ -277,7 +258,6 @@ public:
 
   iterator erase(iterator first,iterator last)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     while(first!=last){
       first=erase(first);
     }
@@ -286,14 +266,12 @@ public:
 
   bool replace(iterator position,const value_type& x)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     return this->final_replace_(
       x,static_cast<final_node_type*>(position.get_node()));
   }
 
   bool replace(iterator position,BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     return this->final_replace_rv_(
       x,static_cast<final_node_type*>(position.get_node()));
   }
@@ -301,7 +279,6 @@ public:
   template<typename Modifier>
   bool modify(iterator position,Modifier mod)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
 
     return this->final_modify_(
       mod,static_cast<final_node_type*>(position.get_node()));
@@ -310,7 +287,6 @@ public:
   template<typename Modifier,typename Rollback>
   bool modify(iterator position,Modifier mod,Rollback back_)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
 
     return this->final_modify_(
       mod,back_,static_cast<final_node_type*>(position.get_node()));
@@ -319,7 +295,6 @@ public:
   template<typename Modifier>
   bool modify_key(iterator position,Modifier mod)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     return modify(
       position,modify_key_adaptor<Modifier,value_type,KeyFromValue>(mod,key));
   }
@@ -327,7 +302,6 @@ public:
   template<typename Modifier,typename Rollback>
   bool modify_key(iterator position,Modifier mod,Rollback back_)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     return modify(
       position,
       modify_key_adaptor<Modifier,value_type,KeyFromValue>(mod,key),
@@ -336,14 +310,11 @@ public:
 
   void clear()BOOST_NOEXCEPT
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     this->final_clear_();
   }
 
   void swap(hashed_index<KeyFromValue,Hash,Pred,SuperMeta,TagList,Category>& x)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT_OF(x);
     this->final_swap_(x.final());
   }
 
@@ -479,7 +450,6 @@ public:
 
   void rehash(size_type n)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     if(size()<=max_load&&n<=bucket_count())return;
 
     size_type bc =(std::numeric_limits<size_type>::max)();
@@ -899,42 +869,6 @@ protected:
     return true;
   }
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-  /* invariant stuff */
-
-  bool invariant_()const
-  {
-    if(size()==0||begin()==end()){
-      if(size()!=0||begin()!=end())return false;
-    }
-    else{
-      size_type s0=0;
-      for(const_iterator it=begin(),it_end=end();it!=it_end;++it,++s0){}
-      if(s0!=size())return false;
-
-      size_type s1=0;
-      for(size_type buc=0;buc<bucket_count();++buc){
-        size_type ss1=0;
-        for(const_local_iterator it=begin(buc),it_end=end(buc);
-            it!=it_end;++it,++ss1){
-          if(find_bucket(*it)!=buc)return false;
-        }
-        if(ss1!=bucket_size(buc))return false;
-        s1+=ss1;
-      }
-      if(s1!=size())return false;
-    }
-
-    return super::invariant_();
-  }
-
-  /* This forwarding function eases things for the boost::mem_fn construct
-   * in BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT. Actually,
-   * final_check_invariant is already an inherited member function of index.
-   */
-  void check_invariant_()const{this->final_check_invariant_();}
-#endif
-
 private:
   node_type* header()const{return this->final_header();}
 
@@ -1294,7 +1228,6 @@ private:
   template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
   std::pair<iterator,bool> emplace_impl(BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool>p=
       this->final_emplace_(BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
@@ -1304,7 +1237,6 @@ private:
   iterator emplace_hint_impl(
     iterator position,BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
   {
-    BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool>p=
       this->final_emplace_hint_(
         static_cast<final_node_type*>(position.get_node()),
@@ -1519,5 +1451,3 @@ inline boost::mpl::true_* boost_foreach_is_noncopyable(
   return 0;
 }
 
-#undef BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT
-#undef BOOST_MULTI_INDEX_HASHED_INDEX_CHECK_INVARIANT_OF

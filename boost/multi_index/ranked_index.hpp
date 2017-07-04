@@ -301,16 +301,6 @@ struct rank_policy
   {
     rotate_left(x,y);
   }
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-  /* invariant stuff */
-
-  template<typename Pointer>
-  static bool invariant(Pointer x)
-  {
-    return x->size==ranked_node_size(x->left())+ranked_node_size(x->right())+1;
-  }
-#endif
 };
 
 } /* namespace multi_index::detail */

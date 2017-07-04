@@ -38,7 +38,7 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <boost/call_traits.hpp>
-#include <boost/detail/workaround.hpp>
+//#include <boost/detail/workaround.hpp>
 #include <boost/foreach_fwd.hpp>
 #include <boost/iterator/reverse_iterator.hpp>
 #include <boost/move/core.hpp>
@@ -61,18 +61,6 @@
 #include <initializer_list>
 #include <utility>
 #include <type_traits>
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-#define BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT_OF(x)                    \
-  detail::scope_guard BOOST_JOIN(check_invariant_,__LINE__)=                 \
-    detail::make_obj_guard(x,&ordered_index_impl::check_invariant_);         \
-  BOOST_JOIN(check_invariant_,__LINE__).touch();
-#define BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT                          \
-  BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT_OF(*this)
-#else
-#define BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT_OF(x)
-#define BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT
-#endif
 
 namespace boost{
 
@@ -240,21 +228,18 @@ public:
 
   std::pair<iterator,bool> insert(const value_type& x)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_(x);
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
   }
 
   std::pair<iterator,bool> insert(BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_rv_(x);
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
   }
 
   iterator insert(iterator position,const value_type& x)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_(
       x,static_cast<final_node_type*>(position.get_node()));
     return make_iterator(p.first);
@@ -262,7 +247,6 @@ public:
 
   iterator insert(iterator position,BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_rv_(
       x,static_cast<final_node_type*>(position.get_node()));
     return make_iterator(p.first);
@@ -271,7 +255,6 @@ public:
   template<typename InputIterator>
   void insert(InputIterator first,InputIterator last)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     node_type* hint=header(); /* end() */
     for(;first!=last;++first){
       hint=this->final_insert_ref_(
@@ -287,14 +270,12 @@ public:
 
   iterator erase(iterator position)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     this->final_erase_(static_cast<final_node_type*>(position++.get_node()));
     return position;
   }
 
   size_type erase(key_param_type x)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     std::pair<iterator,iterator> p=equal_range(x);
     size_type s=0;
     while(p.first!=p.second){
@@ -306,7 +287,6 @@ public:
 
   iterator erase(iterator first,iterator last)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     while(first!=last){
       first=erase(first);
     }
@@ -315,14 +295,12 @@ public:
 
   bool replace(iterator position,const value_type& x)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     return this->final_replace_(
       x,static_cast<final_node_type*>(position.get_node()));
   }
 
   bool replace(iterator position,BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     return this->final_replace_rv_(
       x,static_cast<final_node_type*>(position.get_node()));
   }
@@ -330,7 +308,6 @@ public:
   template<typename Modifier>
   bool modify(iterator position,Modifier mod)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
 
     return this->final_modify_(
       mod,static_cast<final_node_type*>(position.get_node()));
@@ -339,7 +316,6 @@ public:
   template<typename Modifier,typename Rollback>
   bool modify(iterator position,Modifier mod,Rollback back_)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
 
     return this->final_modify_(
       mod,back_,static_cast<final_node_type*>(position.get_node()));
@@ -348,7 +324,6 @@ public:
   template<typename Modifier>
   bool modify_key(iterator position,Modifier mod)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     return modify(
       position,modify_key_adaptor<Modifier,value_type,KeyFromValue>(mod,key));
   }
@@ -356,7 +331,6 @@ public:
   template<typename Modifier,typename Rollback>
   bool modify_key(iterator position,Modifier mod,Rollback back_)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     return modify(
       position,
       modify_key_adaptor<Modifier,value_type,KeyFromValue>(mod,key),
@@ -367,14 +341,11 @@ public:
     ordered_index<
       KeyFromValue,Compare,SuperMeta,TagList,Category,AugmentPolicy>& x)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT_OF(x);
     this->final_swap_(x.final());
   }
 
   void clear()BOOST_NOEXCEPT
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     this->final_clear_();
   }
 
@@ -755,56 +726,6 @@ protected:
     }
   }
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-  /* invariant stuff */
-
-  bool invariant_()const
-  {
-    if(size()==0||begin()==end()){
-      if(size()!=0||begin()!=end()||
-         header()->left()!=header()->impl()||
-         header()->right()!=header()->impl())return false;
-    }
-    else{
-      if((size_type)std::distance(begin(),end())!=size())return false;
-
-      std::size_t len=node_impl_type::black_count(
-        leftmost()->impl(),root()->impl());
-      for(const_iterator it=begin(),it_end=end();it!=it_end;++it){
-        node_type* x=it.get_node();
-        node_type* left_x=node_type::from_impl(x->left());
-        node_type* right_x=node_type::from_impl(x->right());
-
-        if(x->color()==red){
-          if((left_x&&left_x->color()==red)||
-             (right_x&&right_x->color()==red))return false;
-        }
-        if(left_x&&comp_(key(x->value()),key(left_x->value())))return false;
-        if(right_x&&comp_(key(right_x->value()),key(x->value())))return false;
-        if(!left_x&&!right_x&&
-           node_impl_type::black_count(x->impl(),root()->impl())!=len)
-          return false;
-        if(!AugmentPolicy::invariant(x->impl()))return false;
-      }
-
-      if(leftmost()->impl()!=node_impl_type::minimum(root()->impl()))
-        return false;
-      if(rightmost()->impl()!=node_impl_type::maximum(root()->impl()))
-        return false;
-    }
-
-    return super::invariant_();
-  }
-
-
-  /* This forwarding function eases things for the boost::mem_fn construct
-   * in BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT. Actually,
-   * final_check_invariant is already an inherited member function of
-   * ordered_index_impl.
-   */
-  void check_invariant_()const{this->final_check_invariant_();}
-#endif
-
 protected: /* for the benefit of AugmentPolicy::augmented_interface */
   node_type* header()const{return this->final_header();}
   node_type* root()const{return node_type::from_impl(header()->parent());}
@@ -1011,7 +932,6 @@ private:
   template<BOOST_MULTI_INDEX_TEMPLATE_PARAM_PACK>
   std::pair<iterator,bool> emplace_impl(BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool>p=
       this->final_emplace_(BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
     return std::pair<iterator,bool>(make_iterator(p.first),p.second);
@@ -1021,7 +941,6 @@ private:
   iterator emplace_hint_impl(
     iterator position,BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
   {
-    BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool>p=
       this->final_emplace_hint_(
         static_cast<final_node_type*>(position.get_node()),
@@ -1304,6 +1223,3 @@ inline boost::mpl::true_* boost_foreach_is_noncopyable(
 {
   return 0;
 }
-
-#undef BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT
-#undef BOOST_MULTI_INDEX_ORD_INDEX_CHECK_INVARIANT_OF

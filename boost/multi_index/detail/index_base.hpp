@@ -165,12 +165,6 @@ protected:
 
   bool modify_rollback_(node_type*){return true;}
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-  /* invariant stuff */
-
-  bool invariant_()const{return true;}
-#endif
-
   /* access to backbone memfuns of Final class */
 
   final_type&       final(){return *static_cast<final_type*>(this);}
@@ -245,10 +239,6 @@ protected:
   template<typename Modifier,typename Rollback>
   bool final_modify_(Modifier& mod,Rollback& back,final_node_type* x)
     {return final().modify_(mod,back,x);}
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-  void final_check_invariant_()const{final().check_invariant_();}
-#endif
 };
 
 } /* namespace multi_index::detail */

@@ -539,22 +539,6 @@ public:
       link(x,to_right,position,header);
     }
   }
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-  /* invariant stuff */
-
-  static std::size_t black_count(pointer node,pointer root)
-  {
-    if(node==pointer(0))return 0;
-    std::size_t sum=0;
-    for(;;){
-      if(node->color()==black)++sum;
-      if(node==root)break;
-      node=node->parent();
-    }
-    return sum;
-  }
-#endif
 };
 
 template<typename AugmentPolicy,typename Super>

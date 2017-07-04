@@ -34,22 +34,9 @@
 #include <boost/type_traits/is_integral.hpp>
 #include <cstddef>
 #include <functional>
+#include <initializer_list>
 #include <stdexcept>
 #include <utility>
-
-#include<initializer_list>
-
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-#define BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT_OF(x)                    \
-  detail::scope_guard BOOST_JOIN(check_invariant_,__LINE__)=                 \
-    detail::make_obj_guard(x,&random_access_index::check_invariant_);        \
-  BOOST_JOIN(check_invariant_,__LINE__).touch();
-#define BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT                          \
-  BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT_OF(*this)
-#else
-#define BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT_OF(x)
-#define BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT
-#endif
 
 namespace boost{
 
@@ -159,7 +146,6 @@ public:
 
   void assign(size_type n,value_param_type value)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     clear();
     for(size_type i=0;i<n;++i)push_back(value);
   }
@@ -215,19 +201,16 @@ public:
 
   void reserve(size_type n)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     ptrs.reserve(n);
   }
 
   void shrink_to_fit()
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     ptrs.shrink_to_fit();
   }
 
   void resize(size_type n)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     if(n>size())
       for(size_type m=n-size();m--;)
         this->final_emplace_(BOOST_MULTI_INDEX_NULL_PARAM_PACK);
@@ -236,7 +219,6 @@ public:
 
   void resize(size_type n,value_param_type x)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     if(n>size())for(size_type m=n-size();m--;)this->final_insert_(x);
     else if(n<size())erase(begin()+n,end());
   }
@@ -284,7 +266,6 @@ public:
 
   std::pair<iterator,bool> insert(iterator position,const value_type& x)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_(x);
     if(p.second&&position.get_node()!=header()){
       relocate(position.get_node(),p.first);
@@ -294,7 +275,6 @@ public:
 
   std::pair<iterator,bool> insert(iterator position,BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=this->final_insert_rv_(x);
     if(p.second&&position.get_node()!=header()){
       relocate(position.get_node(),p.first);
@@ -304,7 +284,6 @@ public:
 
   void insert(iterator position,size_type n,value_param_type x)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     size_type s=0;
     try {
       while(n--){
@@ -331,14 +310,12 @@ public:
 
   iterator erase(iterator position)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     this->final_erase_(static_cast<final_node_type*>(position++.get_node()));
     return position;
   }
 
   iterator erase(iterator first,iterator last)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     difference_type n=last-first;
     relocate(end(),first,last);
     while(n--)pop_back();
@@ -347,14 +324,12 @@ public:
 
   bool replace(iterator position,const value_type& x)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     return this->final_replace_(
       x,static_cast<final_node_type*>(position.get_node()));
   }
 
   bool replace(iterator position,BOOST_RV_REF(value_type) x)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     return this->final_replace_rv_(
       x,static_cast<final_node_type*>(position.get_node()));
   }
@@ -362,7 +337,6 @@ public:
   template<typename Modifier>
   bool modify(iterator position,Modifier mod)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
 
     return this->final_modify_(
       mod,static_cast<final_node_type*>(position.get_node()));
@@ -371,7 +345,6 @@ public:
   template<typename Modifier,typename Rollback>
   bool modify(iterator position,Modifier mod,Rollback back_)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
 
     return this->final_modify_(
       mod,back_,static_cast<final_node_type*>(position.get_node()));
@@ -379,14 +352,11 @@ public:
 
   void swap(random_access_index<SuperMeta,TagList>& x)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT_OF(x);
     this->final_swap_(x.final());
   }
 
   void clear()BOOST_NOEXCEPT
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     this->final_clear_();
   }
 
@@ -394,7 +364,6 @@ public:
 
   void splice(iterator position,random_access_index<SuperMeta,TagList>& x)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     iterator  first=x.begin(),last=x.end();
     size_type n=0;
     try {
@@ -416,7 +385,6 @@ public:
   void splice(
     iterator position,random_access_index<SuperMeta,TagList>& x,iterator i)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     if(&x==this)relocate(position,i);
     else{
       if(insert(position,*i).second){
@@ -430,7 +398,6 @@ public:
     iterator position,random_access_index<SuperMeta,TagList>& x,
     iterator first,iterator last)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     if(&x==this)relocate(position,first,last);
     else{
       size_type n=0;
@@ -453,7 +420,6 @@ public:
 
   void remove(value_param_type value)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     difference_type n=
       end()-make_iterator(
         random_access_index_remove<node_type>(
@@ -465,7 +431,6 @@ public:
   template<typename Predicate>
   void remove_if(Predicate pred)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     difference_type n=
       end()-make_iterator(random_access_index_remove<node_type>(ptrs,pred));
     while(n--)pop_back();
@@ -473,7 +438,6 @@ public:
 
   void unique()
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     difference_type n=
       end()-make_iterator(
         random_access_index_unique<node_type>(
@@ -484,7 +448,6 @@ public:
   template <class BinaryPredicate>
   void unique(BinaryPredicate binary_pred)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     difference_type n=
       end()-make_iterator(
         random_access_index_unique<node_type>(ptrs,binary_pred));
@@ -494,7 +457,6 @@ public:
   void merge(random_access_index<SuperMeta,TagList>& x)
   {
     if(this!=&x){
-      BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
       size_type s=size();
       splice(end(),x);
       random_access_index_inplace_merge<node_type>(
@@ -506,7 +468,6 @@ public:
   void merge(random_access_index<SuperMeta,TagList>& x,Compare comp)
   {
     if(this!=&x){
-      BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
       size_type s=size();
       splice(end(),x);
       random_access_index_inplace_merge<node_type>(
@@ -516,7 +477,6 @@ public:
 
   void sort()
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     random_access_index_sort<node_type>(
       get_allocator(),ptrs,std::less<value_type>());
   }
@@ -524,14 +484,12 @@ public:
   template <typename Compare>
   void sort(Compare comp)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     random_access_index_sort<node_type>(
       get_allocator(),ptrs,comp);
   }
 
   void reverse()BOOST_NOEXCEPT
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     node_impl_type::reverse(ptrs.begin(),ptrs.end());
   }
 
@@ -539,13 +497,11 @@ public:
 
   void relocate(iterator position,iterator i)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     if(position!=i)relocate(position.get_node(),i.get_node());
   }
 
   void relocate(iterator position,iterator first,iterator last)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     if(position!=last)relocate(
       position.get_node(),first.get_node(),last.get_node());
   }
@@ -553,7 +509,6 @@ public:
   template<typename InputIterator>
   void rearrange(InputIterator first)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     for(node_impl_ptr_pointer p0=ptrs.begin(),p0_end=ptrs.end();
         p0!=p0_end;++first,++p0){
       const value_type& v1=*first;
@@ -695,34 +650,6 @@ protected:
     return super::modify_rollback_(x);
   }
 
-#if defined(BOOST_MULTI_INDEX_ENABLE_INVARIANT_CHECKING)
-  /* invariant stuff */
-
-  bool invariant_()const
-  {
-    if(size()>capacity())return false;
-    if(size()==0||begin()==end()){
-      if(size()!=0||begin()!=end())return false;
-    }
-    else{
-      size_type s=0;
-      for(const_iterator it=begin(),it_end=end();;++it,++s){
-        if(*(it.get_node()->up())!=it.get_node()->impl())return false;
-        if(it==it_end)break;
-      }
-      if(s!=size())return false;
-    }
-
-    return super::invariant_();
-  }
-
-  /* This forwarding function eases things for the boost::mem_fn construct
-   * in BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT. Actually,
-   * final_check_invariant is already an inherited member function of index.
-   */
-  void check_invariant_()const{this->final_check_invariant_();}
-#endif
-
 private:
   node_type* header()const{return this->final_header();}
 
@@ -740,14 +667,12 @@ private:
   template <class InputIterator>
   void assign_iter(InputIterator first,InputIterator last,mpl::true_)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     clear();
     for(;first!=last;++first)this->final_insert_ref_(*first);
   }
 
   void assign_iter(size_type n,value_param_type value,mpl::false_)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     clear();
     for(size_type i=0;i<n;++i)push_back(value);
   }
@@ -756,7 +681,6 @@ private:
   void insert_iter(
     iterator position,InputIterator first,InputIterator last,mpl::true_)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     size_type s=0;
     try {
       for(;first!=last;++first){
@@ -773,7 +697,6 @@ private:
   void insert_iter(
     iterator position,size_type n,value_param_type x,mpl::false_)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     size_type  s=0;
     try {
       while(n--){
@@ -805,7 +728,6 @@ private:
   std::pair<iterator,bool> emplace_impl(
     iterator position,BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK)
   {
-    BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT;
     std::pair<final_node_type*,bool> p=
       this->final_emplace_(BOOST_MULTI_INDEX_FORWARD_PARAM_PACK);
     if(p.second&&position.get_node()!=header()){
@@ -931,6 +853,3 @@ inline boost::mpl::true_* boost_foreach_is_noncopyable(
 {
   return 0;
 }
-
-#undef BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT
-#undef BOOST_MULTI_INDEX_RND_INDEX_CHECK_INVARIANT_OF
