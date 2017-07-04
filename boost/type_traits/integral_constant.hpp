@@ -6,6 +6,27 @@
 #pragma once
 
 #include <boost/config.hpp>
+#include <boost/detail/workaround.hpp>
+
+// TODO: remove this workaround.... just use std::integral_constant
+
+#if (BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1400)) \
+   || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610)) \
+   || BOOST_WORKAROUND(__DMC__, BOOST_TESTED_AT(0x840)) \
+   || BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3202)) \
+   || BOOST_WORKAROUND(BOOST_INTEL_CXX_VERSION, BOOST_TESTED_AT(810)) )
+
+
+namespace boost{
+   namespace mpl
+   {
+      template <bool B> struct bool_;
+      template <class I, I val> struct integral_c;
+      struct integral_c_tag;
+   }
+}
+
+#else
 
 namespace mpl_{
 
@@ -23,6 +44,8 @@ namespace boost
       using ::mpl_::integral_c_tag;
    }
 }
+
+#endif
 
 namespace boost{
 
