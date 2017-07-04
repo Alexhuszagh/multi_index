@@ -13,9 +13,9 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <cstddef>
+#include <iterator>
 #include "employee.hpp"
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/next_prior.hpp>
 
 struct do_nothing
 {
@@ -58,7 +58,7 @@ void test_stable_update()
     c.count(4)+c.count(5)+c.count(6)+c.count(7);
 
   for(size_type n=c.size();n--;){
-    iterator it=boost::next(c.begin(),n);
+    iterator it=std::next(c.begin(),n);
 
     c.replace(it,*it);
     BOOST_TEST((size_type)std::distance(c.begin(),it)==n);
@@ -77,7 +77,7 @@ void test_stable_update()
                   c.count(5)+c.count(6)+c.count(7)+c.count(8)==num_elems);
       if(b){
         c=cpy;
-        it=boost::next(c.begin(),n);
+        it=std::next(c.begin(),n);
       }
     }
   }
