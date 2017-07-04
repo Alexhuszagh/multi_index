@@ -11,24 +11,9 @@
 
 //! \file
 
-#ifndef BOOST_MOVE_TRAITS_HPP
-#define BOOST_MOVE_TRAITS_HPP
+#pragma once
 
-#ifndef BOOST_CONFIG_HPP
-#  include <boost/config.hpp>
-#endif
-#
-#if defined(BOOST_HAS_PRAGMA_ONCE)
-#  pragma once
-#endif
-
-#include <boost/move/detail/config_begin.hpp>
-
-#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-#include <boost/move/core.hpp>
-#endif
-#include <boost/move/detail/meta_utils.hpp>
-#include <boost/move/detail/type_traits.hpp>
+#include <type_traits>
 
 namespace boost {
 
@@ -42,8 +27,7 @@ namespace boost {
 //! every class should specialize this trait if it wants to improve performance
 //! when inserted in containers.
 template <class T>
-struct has_trivial_destructor_after_move
-   : ::boost::move_detail::is_trivially_destructible<T>
+struct has_trivial_destructor_after_move: std::is_trivially_destructible<T>
 {};
 
 //! By default this traits returns
@@ -53,8 +37,8 @@ struct has_trivial_destructor_after_move
 template <class T>
 struct has_nothrow_move
 {
-   static const bool value = boost::move_detail::is_nothrow_move_constructible<T>::value &&
-                             boost::move_detail::is_nothrow_move_assignable<T>::value;
+   static const bool value = std::is_nothrow_move_constructible<T>::value &&
+                             std::is_nothrow_move_assignable<T>::value;
 };
 
 namespace move_detail {
@@ -64,14 +48,10 @@ struct is_nothrow_move_constructible_or_uncopyable
 {
    //The standard requires is_nothrow_move_constructible for move_if_noexcept
    //but a user (usually in C++03) might specialize has_nothrow_move which includes it
-   static const bool value = is_nothrow_move_constructible<T>::value ||
+   static const bool value = std::is_nothrow_move_constructible<T>::value ||
                              has_nothrow_move<T>::value ||
-                            !is_copy_constructible<T>::value;
+                            !std::is_copy_constructible<T>::value;
 };
 
 }  //move_detail {
 }  //namespace boost {
-
-#include <boost/move/detail/config_end.hpp>
-
-#endif //#ifndef BOOST_MOVE_TRAITS_HPP

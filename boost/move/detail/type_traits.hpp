@@ -34,6 +34,7 @@
 #include <boost/static_assert.hpp>
 // std
 #include <cstddef>
+#include <type_traits>
 
 //Use of Boost.TypeTraits leads to long preprocessed source code due to
 //MPL dependencies. We'll use intrinsics directly and make or own
@@ -743,7 +744,7 @@ struct is_copy_constructible
    //
    // error: function *function_name* cannot be referenced -- it is a deleted function
    // static yes_type test(U&, decltype(U(boost::declval<U&>()))* = 0);
-   //                                                        ^ 
+   //                                                        ^
    // MSVC 12.0 (Visual 2013) has problems when the copy constructor has been deleted. See:
    // https://connect.microsoft.com/VisualStudio/feedback/details/800328/std-is-copy-constructible-is-broken
    #if defined(BOOST_MOVE_TT_CXX11_IS_COPY_CONSTRUCTIBLE)
@@ -779,14 +780,14 @@ struct is_copy_assignable
 //
 // error: function *function_name* cannot be referenced -- it is a deleted function
 // static boost::type_traits::yes_type test(T1&, decltype(T1(boost::declval<T1&>()))* = 0);
-//                                                        ^ 
+//                                                        ^
 //
 // MSVC 12.0 (Visual 2013) has problems when the copy constructor has been deleted. See:
 // https://connect.microsoft.com/VisualStudio/feedback/details/800328/std-is-copy-constructible-is-broken
 #if defined(BOOST_MOVE_TT_CXX11_IS_COPY_ASSIGNABLE)
    typedef char yes_type;
    struct no_type { char dummy[2]; };
-   
+
    template <class U>   static typename add_reference<U>::type source();
    template <class U>   static decltype(source<U&>() = source<const U&>(), yes_type() ) test(int);
    template <class>     static no_type test(...);
@@ -838,7 +839,7 @@ struct is_trivially_copy_assignable
    //In several compilers BOOST_MOVE_IS_TRIVIALLY_COPY_CONSTRUCTIBLE return true even with
    //deleted copy constructors so make sure the type is copy constructible.
    static const bool value = BOOST_MOVE_IS_TRIVIALLY_COPY_ASSIGNABLE(T);
-};                             
+};
 
 //////////////////////////////////////
 //       is_trivially_move_assignable
@@ -999,7 +1000,7 @@ BOOST_MOVE_ALIGNED_STORAGE_WITH_BOOST_ALIGNMENT(0x1000)
 
 template<class T, std::size_t Len>
 union aligned_union
-{   
+{
    T aligner;
    char dummy[Len];
 };

@@ -46,14 +46,7 @@ class move_iterator
    public:
    typedef It                                                              iterator_type;
    typedef typename boost::movelib::iterator_traits<iterator_type>::value_type        value_type;
-   #if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) || defined(BOOST_MOVE_DOXYGEN_INVOKED)
    typedef value_type &&                                                   reference;
-   #else
-   typedef typename ::boost::move_detail::if_
-      < ::boost::has_move_emulation_enabled<value_type>
-      , ::boost::rv<value_type>&
-      , value_type & >::type                                               reference;
-   #endif
    typedef It                                                              pointer;
    typedef typename boost::movelib::iterator_traits<iterator_type>::difference_type   difference_type;
    typedef typename boost::movelib::iterator_traits<iterator_type>::iterator_category iterator_category;

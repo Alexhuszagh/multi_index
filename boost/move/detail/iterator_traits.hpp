@@ -11,19 +11,14 @@
 
 //! \file
 
-#ifndef BOOST_MOVE_DETAIL_ITERATOR_TRAITS_HPP
-#define BOOST_MOVE_DETAIL_ITERATOR_TRAITS_HPP
+#pragma once
 
 #ifndef BOOST_CONFIG_HPP
 #  include <boost/config.hpp>
 #endif
-#
-#if defined(BOOST_HAS_PRAGMA_ONCE)
-#  pragma once
-#endif
 
 #include <cstddef>
-#include <boost/move/detail/type_traits.hpp>
+#include <type_traits>
 
 #include <boost/move/detail/std_ns_begin.hpp>
 BOOST_MOVE_STD_NS_BEG
@@ -47,7 +42,7 @@ struct iterator_traits
    typedef typename Iterator::pointer           pointer;
    typedef typename Iterator::reference         reference;
    typedef typename Iterator::iterator_category iterator_category;
-   typedef typename boost::move_detail::make_unsigned<difference_type>::type size_type;
+   typedef typename std::make_unsigned<difference_type>::type size_type;
 };
 
 template<class T>
@@ -58,7 +53,7 @@ struct iterator_traits<T*>
    typedef T*                                pointer;
    typedef T&                                reference;
    typedef std::random_access_iterator_tag   iterator_category;
-   typedef typename boost::move_detail::make_unsigned<difference_type>::type size_type;
+   typedef typename std::make_unsigned<difference_type>::type size_type;
 };
 
 template<class T>
@@ -69,9 +64,7 @@ struct iterator_traits<const T*>
    typedef const T*                          pointer;
    typedef const T&                          reference;
    typedef std::random_access_iterator_tag   iterator_category;
-   typedef typename boost::move_detail::make_unsigned<difference_type>::type size_type;
+   typedef typename std::make_unsigned<difference_type>::type size_type;
 };
 
 }} //namespace boost {  namespace movelib{
-
-#endif //#ifndef BOOST_MOVE_DETAIL_ITERATOR_TRAITS_HPP

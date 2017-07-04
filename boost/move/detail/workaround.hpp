@@ -47,9 +47,6 @@
 #elif defined(_MSC_VER) && (_MSC_VER == 1600)
    //Standard rvalue binding rules but with some bugs
    #define BOOST_MOVE_MSVC_10_MEMBER_RVALUE_REF_BUG
-   #define BOOST_MOVE_MSVC_AUTO_MOVE_RETURN_BUG
-#elif defined(_MSC_VER) && (_MSC_VER == 1700)
-   #define BOOST_MOVE_MSVC_AUTO_MOVE_RETURN_BUG
 #endif
 
 #if defined(BOOST_MOVE_DISABLE_FORCEINLINE)

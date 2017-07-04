@@ -29,135 +29,6 @@
 #include <boost/move/detail/workaround.hpp>  //forceinline
 #include <boost/move/core.hpp>
 #include <boost/move/detail/meta_utils.hpp>
-#include <boost/static_assert.hpp>
-
-#if defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_MOVE_DOXYGEN_INVOKED)
-
-   namespace boost {
-
-   template<class T>
-   struct enable_move_utility_emulation
-   {
-      static const bool value = true;
-   };
-    
-   //////////////////////////////////////////////////////////////////////////////
-   //
-   //                            move()
-   //
-   //////////////////////////////////////////////////////////////////////////////
-
-   template <class T>
-   BOOST_MOVE_FORCEINLINE typename ::boost::move_detail::enable_if_and
-      < T &
-      , enable_move_utility_emulation<T>
-      , has_move_emulation_disabled<T>
-      >::type
-         move(T& x) BOOST_NOEXCEPT
-   {
-      return x;
-   }
-
-   template <class T>
-   BOOST_MOVE_FORCEINLINE typename ::boost::move_detail::enable_if_and
-      < rv<T>&
-      , enable_move_utility_emulation<T>
-      , has_move_emulation_enabled<T>
-      >::type
-         move(T& x) BOOST_NOEXCEPT
-   {
-      return *BOOST_MOVE_TO_RV_CAST(::boost::rv<T>*, ::boost::move_detail::addressof(x) );
-   }
-
-   template <class T>
-   BOOST_MOVE_FORCEINLINE typename ::boost::move_detail::enable_if_and
-      < rv<T>&
-      , enable_move_utility_emulation<T>
-      , has_move_emulation_enabled<T>
-      >::type
-         move(rv<T>& x) BOOST_NOEXCEPT
-   {
-      return x;
-   }
-
-   //////////////////////////////////////////////////////////////////////////////
-   //
-   //                            forward()
-   //
-   //////////////////////////////////////////////////////////////////////////////
-
-   template <class T>
-   BOOST_MOVE_FORCEINLINE typename ::boost::move_detail::enable_if_and
-      < T &
-      , enable_move_utility_emulation<T>
-      , ::boost::move_detail::is_rv<T>
-      >::type
-         forward(const typename ::boost::move_detail::identity<T>::type &x) BOOST_NOEXCEPT
-   {
-      return const_cast<T&>(x);
-   }
-
-   template <class T>
-   BOOST_MOVE_FORCEINLINE typename ::boost::move_detail::enable_if_and
-      < const T &
-      , enable_move_utility_emulation<T>
-      , ::boost::move_detail::is_not_rv<T>
-      >::type
-         forward(const typename ::boost::move_detail::identity<T>::type &x) BOOST_NOEXCEPT
-   {
-      return x;
-   }
-
-   //////////////////////////////////////////////////////////////////////////////
-   //
-   //                        move_if_not_lvalue_reference()
-   //
-   //////////////////////////////////////////////////////////////////////////////
-
-   template <class T>
-   BOOST_MOVE_FORCEINLINE typename ::boost::move_detail::enable_if_and
-      < T &
-      , enable_move_utility_emulation<T>
-      , ::boost::move_detail::is_rv<T>
-      >::type
-         move_if_not_lvalue_reference(const typename ::boost::move_detail::identity<T>::type &x) BOOST_NOEXCEPT
-   {
-      return const_cast<T&>(x);
-   }
-
-   template <class T>
-   BOOST_MOVE_FORCEINLINE typename ::boost::move_detail::enable_if_and
-      < typename ::boost::move_detail::add_lvalue_reference<T>::type
-      , enable_move_utility_emulation<T>
-      , ::boost::move_detail::is_not_rv<T>
-      , ::boost::move_detail::or_
-         < ::boost::move_detail::is_lvalue_reference<T>
-         , has_move_emulation_disabled<T>
-         >
-      >::type
-         move_if_not_lvalue_reference(typename ::boost::move_detail::remove_reference<T>::type &x) BOOST_NOEXCEPT
-   {
-      return x;
-   }
-
-   template <class T>
-   BOOST_MOVE_FORCEINLINE typename ::boost::move_detail::enable_if_and
-      < rv<T>&
-      , enable_move_utility_emulation<T>
-      , ::boost::move_detail::is_not_rv<T>
-      , ::boost::move_detail::and_
-         < ::boost::move_detail::not_< ::boost::move_detail::is_lvalue_reference<T> >
-         , has_move_emulation_enabled<T>
-         >
-      >::type
-         move_if_not_lvalue_reference(typename ::boost::move_detail::remove_reference<T>::type &x) BOOST_NOEXCEPT
-   {
-      return move(x);
-   }
-
-   }  //namespace boost
-
-#else    //#if defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && !defined(BOOST_MOVE_DOXYGEN_INVOKED)
 
    #if defined(BOOST_MOVE_USE_STANDARD_LIBRARY_MOVE)
       #include <utility>
@@ -252,7 +123,7 @@
          BOOST_MOVE_FORCEINLINE T&& forward(typename ::boost::move_detail::remove_reference<T>::type&& t) BOOST_NOEXCEPT
          {
             //"boost::forward<T> error: 'T' is a lvalue reference, can't forward as rvalue.";
-            BOOST_STATIC_ASSERT(!boost::move_detail::is_lvalue_reference<T>::value);
+            static_assert(!boost::move_detail::is_lvalue_reference<T>::value, "");
             return static_cast<T&&>(t);
          }
 
@@ -287,7 +158,7 @@
          BOOST_MOVE_FORCEINLINE T&& move_if_not_lvalue_reference(typename ::boost::move_detail::remove_reference<T>::type&& t) BOOST_NOEXCEPT
          {
             //"boost::forward<T> error: 'T' is a lvalue reference, can't forward as rvalue.";
-            BOOST_STATIC_ASSERT(!boost::move_detail::is_lvalue_reference<T>::value);
+            static_assert(!boost::move_detail::is_lvalue_reference<T>::value, "");
             return static_cast<T&&>(t);
          }
 
@@ -296,8 +167,6 @@
       }  //namespace boost {
 
    #endif   //#if defined(BOOST_MOVE_USE_STANDARD_LIBRARY_MOVE)
-
-#endif   //BOOST_NO_CXX11_RVALUE_REFERENCES
 
 #if !defined(BOOST_MOVE_DOXYGEN_INVOKED)
 
