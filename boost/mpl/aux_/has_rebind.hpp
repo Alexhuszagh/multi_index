@@ -4,8 +4,8 @@
 
 // Copyright Aleksey Gurtovoy 2002-2004
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
@@ -14,6 +14,7 @@
 // $Date$
 // $Revision$
 
+#include <type_traits>
 #include <boost/mpl/aux_/config/msvc.hpp>
 #include <boost/mpl/aux_/config/intel.hpp>
 #include <boost/mpl/aux_/config/workaround.hpp>
@@ -30,7 +31,6 @@
 #   include <boost/mpl/bool.hpp>
 #   include <boost/mpl/aux_/yes_no.hpp>
 #   include <boost/mpl/aux_/config/static_constant.hpp>
-#   include <boost/type_traits/is_class.hpp>
 #else
 #   include <boost/mpl/aux_/type_wrapper.hpp>
 #   include <boost/mpl/aux_/yes_no.hpp>
@@ -49,7 +49,7 @@ BOOST_MPL_HAS_XXX_TRAIT_NAMED_DEF(has_rebind_impl, rebind, false)
 
 template< typename T >
 struct has_rebind
-    : if_< 
+    : if_<
           msvc_is_class<T>
         , has_rebind_impl<T>
         , bool_<false>
@@ -67,7 +67,7 @@ template< typename T >
 struct has_rebind
 {
     static has_rebind_tag<T>* get();
-    BOOST_STATIC_CONSTANT(bool, value = 
+    BOOST_STATIC_CONSTANT(bool, value =
           sizeof(has_rebind_tag<int>() | get()) == sizeof(yes_tag)
         );
 };
@@ -76,15 +76,15 @@ template< typename T >
 struct has_rebind_impl
 {
     static T* get();
-    BOOST_STATIC_CONSTANT(bool, value = 
+    BOOST_STATIC_CONSTANT(bool, value =
           sizeof(has_rebind_tag<int>() | get()) == sizeof(yes_tag)
         );
 };
 
 template< typename T >
 struct has_rebind
-    : if_< 
-          is_class<T>
+    : if_<
+          std::is_class<T>
         , has_rebind_impl<T>
         , bool_<false>
         >::type

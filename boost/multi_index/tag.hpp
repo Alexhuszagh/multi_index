@@ -16,7 +16,7 @@
 #include <boost/preprocessor/facilities/intercept.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/type_traits/is_base_and_derived.hpp>  // TODO: this won't be easy
+#include <boost/type_traits/is_base_and_derived.hpp>
 
 /* A wrapper of mpl::vector used to hide MPL from the user.
  * tag contains types used as tag names for indices in get() functions.

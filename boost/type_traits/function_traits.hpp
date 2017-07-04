@@ -9,9 +9,8 @@
 #ifndef BOOST_TT_FUNCTION_TRAITS_HPP_INCLUDED
 #define BOOST_TT_FUNCTION_TRAITS_HPP_INCLUDED
 
+#include <type_traits>
 #include <boost/config.hpp>
-#include <boost/type_traits/is_function.hpp>
-#include <boost/type_traits/add_pointer.hpp>
 
 namespace boost {
 
@@ -164,8 +163,8 @@ struct function_traits_helper<R (*)(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10)>
 } // end namespace detail
 
 template<typename Function>
-struct function_traits : 
-  public boost::detail::function_traits_helper<typename boost::add_pointer<Function>::type>
+struct function_traits :
+  public boost::detail::function_traits_helper<typename std::add_pointer<Function>::type>
 {
 };
 

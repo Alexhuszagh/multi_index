@@ -11,6 +11,7 @@
 #ifndef BOOST_TT_DISABLE_INTRINSICS
 
 #include <boost/config.hpp>
+#include <type_traits>
 
 #ifndef BOOST_TT_CONFIG_HPP_INCLUDED
 #include <boost/type_traits/detail/config.hpp>
@@ -78,7 +79,7 @@
 #if defined(__MSL_CPP__) && (__MSL_CPP__ >= 0x8000)
     // Metrowerks compiler is acquiring intrinsic type traits support
     // post version 8.  We hook into the published interface to pick up
-    // user defined specializations as well as compiler intrinsics as 
+    // user defined specializations as well as compiler intrinsics as
     // and when they become available:
 #   include <msl_utility>
 #   define BOOST_IS_UNION(T) BOOST_STD_EXTENSION_NAMESPACE::is_union<T>::value
@@ -117,7 +118,7 @@
 #   define BOOST_IS_ABSTRACT(T) __is_abstract(T)
 #   define BOOST_IS_BASE_OF(T,U) (__is_base_of(T,U) && !is_same<T,U>::value)
 #   define BOOST_IS_CLASS(T) __is_class(T)
-#   define BOOST_IS_CONVERTIBLE(T,U) ((__is_convertible_to(T,U) || (is_same<T,U>::value && !is_function<U>::value)) && !__is_abstract(U))
+#   define BOOST_IS_CONVERTIBLE(T,U) ((__is_convertible_to(T,U) || (is_same<T,U>::value && !std::is_function<U>::value)) && !__is_abstract(U))
 #   define BOOST_IS_ENUM(T) __is_enum(T)
 //  This one fails if the default alignment has been changed with /Zp:
 //  #   define BOOST_ALIGNMENT_OF(T) __alignof(T)
@@ -158,7 +159,7 @@
 //
 // Note that these intrinsics are disabled for the CUDA meta-compiler as it appears
 // to not support them, even though the underlying clang compiler does so.
-// This is a rubbish fix as it basically stops type traits from working correctly, 
+// This is a rubbish fix as it basically stops type traits from working correctly,
 // but maybe the best we can do for now.  See https://svn.boost.org/trac/boost/ticket/10694
 //
 //
@@ -296,7 +297,7 @@
 
 #if defined(__SUNPRO_CC) && (__SUNPRO_CC >= 0x5130)
 #   define BOOST_IS_UNION(T) __oracle_is_union(T)
-#   define BOOST_IS_POD(T) (__oracle_is_pod(T) && !is_function<T>::value)
+#   define BOOST_IS_POD(T) (__oracle_is_pod(T) && !std::is_function<T>::value)
 #   define BOOST_IS_EMPTY(T) __oracle_is_empty(T)
 #   define BOOST_HAS_TRIVIAL_CONSTRUCTOR(T) (__oracle_has_trivial_constructor(T) && ! ::boost::is_volatile<T>::value)
 #   define BOOST_HAS_TRIVIAL_COPY(T) (__oracle_has_trivial_copy(T) && !is_reference<T>::value)

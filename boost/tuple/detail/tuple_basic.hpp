@@ -249,7 +249,7 @@ template <class T> class non_storeable_type {
 
 template <class T> struct wrap_non_storeable_type {
   typedef typename IF<
-    ::boost::is_function<T>::value, non_storeable_type<T>, T
+    std::is_function<T>::value, non_storeable_type<T>, T
   >::RET type;
 };
 template <> struct wrap_non_storeable_type<void> {

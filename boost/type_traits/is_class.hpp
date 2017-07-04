@@ -18,11 +18,6 @@
 
 #ifdef BOOST_TT_HAS_CONFORMING_IS_CLASS_IMPLEMENTATION
 #   include <boost/type_traits/detail/yes_no_type.hpp>
-#else
-#   include <boost/type_traits/is_array.hpp>
-#   include <boost/type_traits/is_reference.hpp>
-#   include <boost/type_traits/is_void.hpp>
-#   include <boost/type_traits/is_function.hpp>
 #endif
 #include <type_traits>
 
@@ -84,10 +79,10 @@ struct is_class_impl
     BOOST_STATIC_CONSTANT(bool, value =
         ! ::boost::is_union<T>::value >::value
         && ! std::is_scalar<T>::value
-        && ! ::boost::is_array<T>::value
-        && ! ::boost::is_reference<T>::value
-        && ! ::boost::is_void<T>::value
-        && ! ::boost::is_function<T>::value
+        && ! std::is_array<T>::value
+        && ! std::is_reference<T>::value
+        && ! std::is_void<T>::value
+        && ! std::is_function<T>::value
         );
 };
 
