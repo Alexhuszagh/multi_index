@@ -23,7 +23,12 @@
 #   include <boost/mpl/aux_/config/gcc.hpp>
 #   include <boost/mpl/aux_/config/workaround.hpp>
 
-#   define BOOST_MPL_CFG_COMPILER_DIR gcc
+#   if BOOST_WORKAROUND(BOOST_MPL_CFG_GCC, BOOST_TESTED_AT(0x0304))
+#       define BOOST_MPL_CFG_COMPILER_DIR gcc
+
+#   else
+#       define BOOST_MPL_CFG_COMPILER_DIR plain
+#   endif
 
 #endif // BOOST_MPL_CFG_COMPILER_DIR
 
