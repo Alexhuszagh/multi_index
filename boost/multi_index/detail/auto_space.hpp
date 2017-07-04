@@ -10,7 +10,7 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
-#include <boost/noncopyable.hpp>
+#include <boost/core/noncopyable.hpp>
 #include <utility>
 
 namespace boost{

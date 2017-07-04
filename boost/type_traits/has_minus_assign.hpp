@@ -6,6 +6,8 @@
 //
 //  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
+#include <type_traits>
+
 #ifndef BOOST_TT_HAS_MINUS_ASSIGN_HPP_INCLUDED
 #define BOOST_TT_HAS_MINUS_ASSIGN_HPP_INCLUDED
 
@@ -51,7 +53,7 @@
             ::boost::is_fundamental< Rhs_nocv >::value || \
             ::boost::is_pointer< Rhs_noref >::value\
           ) && \
-         ::boost::is_const< Lhs_noref >::value\
+         std::is_const< Lhs_noref >::value\
       )\
       )
 

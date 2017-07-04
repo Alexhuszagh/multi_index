@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <boost/multi_index/detail/auto_space.hpp>
 #include <boost/multi_index/detail/raw_ptr.hpp>
-#include <boost/noncopyable.hpp>
+#include <boost/core/noncopyable.hpp>
 #include <cstddef>
 #include <functional>
 

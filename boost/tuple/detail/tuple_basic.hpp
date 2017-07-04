@@ -34,6 +34,7 @@
 
 
 #include <functional>
+#include <type_traits>
 #include <utility> // needed for the assignment from pair to tuple
 
 #include "boost/type_traits/cv_traits.hpp"
@@ -170,7 +171,7 @@ struct element_impl<N, T, true /* IsConst */>
 
 template<int N, class T>
 struct element:
-  public detail::element_impl<N, T, ::boost::is_const<T>::value>
+  public detail::element_impl<N, T, std::is_const<T>::value>
 {
 };
 

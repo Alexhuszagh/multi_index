@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <boost/noncopyable.hpp>
+#include <boost/core/noncopyable.hpp>
 
 namespace boost{
 

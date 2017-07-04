@@ -38,7 +38,7 @@ template <> struct is_copy_constructible<void volatile> : public false_type{};
 // boost::non_copyable as a base class as a special case:
 //
 #include <boost/type_traits/is_base_and_derived.hpp>
-#include <boost/noncopyable.hpp>
+#include <boost/core/noncopyable.hpp>
 
 namespace boost {
 
@@ -70,7 +70,7 @@ namespace boost {
 #include <boost/type_traits/declval.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/declval.hpp>
-#include <boost/noncopyable.hpp>
+#include <boost/core/noncopyable.hpp>
 
 #ifdef BOOST_MSVC
 #pragma warning(push)
@@ -88,7 +88,7 @@ namespace boost {
          //
          // error: function *function_name* cannot be referenced -- it is a deleted function
          // static boost::type_traits::yes_type test(T1&, decltype(T1(boost::declval<T1&>()))* = 0);
-         //                                                        ^ 
+         //                                                        ^
          //
          // MSVC 12.0 (Visual 2013) has problems when the copy constructor has been deleted. See:
          // https://connect.microsoft.com/VisualStudio/feedback/details/800328/std-is-copy-constructible-is-broken
