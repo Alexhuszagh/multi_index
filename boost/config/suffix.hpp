@@ -955,29 +955,11 @@ namespace std{ using ::type_info; }
 #endif
 
 //
-// constexpr workarounds
-//
-#if defined(BOOST_NO_CXX11_CONSTEXPR)
-#define BOOST_CONSTEXPR
-#define BOOST_CONSTEXPR_OR_CONST const
-#else
-#define BOOST_CONSTEXPR constexpr
-#define BOOST_CONSTEXPR_OR_CONST constexpr
-#endif
-#if defined(BOOST_NO_CXX14_CONSTEXPR)
-#define BOOST_CXX14_CONSTEXPR
-#else
-#define BOOST_CXX14_CONSTEXPR constexpr
-#endif
-
-//
 // Unused variable/typedef workarounds:
 //
 #ifndef BOOST_ATTRIBUTE_UNUSED
 #  define BOOST_ATTRIBUTE_UNUSED
 #endif
-
-#define BOOST_STATIC_CONSTEXPR  static BOOST_CONSTEXPR_OR_CONST
 
 //
 // Set BOOST_HAS_STATIC_ASSERT when BOOST_NO_CXX11_STATIC_ASSERT is not defined

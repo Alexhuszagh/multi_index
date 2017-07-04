@@ -132,7 +132,7 @@ protected:
     !(defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 4))
     template <typename ...T, typename EnableIf = typename
      ::boost::detail::enable_if_unrelated<base_from_member, T...>::type>
-    explicit BOOST_CONSTEXPR base_from_member( T&& ...x )
+    explicit constexpr base_from_member( T&& ...x )
         BOOST_NOEXCEPT_IF( BOOST_NOEXCEPT_EXPR(::new ((void*) 0) MemberType(
          static_cast<T&&>(x)... )) )  // no std::is_nothrow_constructible...
         : member( static_cast<T&&>(x)... )     // ...nor std::forward needed
@@ -155,7 +155,7 @@ class base_from_member<MemberType&, UniqueID>
 protected:
     MemberType& member;
 
-    explicit BOOST_CONSTEXPR base_from_member( MemberType& x )
+    explicit constexpr base_from_member( MemberType& x )
         BOOST_NOEXCEPT
         : member( x )
         {}

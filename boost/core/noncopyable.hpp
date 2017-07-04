@@ -24,7 +24,7 @@ namespace noncopyable_  // protection from unintended ADL
   {
   protected:
 #if !defined(BOOST_NO_CXX11_DEFAULTED_FUNCTIONS) && !defined(BOOST_NO_CXX11_NON_PUBLIC_DEFAULTED_FUNCTIONS)
-      BOOST_CONSTEXPR noncopyable() = default;
+      constexpr noncopyable() = default;
       ~noncopyable() = default;
 #else
       noncopyable() {}

@@ -141,6 +141,7 @@ struct BOOST_PP_CAT(nth_composite_key_,name)                                 \
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(equal_to,std::equal_to)
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(less,std::less)
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(greater,std::greater)
+// TODO: I can change this to STD::HASH
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(hash,boost::hash)
 
 /* used for defining equality and comparison ops of composite_key_result */

@@ -27,12 +27,12 @@
 #include <boost/multi_index/random_access_index_fwd.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <boost/type_traits/is_integral.hpp>
 #include <cstddef>
 #include <functional>
 #include <initializer_list>
 #include <iterator>
 #include <stdexcept>
+#include <type_traits>
 #include <utility>
 
 namespace boost{
@@ -133,7 +133,7 @@ public:
   template <class InputIterator>
   void assign(InputIterator first,InputIterator last)
   {
-    assign_iter(first,last,mpl::not_<is_integral<InputIterator> >());
+    assign_iter(first,last,mpl::not_<std::is_integral<InputIterator> >());
   }
 
   void assign(std::initializer_list<value_type> list)
@@ -297,7 +297,7 @@ public:
   template<typename InputIterator>
   void insert(iterator position,InputIterator first,InputIterator last)
   {
-    insert_iter(position,first,last,mpl::not_<is_integral<InputIterator> >());
+    insert_iter(position,first,last,mpl::not_<std::is_integral<InputIterator> >());
   }
 
   void insert(iterator position,std::initializer_list<value_type> list)
@@ -417,11 +417,12 @@ public:
 
   void remove(value_param_type value)
   {
+    using namespace std::placeholders;
     difference_type n=
       end()-make_iterator(
         random_access_index_remove<node_type>(
           ptrs,
-          ::std::bind(std::equal_to<value_type>(),std::placeholders::_1,value)));
+          ::std::bind(std::equal_to<value_type>(),_1,value)));
     while(n--)pop_back();
   }
 
@@ -818,7 +819,7 @@ void swap(
 template <typename TagList>
 struct random_access
 {
-  BOOST_STATIC_ASSERT(detail::is_tag<TagList>::value);
+  static_assert(detail::is_tag<TagList>::value, "");
 
   template<typename Super>
   struct node_class

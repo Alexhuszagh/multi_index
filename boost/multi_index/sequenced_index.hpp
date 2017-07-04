@@ -359,9 +359,10 @@ public:
 
   void remove(value_param_type value)
   {
+    using namespace std::placeholders;
     sequenced_index_remove(
       *this,
-      ::std::bind(std::equal_to<value_type>(),std::placeholders::_1,value));
+      ::std::bind(std::equal_to<value_type>(),_1,value));
   }
 
   template<typename Predicate>
@@ -723,7 +724,7 @@ void swap(
 template <typename TagList>
 struct sequenced
 {
-  BOOST_STATIC_ASSERT(detail::is_tag<TagList>::value);
+  static_assert(detail::is_tag<TagList>::value, "");
 
   template<typename Super>
   struct node_class

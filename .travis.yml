@@ -1,0 +1,45 @@
+language: cpp
+notifications:
+  email:
+    recipients:
+      - ahuszagh@gmail.com
+    on_success: never
+    on_failure: always
+    on_cancel: never
+    on_error: never
+
+compiler:
+  - clang
+  - gcc
+
+os:
+  - linux
+  - osx
+
+addons:
+  apt:
+    sources:
+      - llvm-toolchain-precise-3.9
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-3.9
+      - g++-6
+      - gcc-6
+
+before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update                                                           ; fi
+  - if [ "$CXX" = "g++" ] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install gcc                                ; fi
+  - if [ "$CXX" = "clang++" ] &&[[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PATH="/usr/local/opt/llvm/bin:$PATH"  ; fi
+  - if [ "$CXX" = "clang++" ] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install llvm                           ; fi
+
+install:
+  - if [ "$CXX" = "g++" ] && [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export CXX="g++-7" CC="gcc-7"; fi
+  - if [ "$CXX" = "g++" ] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CXX="g++-6" CC="gcc-6"; fi
+  - if [ "$CXX" = "clang++" ] && [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export CXX="clang++-3.9" CC="clang-3.9"; fi
+
+script:
+  - mkdir -p build
+  - cd build
+  - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON ..
+  - make -j 8
+  - ctest -C Release -V

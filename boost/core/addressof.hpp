@@ -34,7 +34,7 @@ http://www.boost.org/LICENSE_1_0.txt)
 namespace boost {
 
 template<class T>
-BOOST_CONSTEXPR inline T*
+constexpr inline T*
 addressof(T& o) BOOST_NOEXCEPT
 {
     return __builtin_addressof(o);

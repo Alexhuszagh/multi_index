@@ -8,13 +8,7 @@
 //  See boost/detail/call_traits.hpp
 //  for full copyright notices.
 
-#ifndef BOOST_CALL_TRAITS_HPP
-#define BOOST_CALL_TRAITS_HPP
+#pragma once
 
-#ifndef BOOST_CONFIG_HPP
 #include <boost/config.hpp>
-#endif
-
 #include <boost/detail/call_traits.hpp>
-
-#endif // BOOST_CALL_TRAITS_HPP
