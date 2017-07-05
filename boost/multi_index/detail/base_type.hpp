@@ -10,11 +10,9 @@
 
 #include <brigand/functions/eval_if.hpp>
 #include <brigand/functions/arithmetic/identity.hpp>
-//#include <brigand/sequences/at.hpp>
-//#include <brigand/sequences/size.hpp>
-// TODO: needs to be brigand apply
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/at.hpp>
+#include <boost/mpl/size.hpp>
 #include <boost/multi_index/detail/index_base.hpp>
 #include <boost/multi_index/detail/is_index_list.hpp>
 

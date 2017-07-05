@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <brigand/sequences/list.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/vector.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -50,7 +49,6 @@ template<
     BOOST_MULTI_INDEX_INDEXED_BY_TEMPLATE_PARM,T)
 >
 struct indexed_by:
-  // TODO: brigand::list
   mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MULTI_INDEX_INDEXED_BY_SIZE,T)>
 {
 };
