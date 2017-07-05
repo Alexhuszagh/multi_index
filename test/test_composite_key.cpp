@@ -65,8 +65,8 @@ struct is_boost_tuple_helper
 
   static no test(void*);
 
-  template<BOOST_PP_ENUM_PARAMS(10,typename T)>
-  static yes test(boost::tuple<BOOST_PP_ENUM_PARAMS(10,T)>*);
+  template<typename... Ts>
+  static yes test(boost::tuple<Ts...>*);
 };
 
 template<typename T>

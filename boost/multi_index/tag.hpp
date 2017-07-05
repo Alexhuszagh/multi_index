@@ -13,9 +13,6 @@
 #include <boost/multi_index/detail/no_duplicate_tags.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/vector.hpp>
-#include <boost/preprocessor/facilities/intercept.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/type_traits/is_base_and_derived.hpp>
 
 /* A wrapper of mpl::vector used to hide MPL from the user.
@@ -26,16 +23,6 @@
  * useful for shortening resulting symbol names (MSVC++ 6.0, for instance,
  * has problems coping with very long symbol names.)
  */
-
-#if !defined(BOOST_MULTI_INDEX_LIMIT_TAG_SIZE)
-#define BOOST_MULTI_INDEX_LIMIT_TAG_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE
-#endif
-
-#if BOOST_MULTI_INDEX_LIMIT_TAG_SIZE<BOOST_MPL_LIMIT_VECTOR_SIZE
-#define BOOST_MULTI_INDEX_TAG_SIZE BOOST_MULTI_INDEX_LIMIT_TAG_SIZE
-#else
-#define BOOST_MULTI_INDEX_TAG_SIZE BOOST_MPL_LIMIT_VECTOR_SIZE
-#endif
 
 namespace boost{
 
@@ -53,12 +40,7 @@ struct is_tag
 
 } /* namespace multi_index::detail */
 
-template<
-  BOOST_PP_ENUM_BINARY_PARAMS(
-    BOOST_MULTI_INDEX_TAG_SIZE,
-    typename T,
-    =mpl::na BOOST_PP_INTERCEPT)
->
+template<typename... Ts>
 struct tag:private detail::tag_marker
 {
   /* The mpl::transform pass produces shorter symbols (without
@@ -66,7 +48,7 @@ struct tag:private detail::tag_marker
    */
 
   typedef typename mpl::transform<
-    mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MULTI_INDEX_TAG_SIZE,T)>,
+    mpl::vector<Ts...>,
     brigand::identity<mpl::_1>
   >::type type;
 

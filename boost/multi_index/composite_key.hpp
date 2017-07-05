@@ -8,11 +8,11 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/functional/hash_fwd.hpp>
 #include <brigand/functions/eval_if.hpp>
 #include <brigand/functions/arithmetic/identity.hpp>
 #include <brigand/functions/logical/or.hpp>
+#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
+#include <boost/functional/hash_fwd.hpp>
 // TODO: remove the preprocessor shit...
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
