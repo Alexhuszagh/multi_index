@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <brigand/types/bool.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <boost/call_traits.hpp>
@@ -1245,9 +1246,9 @@ private:
   >
   iterator find(
     const key_type& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::true_)const
+    const CompatibleHash& hash,const CompatiblePred& eq,brigand::true_type)const
   {
-    return find(k,hash,eq,mpl::false_());
+    return find(k,hash,eq,brigand::false_type());
   }
 
   template<
@@ -1255,7 +1256,7 @@ private:
   >
   iterator find(
     const CompatibleKey& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::false_)const
+    const CompatibleHash& hash,const CompatiblePred& eq,brigand::false_type)const
   {
     std::size_t buc=buckets.position(hash(k));
     for(node_impl_pointer x=buckets.at(buc)->prior();
@@ -1272,9 +1273,9 @@ private:
   >
   size_type count(
     const key_type& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::true_)const
+    const CompatibleHash& hash,const CompatiblePred& eq,brigand::true_type)const
   {
-    return count(k,hash,eq,mpl::false_());
+    return count(k,hash,eq,brigand::false_type());
   }
 
   template<
@@ -1282,7 +1283,7 @@ private:
   >
   size_type count(
     const CompatibleKey& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::false_)const
+    const CompatibleHash& hash,const CompatiblePred& eq,brigand::false_type)const
   {
     std::size_t buc=buckets.position(hash(k));
     for(node_impl_pointer x=buckets.at(buc)->prior();
@@ -1305,9 +1306,9 @@ private:
   >
   std::pair<iterator,iterator> equal_range(
     const key_type& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::true_)const
+    const CompatibleHash& hash,const CompatiblePred& eq,brigand::true_type)const
   {
-    return equal_range(k,hash,eq,mpl::false_());
+    return equal_range(k,hash,eq,brigand::false_type());
   }
 
   template<
@@ -1315,7 +1316,7 @@ private:
   >
   std::pair<iterator,iterator> equal_range(
     const CompatibleKey& k,
-    const CompatibleHash& hash,const CompatiblePred& eq,mpl::false_)const
+    const CompatibleHash& hash,const CompatiblePred& eq,brigand::false_type)const
   {
     std::size_t buc=buckets.position(hash(k));
     for(node_impl_pointer x=buckets.at(buc)->prior();

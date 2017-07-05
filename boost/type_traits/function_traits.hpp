@@ -1,4 +1,3 @@
-
 //  Copyright 2000 John Maddock (john@johnmaddock.co.uk)
 //  Use, modification and distribution are subject to the Boost Software License,
 //  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -6,11 +5,9 @@
 //
 //  See http://www.boost.org/libs/type_traits for most recent version including documentation.
 
-#ifndef BOOST_TT_FUNCTION_TRAITS_HPP_INCLUDED
-#define BOOST_TT_FUNCTION_TRAITS_HPP_INCLUDED
+#pragma once
 
 #include <type_traits>
-#include <boost/config.hpp>
 
 namespace boost {
 
@@ -21,14 +18,14 @@ template<typename Function> struct function_traits_helper;
 template<typename R>
 struct function_traits_helper<R (*)(void)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 0);
+  static const unsigned arity = 0;
   typedef R result_type;
 };
 
 template<typename R, typename T1>
 struct function_traits_helper<R (*)(T1)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 1);
+  static const unsigned arity = 1;
   typedef R result_type;
   typedef T1 arg1_type;
   typedef T1 argument_type;
@@ -37,7 +34,7 @@ struct function_traits_helper<R (*)(T1)>
 template<typename R, typename T1, typename T2>
 struct function_traits_helper<R (*)(T1, T2)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 2);
+  static const unsigned arity = 2;
   typedef R result_type;
   typedef T1 arg1_type;
   typedef T2 arg2_type;
@@ -48,7 +45,7 @@ struct function_traits_helper<R (*)(T1, T2)>
 template<typename R, typename T1, typename T2, typename T3>
 struct function_traits_helper<R (*)(T1, T2, T3)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 3);
+  static const unsigned arity = 3;
   typedef R result_type;
   typedef T1 arg1_type;
   typedef T2 arg2_type;
@@ -58,7 +55,7 @@ struct function_traits_helper<R (*)(T1, T2, T3)>
 template<typename R, typename T1, typename T2, typename T3, typename T4>
 struct function_traits_helper<R (*)(T1, T2, T3, T4)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 4);
+  static const unsigned arity = 4;
   typedef R result_type;
   typedef T1 arg1_type;
   typedef T2 arg2_type;
@@ -70,7 +67,7 @@ template<typename R, typename T1, typename T2, typename T3, typename T4,
          typename T5>
 struct function_traits_helper<R (*)(T1, T2, T3, T4, T5)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 5);
+  static const unsigned arity = 5;
   typedef R result_type;
   typedef T1 arg1_type;
   typedef T2 arg2_type;
@@ -83,7 +80,7 @@ template<typename R, typename T1, typename T2, typename T3, typename T4,
          typename T5, typename T6>
 struct function_traits_helper<R (*)(T1, T2, T3, T4, T5, T6)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 6);
+  static const unsigned arity = 6;
   typedef R result_type;
   typedef T1 arg1_type;
   typedef T2 arg2_type;
@@ -97,7 +94,7 @@ template<typename R, typename T1, typename T2, typename T3, typename T4,
          typename T5, typename T6, typename T7>
 struct function_traits_helper<R (*)(T1, T2, T3, T4, T5, T6, T7)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 7);
+  static const unsigned arity = 7;
   typedef R result_type;
   typedef T1 arg1_type;
   typedef T2 arg2_type;
@@ -112,7 +109,7 @@ template<typename R, typename T1, typename T2, typename T3, typename T4,
          typename T5, typename T6, typename T7, typename T8>
 struct function_traits_helper<R (*)(T1, T2, T3, T4, T5, T6, T7, T8)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 8);
+  static const unsigned arity = 8;
   typedef R result_type;
   typedef T1 arg1_type;
   typedef T2 arg2_type;
@@ -128,7 +125,7 @@ template<typename R, typename T1, typename T2, typename T3, typename T4,
          typename T5, typename T6, typename T7, typename T8, typename T9>
 struct function_traits_helper<R (*)(T1, T2, T3, T4, T5, T6, T7, T8, T9)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 9);
+  static const unsigned arity = 9;
   typedef R result_type;
   typedef T1 arg1_type;
   typedef T2 arg2_type;
@@ -146,7 +143,7 @@ template<typename R, typename T1, typename T2, typename T3, typename T4,
          typename T10>
 struct function_traits_helper<R (*)(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10)>
 {
-  BOOST_STATIC_CONSTANT(unsigned, arity = 10);
+  static const unsigned arity = 10;
   typedef R result_type;
   typedef T1 arg1_type;
   typedef T2 arg2_type;
@@ -169,5 +166,3 @@ struct function_traits :
 };
 
 }
-
-#endif // BOOST_TT_FUNCTION_TRAITS_HPP_INCLUDED

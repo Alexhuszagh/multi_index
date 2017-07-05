@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/or.hpp>
+#include <brigand/functions/logical/or.hpp>
+#include <brigand/functions/logical/not.hpp>
+#include <brigand/types/bool.hpp>
+#include <boost/type_traits/function_traits.hpp>
 #include <boost/type_traits/function_traits.hpp>
 #include <type_traits>
 #include <utility>
@@ -28,7 +28,7 @@ namespace detail{
  */
 
 template<typename F,typename Arg1,typename Arg2,typename=void>
-struct is_transparent:std::true_type{};
+struct is_transparent:brigand::true_type{};
 
 struct not_is_transparent_result_type{};
 
@@ -41,7 +41,7 @@ struct is_transparent_class_helper:F
 };
 
 template<typename F,typename Arg1,typename Arg2,typename=void>
-struct is_transparent_class:std::true_type{};
+struct is_transparent_class:brigand::true_type{};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent_class<
@@ -55,35 +55,39 @@ struct is_transparent_class<
       not_is_transparent_result_type
     >::value
   >::type
->:std::false_type{};
+>:brigand::false_type{};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent<
   F,Arg1,Arg2,
   typename std::enable_if<
+#if __cplusplus >= 201402L
     std::is_class<F>::value && !std::is_final<F>::value
+#else
+    std::is_class<F>::value
+#endif
   >::type
 >:is_transparent_class<F,Arg1,Arg2>{};
 
 template<typename F,typename Arg1,typename Arg2,typename=void>
-struct is_transparent_function:std::true_type{};
+struct is_transparent_function:brigand::true_type{};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent_function<
   F,Arg1,Arg2,
   typename std::enable_if<
-    mpl::or_<
-      mpl::not_<mpl::or_<
+    brigand::or_<
+      brigand::not_<brigand::or_<
         std::is_same<typename function_traits<F>::arg1_type,const Arg1&>,
         std::is_same<typename function_traits<F>::arg1_type,Arg1>
       > >,
-      mpl::not_<mpl::or_<
+      brigand::not_<brigand::or_<
         std::is_same<typename function_traits<F>::arg2_type,const Arg2&>,
         std::is_same<typename function_traits<F>::arg2_type,Arg2>
       > >
     >::value
   >::type
->:std::false_type{};
+>:brigand::false_type{};
 
 template<typename F,typename Arg1,typename Arg2>
 struct is_transparent<

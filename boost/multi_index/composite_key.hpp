@@ -10,9 +10,10 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/functional/hash_fwd.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/or.hpp>
+#include <brigand/functions/eval_if.hpp>
+#include <brigand/functions/arithmetic/identity.hpp>
+#include <brigand/functions/logical/or.hpp>
+// TODO: remove the preprocessor shit...
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/list/at.hpp>
@@ -95,10 +96,10 @@ template<typename CompositeKey,int N>
 struct nth_key_from_value
 {
   typedef typename CompositeKey::key_extractor_tuple key_extractor_tuple;
-  typedef typename mpl::eval_if_c<
+  typedef typename brigand::eval_if_c<
     N<tuples::length<key_extractor_tuple>::value,
     tuples::element<N,key_extractor_tuple>,
-    mpl::identity<tuples::null_type>
+    brigand::identity<tuples::null_type>
   >::type                                            type;
 };
 
@@ -229,7 +230,7 @@ template
 >
 struct equal_ckey_ckey:
   std::conditional<
-    mpl::or_<
+    brigand::or_<
       std::is_same<KeyCons1,tuples::null_type>,
       std::is_same<KeyCons2,tuples::null_type>
     >::value,
@@ -305,7 +306,7 @@ template
 >
 struct equal_ckey_cval:
   std::conditional<
-    mpl::or_<
+    brigand::or_<
       std::is_same<KeyCons,tuples::null_type>,
       std::is_same<ValCons,tuples::null_type>
     >::value,
@@ -371,7 +372,7 @@ template
 >
 struct compare_ckey_ckey:
   std::conditional<
-    mpl::or_<
+    brigand::or_<
       std::is_same<KeyCons1,tuples::null_type>,
       std::is_same<KeyCons2,tuples::null_type>
     >::value,
@@ -449,7 +450,7 @@ template
 >
 struct compare_ckey_cval:
   std::conditional<
-    mpl::or_<
+    brigand::or_<
       std::is_same<KeyCons,tuples::null_type>,
       std::is_same<ValCons,tuples::null_type>
     >::value,

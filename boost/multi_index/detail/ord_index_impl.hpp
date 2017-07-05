@@ -35,11 +35,10 @@
 
 #pragma once
 
+#include <brigand/functions/if.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <boost/call_traits.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/multi_index/detail/bidir_node_iterator.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
@@ -440,14 +439,14 @@ public:
   std::pair<iterator,iterator>
   range(LowerBounder lower,UpperBounder upper)const
   {
-    typedef typename mpl::if_<
+    typedef typename brigand::if_<
       std::is_same<LowerBounder,unbounded_type>,
-      typename mpl::if_<
+      typename brigand::if_<
         std::is_same<UpperBounder,unbounded_type>,
         both_unbounded_tag,
         lower_unbounded_tag
       >::type,
-      typename mpl::if_<
+      typename brigand::if_<
         std::is_same<UpperBounder,unbounded_type>,
         upper_unbounded_tag,
         none_unbounded_tag

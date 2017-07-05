@@ -35,6 +35,8 @@
 
 #pragma once
 
+#include <brigand/functions/logical/and.hpp>
+#include <brigand/types/bool.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/and.hpp>
 #include <boost/multi_index/detail/promotes_arg.hpp>
@@ -65,7 +67,8 @@ inline Node* ordered_index_find(
 
   return ordered_index_find(
     top,y,key,x,comp,
-    mpl::and_<
+    // TODO: this is bugging out..
+    brigand::and_<
       promotes_1st_arg<CompatibleCompare,CompatibleKey,key_type>,
       promotes_2nd_arg<CompatibleCompare,key_type,CompatibleKey> >());
 }
@@ -77,9 +80,9 @@ template<
 inline Node* ordered_index_find(
   Node* top,Node* y,const KeyFromValue& key,
   const typename KeyFromValue::result_type& x,
-  const CompatibleCompare& comp,mpl::true_)
+  const CompatibleCompare& comp,brigand::true_type)
 {
-  return ordered_index_find(top,y,key,x,comp,mpl::false_());
+  return ordered_index_find(top,y,key,x,comp,brigand::false_type());
 }
 
 template<
@@ -88,7 +91,7 @@ template<
 >
 inline Node* ordered_index_find(
   Node* top,Node* y,const KeyFromValue& key,const CompatibleKey& x,
-  const CompatibleCompare& comp,mpl::false_)
+  const CompatibleCompare& comp,brigand::false_type)
 {
   Node* y0=y;
 
@@ -125,9 +128,9 @@ template<
 inline Node* ordered_index_lower_bound(
   Node* top,Node* y,const KeyFromValue& key,
   const typename KeyFromValue::result_type& x,
-  const CompatibleCompare& comp,mpl::true_)
+  const CompatibleCompare& comp,brigand::true_type)
 {
-  return ordered_index_lower_bound(top,y,key,x,comp,mpl::false_());
+  return ordered_index_lower_bound(top,y,key,x,comp,brigand::false_type());
 }
 
 template<
@@ -136,7 +139,7 @@ template<
 >
 inline Node* ordered_index_lower_bound(
   Node* top,Node* y,const KeyFromValue& key,const CompatibleKey& x,
-  const CompatibleCompare& comp,mpl::false_)
+  const CompatibleCompare& comp,brigand::false_type)
 {
   while(top){
     if(!comp(key(top->value()),x)){
@@ -171,9 +174,9 @@ template<
 inline Node* ordered_index_upper_bound(
   Node* top,Node* y,const KeyFromValue& key,
   const typename KeyFromValue::result_type& x,
-  const CompatibleCompare& comp,mpl::true_)
+  const CompatibleCompare& comp,brigand::true_type)
 {
-  return ordered_index_upper_bound(top,y,key,x,comp,mpl::false_());
+  return ordered_index_upper_bound(top,y,key,x,comp,brigand::false_type());
 }
 
 template<
@@ -182,7 +185,7 @@ template<
 >
 inline Node* ordered_index_upper_bound(
   Node* top,Node* y,const KeyFromValue& key,const CompatibleKey& x,
-  const CompatibleCompare& comp,mpl::false_)
+  const CompatibleCompare& comp,brigand::false_type)
 {
   while(top){
     if(comp(x,key(top->value()))){
@@ -207,7 +210,7 @@ inline std::pair<Node*,Node*> ordered_index_equal_range(
 
   return ordered_index_equal_range(
     top,y,key,x,comp,
-    mpl::and_<
+    brigand::and_<
       promotes_1st_arg<CompatibleCompare,CompatibleKey,key_type>,
       promotes_2nd_arg<CompatibleCompare,key_type,CompatibleKey> >());
 }
@@ -219,9 +222,9 @@ template<
 inline std::pair<Node*,Node*> ordered_index_equal_range(
   Node* top,Node* y,const KeyFromValue& key,
   const typename KeyFromValue::result_type& x,
-  const CompatibleCompare& comp,mpl::true_)
+  const CompatibleCompare& comp,brigand::true_type)
 {
-  return ordered_index_equal_range(top,y,key,x,comp,mpl::false_());
+  return ordered_index_equal_range(top,y,key,x,comp,brigand::false_type());
 }
 
 template<
@@ -230,7 +233,7 @@ template<
 >
 inline std::pair<Node*,Node*> ordered_index_equal_range(
   Node* top,Node* y,const KeyFromValue& key,const CompatibleKey& x,
-  const CompatibleCompare& comp,mpl::false_)
+  const CompatibleCompare& comp,brigand::false_type)
 {
   while(top){
     if(comp(key(top->value()),x)){
@@ -243,9 +246,9 @@ inline std::pair<Node*,Node*> ordered_index_equal_range(
     else{
       return std::pair<Node*,Node*>(
         ordered_index_lower_bound(
-          Node::from_impl(top->left()),top,key,x,comp,mpl::false_()),
+          Node::from_impl(top->left()),top,key,x,comp,brigand::false_type()),
         ordered_index_upper_bound(
-          Node::from_impl(top->right()),y,key,x,comp,mpl::false_()));
+          Node::from_impl(top->right()),y,key,x,comp,brigand::false_type()));
     }
   }
 

@@ -8,11 +8,11 @@
 
 #pragma once
 
+#include <brigand/functions/eval_if.hpp>
+#include <brigand/functions/if.hpp>
+#include <brigand/functions/arithmetic/identity.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/aux_/na.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/multi_index/tag.hpp>
 #include <functional>
 
@@ -44,22 +44,22 @@ struct ordered_index_args
 {
   typedef is_tag<Arg1> full_form;
 
-  typedef typename mpl::if_<
+  typedef typename brigand::if_<
     full_form,
     Arg1,
     tag< > >::type                                   tag_list_type;
-  typedef typename mpl::if_<
+  typedef typename brigand::if_<
     full_form,
     Arg2,
     Arg1>::type                                      key_from_value_type;
-  typedef typename mpl::if_<
+  typedef typename brigand::if_<
     full_form,
     Arg3,
     Arg2>::type                                      supplied_compare_type;
-  typedef typename mpl::eval_if<
+  typedef typename brigand::eval_if<
     mpl::is_na<supplied_compare_type>,
     index_args_default_compare<key_from_value_type>,
-    mpl::identity<supplied_compare_type>
+    brigand::identity<supplied_compare_type>
   >::type                                            compare_type;
 
   static_assert(is_tag<tag_list_type>::value, "");

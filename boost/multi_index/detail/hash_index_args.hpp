@@ -8,11 +8,11 @@
 
 #pragma once
 
+#include <brigand/functions/eval_if.hpp>
+#include <brigand/functions/arithmetic/identity.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/functional/hash.hpp>
 #include <boost/mpl/aux_/na.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/multi_index/tag.hpp>
 #include <functional>
 #include <type_traits>
@@ -69,19 +69,19 @@ struct hashed_index_args
     full_form::value,
     Arg3,
     Arg2>::type                                      supplied_hash_type;
-  typedef typename mpl::eval_if<
+  typedef typename brigand::eval_if<
     mpl::is_na<supplied_hash_type>,
     index_args_default_hash<key_from_value_type>,
-    mpl::identity<supplied_hash_type>
+    brigand::identity<supplied_hash_type>
   >::type                                            hash_type;
   typedef typename std::conditional<
     full_form::value,
     Arg4,
     Arg3>::type                                      supplied_pred_type;
-  typedef typename mpl::eval_if<
+  typedef typename brigand::eval_if<
     mpl::is_na<supplied_pred_type>,
     index_args_default_pred<key_from_value_type>,
-    mpl::identity<supplied_pred_type>
+    brigand::identity<supplied_pred_type>
   >::type                                            pred_type;
 
   static_assert(is_tag<tag_list_type>::value, "");

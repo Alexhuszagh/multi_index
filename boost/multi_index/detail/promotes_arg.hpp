@@ -8,10 +8,9 @@
 
 #pragma once
 
+#include <brigand/functions/logical/and.hpp>
+#include <brigand/functions/logical/not.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/not.hpp>
 #include <boost/multi_index/detail/is_transparent.hpp>
 #include <type_traits>
 
@@ -23,8 +22,9 @@ namespace detail{
 
 template<typename F,typename Arg1,typename Arg2>
 struct promotes_1st_arg:
-  mpl::and_<
-    mpl::not_<is_transparent<F,Arg1,Arg2> >,
+  // TODO: convert to brigand
+  brigand::and_<
+    brigand::not_<is_transparent<F,Arg1,Arg2> >,
     std::is_convertible<const Arg1,Arg2>,
     is_transparent<F,Arg2,Arg2>
   >
@@ -32,8 +32,9 @@ struct promotes_1st_arg:
 
 template<typename F,typename Arg1,typename Arg2>
 struct promotes_2nd_arg:
-  mpl::and_<
-    mpl::not_<is_transparent<F,Arg1,Arg2> >,
+  // TODO: convert to brigand
+  brigand::and_<
+    brigand::not_<is_transparent<F,Arg1,Arg2> >,
     std::is_convertible<const Arg2,Arg1>,
     is_transparent<F,Arg1,Arg1>
   >

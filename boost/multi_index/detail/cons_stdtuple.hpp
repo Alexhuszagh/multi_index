@@ -8,8 +8,8 @@
 
 #pragma once
 
+#include <brigand/functions/if.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/if.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <tuple>
 
@@ -50,7 +50,7 @@ struct cons_stdtuple_ctor_normal
 
 template<typename StdTuple,std::size_t N=0>
 struct cons_stdtuple_ctor:
-  boost::mpl::if_c<
+  brigand::if_c<
     N<std::tuple_size<StdTuple>::value,
     cons_stdtuple_ctor_normal<StdTuple,N>,
     cons_stdtuple_ctor_terminal

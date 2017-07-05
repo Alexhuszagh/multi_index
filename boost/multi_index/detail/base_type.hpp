@@ -8,10 +8,13 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/at.hpp>
+#include <brigand/functions/eval_if.hpp>
+#include <brigand/functions/arithmetic/identity.hpp>
+//#include <brigand/sequences/at.hpp>
+//#include <brigand/sequences/size.hpp>
+// TODO: needs to be brigand apply
 #include <boost/mpl/apply.hpp>
-#include <boost/mpl/size.hpp>
+#include <boost/mpl/at.hpp>
 #include <boost/multi_index/detail/index_base.hpp>
 #include <boost/multi_index/detail/is_index_list.hpp>
 
@@ -41,9 +44,9 @@ struct nth_layer
 {
   static const int length = mpl::size<IndexSpecifierList>::value;
 
-  typedef typename  mpl::eval_if_c<
+  typedef typename  brigand::eval_if_c<
     N==length,
-    mpl::identity<index_base<Value,IndexSpecifierList,Allocator> >,
+    brigand::identity<index_base<Value,IndexSpecifierList,Allocator> >,
     mpl::apply2<
       index_applier,
       mpl::at_c<IndexSpecifierList,N>,

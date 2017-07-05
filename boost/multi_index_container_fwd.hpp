@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/identity.hpp>
 #include <boost/multi_index/indexed_by.hpp>
 #include <boost/multi_index/ordered_index_fwd.hpp>
