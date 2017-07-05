@@ -16,7 +16,6 @@
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/sequenced_index.hpp>
 #include <boost/mpl/at.hpp>
-#include <boost/mpl/list.hpp>
 
 using namespace boost::multi_index;
 
@@ -59,7 +58,7 @@ void test_mpl_ops()
 
   typedef multi_index_container<
     int,
-    boost::mpl::list<
+    boost::mpl::vector<
       ordered_unique<identity<int> >,
       ordered_non_unique<identity<int> >
     >

@@ -15,7 +15,6 @@
 #include <algorithm>
 #include <boost/call_traits.hpp>
 #include <boost/detail/allocator_utilities.hpp>
-#include <boost/mpl/push_front.hpp>
 #include <boost/multi_index/detail/auto_space.hpp>
 #include <boost/multi_index/detail/bucket_array.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
