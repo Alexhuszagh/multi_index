@@ -8,8 +8,9 @@
 
 #pragma once
 
+#include <brigand/sequences/list.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/vector.hpp>
+#include <boost/mpl/vector.hpp>         // TODO: remove
 
 
 namespace boost{
@@ -20,7 +21,10 @@ template<
 >
 struct indexed_by:
   mpl::vector<Ts...>
-{};
+{
+    // Need to get everything that isn't null...
+    using list = brigand::list<Ts...>;
+};
 
 } /* namespace multi_index */
 } /* namespace boost */

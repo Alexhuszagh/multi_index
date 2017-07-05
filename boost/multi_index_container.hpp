@@ -82,7 +82,7 @@ public:
   typedef typename super::iterator                 iterator;
   typedef typename super::const_iterator           const_iterator;
 
-  static_assert(detail::no_duplicate_tags_in_index_list<index_type_list>::value, "");
+  static_assert(detail::no_duplicate_tags_in_index_list<typename index_type_list::list>::value, "");
 
   /* global project() needs to see this publicly */
 

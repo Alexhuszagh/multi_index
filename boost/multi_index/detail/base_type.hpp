@@ -98,7 +98,6 @@ struct multi_index_base_type: nth_layer<0,Value, IndexSpecifierList, Allocator>
   static_assert(detail::is_index_list<IndexSpecifierList>::value, "");
 };
 
-
 } /* namespace multi_index::detail */
 
 } /* namespace multi_index */

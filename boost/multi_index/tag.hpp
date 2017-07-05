@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <brigand/sequences/list.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/no_duplicate_tags.hpp>
 #include <boost/mpl/contains.hpp>
@@ -32,8 +33,9 @@ struct is_tag: is_base_and_derived<tag_marker, T>
 template<typename... Ts>
 struct tag: private detail::tag_marker
 {
-  typedef mpl::vector<Ts...> type;
-  static_assert(detail::no_duplicate_tags<type>::value, "");
+  using type = mpl::vector<Ts...>;
+  using list = brigand::list<Ts...>;
+  static_assert(detail::no_duplicate_tags<list>::value, "");
 };
 
 } /* namespace multi_index */

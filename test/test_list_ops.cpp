@@ -231,10 +231,6 @@ static void test_list_ops_non_unique_seq()
   }
 }
 
-#if BOOST_WORKAROUND(__MWERKS__,<=0x3003)
-#pragma parse_func_templ reset
-#endif
-
 void test_list_ops()
 {
   typedef multi_index_container<

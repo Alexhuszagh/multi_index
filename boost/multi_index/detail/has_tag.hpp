@@ -11,8 +11,6 @@
 #include <brigand/functions/logical/or.hpp>
 #include <brigand/types/bool.hpp>
 #include <type_traits>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/vector.hpp>         // TODO: remove
 
 namespace boost{
 
@@ -39,8 +37,8 @@ template <typename Tag, typename... Ts>
 struct has_tag;
 
 
-template <typename Tag, typename... Ts>
-struct has_tag<Tag, mpl::vector<Ts...>>
+template <typename Tag, typename... Ts, template <typename...> class C>
+struct has_tag<Tag, C<Ts...>>
 {
     using type = has_tag_impl<Tag, Ts...>;
 };

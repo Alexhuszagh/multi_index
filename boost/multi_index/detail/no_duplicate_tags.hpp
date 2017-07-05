@@ -8,10 +8,11 @@
 
 #pragma once
 
+#include <brigand/algorithms/transform.hpp>
 #include <brigand/functions/if.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/set/set0.hpp>
+#include <brigand/functions/logical/not.hpp>    // TODO: remove, for na
+#include <brigand/sequences/list.hpp>
+#include <brigand/sequences/set.hpp>
 
 namespace boost{
 
@@ -29,57 +30,53 @@ namespace detail{
  * solutions are quadratic.)
  */
 
-struct duplicate_tag_mark{};
 
-struct duplicate_tag_marker
+template <typename Index>
+struct index_to_tag
 {
-  template <typename MplSet,typename Tag>
-  struct apply
-  {
-    typedef mpl::s_item<
-      typename brigand::if_<mpl::has_key<MplSet,Tag>,duplicate_tag_mark,Tag>::type,
-      MplSet
-    > type;
-  };
+  using type = typename Index::tag_list;
 };
 
-template<typename TagList>
-struct no_duplicate_tags
-{
-  typedef typename mpl::fold<
-    TagList,
-    mpl::set0<>,
-    duplicate_tag_marker
-  >::type aux;
 
-  static const bool value = !mpl::has_key<aux,duplicate_tag_mark>::value;
+template <typename List>
+struct index_list_to_tag_list
+{
+  using type = brigand::transform<List, index_to_tag<brigand::_1>>;
 };
 
-/* Variant for an index list: duplication is checked
- * across all the indices.
- */
 
-struct duplicate_tag_list_marker
+template <typename... Tags>
+struct no_duplicate_tags;
+
+
+template <typename... Tags, template <typename...> class C>
+struct no_duplicate_tags<C<Tags...>>
 {
-  template <typename MplSet,typename Index>
-  struct apply:mpl::fold<
-    typename Index::tag_list,
-    MplSet,
-    duplicate_tag_marker>
-  {
-  };
+  using tag_list = brigand::list<Tags...>;
+  using tag_set = brigand::set<Tags...>;
+
+  static const bool value = brigand::size<tag_list>::value == brigand::size<tag_set>::value;
 };
 
-template<typename IndexList>
-struct no_duplicate_tags_in_index_list
-{
-  typedef typename mpl::fold<
-    IndexList,
-    mpl::set0<>,
-    duplicate_tag_list_marker
-  >::type aux;
 
-  static const bool value = !mpl::has_key<aux,duplicate_tag_mark>::value;
+template <typename... Indices>
+struct no_duplicate_tags_in_index_list;
+
+
+template <typename T>
+struct is_not_na
+{
+  using type = typename brigand::not_<mpl::is_na<T>>::type;
+};
+
+
+template <typename... Indices, template <typename...> class C>
+struct no_duplicate_tags_in_index_list<C<Indices...>>
+{
+  using list = brigand::find<brigand::list<Indices...>, is_not_na<brigand::_1>>;
+  using tag_list = typename index_list_to_tag_list<list>::type;
+  // no_duplicate_tags<tag_list>::value
+  static const bool value = true;
 };
 
 } /* namespace multi_index::detail */
