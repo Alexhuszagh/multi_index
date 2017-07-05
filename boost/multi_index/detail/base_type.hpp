@@ -37,27 +37,44 @@ struct index_applier
   };
 };
 
-template<int N,typename Value,typename IndexSpecifierList,typename Allocator>
-struct nth_layer
-{
-  static const int length = mpl::size<IndexSpecifierList>::value;
 
-  typedef typename  brigand::eval_if_c<
+// TODO: I needto convert this to use sfinae logic...
+
+
+template <int N,typename V, typename A, typename I>
+struct nth_layer_impl
+{
+  static const int length = mpl::size<I>::value;
+
+  typedef typename brigand::eval_if_c<
     N==length,
-    brigand::identity<index_base<Value,IndexSpecifierList,Allocator> >,
+    brigand::identity<index_base<V,I,A> >,
     mpl::apply2<
       index_applier,
-      mpl::at_c<IndexSpecifierList,N>,
-      nth_layer<N+1,Value,IndexSpecifierList,Allocator>
+      mpl::at_c<I,N>,
+      nth_layer_impl<N+1, V, A, I>
     >
   >::type type;
 };
 
+
+template <int N, typename... Ts>
+struct nth_layer;
+
+
+template <int N,typename V, typename A, typename I>
+struct nth_layer<N, V, A, I>
+{
+  using type = typename nth_layer_impl<N, V, A, I>::type;
+};
+
+
 template<typename Value,typename IndexSpecifierList,typename Allocator>
-struct multi_index_base_type:nth_layer<0,Value,IndexSpecifierList,Allocator>
+struct multi_index_base_type: nth_layer<0,Value, Allocator, IndexSpecifierList>
 {
   static_assert(detail::is_index_list<IndexSpecifierList>::value, "");
 };
+
 
 } /* namespace multi_index::detail */
 

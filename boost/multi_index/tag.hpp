@@ -28,6 +28,7 @@ struct is_tag: is_base_and_derived<tag_marker, T>
 
 } /* namespace multi_index::detail */
 
+// TODO: convert this to brigand::list
 template<typename... Ts>
 struct tag: private detail::tag_marker
 {

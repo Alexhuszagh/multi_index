@@ -99,7 +99,7 @@ struct ssn{};
 struct randomly{};
 
 struct employee_set_indices:
-  boost::mpl::vector<
+  boost::multi_index::indexed_by<
     boost::multi_index::ordered_unique<
       boost::multi_index::identity<employee> >,
     boost::multi_index::hashed_non_unique<
