@@ -55,7 +55,7 @@ public:
 template<typename Allocator>
 struct is_partial_std_allocator
 {
-  BOOST_STATIC_CONSTANT(bool,value=false);
+  static const bool value = false;
 };
 
 /* rebind operations for defective std allocators */

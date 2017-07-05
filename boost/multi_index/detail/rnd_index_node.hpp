@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <boost/detail/allocator_utilities.hpp>
 #include <boost/integer/common_factor_rt.hpp>

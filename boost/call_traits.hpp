@@ -10,5 +10,4 @@
 
 #pragma once
 
-#include <boost/config.hpp>
 #include <boost/detail/call_traits.hpp>

@@ -12,7 +12,6 @@
 #include <brigand/functions/logical/not.hpp>
 #include <brigand/types/bool.hpp>
 #include <boost/type_traits/function_traits.hpp>
-#include <boost/type_traits/function_traits.hpp>
 #include <type_traits>
 #include <utility>
 

@@ -37,7 +37,6 @@
 
 #include <brigand/functions/if.hpp>
 #include <brigand/sequences/front.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <boost/call_traits.hpp>
 #include <boost/multi_index/detail/bidir_node_iterator.hpp>

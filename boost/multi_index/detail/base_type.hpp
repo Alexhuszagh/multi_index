@@ -10,12 +10,12 @@
 
 #include <brigand/functions/eval_if.hpp>
 #include <brigand/functions/arithmetic/identity.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/at.hpp>
 #include <boost/mpl/fold.hpp>
-#include <boost/mpl/size.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/multi_index/detail/index_base.hpp>
 #include <boost/multi_index/detail/is_index_list.hpp>
+#include <tuple>
+#include <type_traits>
 
 namespace boost{
 
@@ -27,15 +27,12 @@ namespace detail{
  * a index list.
  */
 
-struct index_applier
+
+template <typename IndexSpecifierMeta, typename SuperMeta>
+struct next_index_layer
 {
-  template<typename IndexSpecifierMeta,typename SuperMeta>
-  struct apply
-  {
-    typedef typename IndexSpecifierMeta::type            index_specifier;
-    typedef typename index_specifier::
-      template index_class<SuperMeta>::type type;
-  };
+    using index_specifier = typename IndexSpecifierMeta::type;
+    using type = typename index_specifier::template index_class<SuperMeta>::type;
 };
 
 
@@ -65,9 +62,8 @@ struct nth_layer_impl<N, V, A, std::tuple<Ts...>>
 
   typedef typename brigand::eval_if_c<
     N==length,
-    brigand::identity<index_base<V,  mpl::vector<Ts...>, A>>,
-    mpl::apply2<
-      index_applier,
+    brigand::identity<index_base<V, mpl::vector<Ts...>, A>>,
+    next_index_layer<
       std::tuple_element<N, T>,
       nth_layer_impl<N+1, V, A, std::tuple<Ts...>>
     >

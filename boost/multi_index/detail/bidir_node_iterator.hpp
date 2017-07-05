@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <iterator>
+
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/operators.hpp>
 
