@@ -9,6 +9,7 @@
 #pragma once
 
 #include <brigand/functions/if.hpp>
+#include <brigand/sequences/front.hpp>
 #include <brigand/types/bool.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
@@ -108,12 +109,12 @@ protected:
   typedef typename mpl::push_front<
     typename super::index_type_list,
     hashed_index>::type                       index_type_list;
-  typedef typename mpl::push_front<
+  typedef brigand::push_front<
     typename super::iterator_type_list,
-    iterator>::type                           iterator_type_list;
-  typedef typename mpl::push_front<
+    iterator>                                 iterator_type_list;
+  typedef brigand::push_front<
     typename super::const_iterator_type_list,
-    const_iterator>::type                     const_iterator_type_list;
+    const_iterator>                           const_iterator_type_list;
   typedef typename super::copy_map_type       copy_map_type;
 
 private:

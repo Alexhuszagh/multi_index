@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <brigand/sequences/list.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/allocator_utilities.hpp>
 #include <boost/mpl/vector.hpp>
@@ -53,8 +54,10 @@ protected:
     typename Allocator::value_type
   >::type                                     final_allocator_type;
   typedef mpl::vector0<>                      index_type_list;
-  typedef mpl::vector0<>                      iterator_type_list;
-  typedef mpl::vector0<>                      const_iterator_type_list;
+//  typedef mpl::vector0<>                      iterator_type_list;
+//  typedef mpl::vector0<>                      const_iterator_type_list;
+  typedef brigand::list<>                     iterator_type_list;
+  typedef brigand::list<>                     const_iterator_type_list;
   typedef copy_map<
     final_node_type,
     final_allocator_type>                     copy_map_type;
