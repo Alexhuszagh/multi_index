@@ -53,9 +53,10 @@ protected:
     Allocator,
     typename Allocator::value_type
   >::type                                     final_allocator_type;
-  typedef mpl::vector0<>                      index_type_list;
+//  typedef mpl::vector0<>                      index_type_list;
 //  typedef mpl::vector0<>                      iterator_type_list;
 //  typedef mpl::vector0<>                      const_iterator_type_list;
+  typedef brigand::list<>                     index_type_list;
   typedef brigand::list<>                     iterator_type_list;
   typedef brigand::list<>                     const_iterator_type_list;
   typedef copy_map<

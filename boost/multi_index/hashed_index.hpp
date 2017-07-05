@@ -106,9 +106,9 @@ protected:
   typedef tuples::cons<
     ctor_args,
     typename super::ctor_args_list>           ctor_args_list;
-  typedef typename mpl::push_front<
+  typedef brigand::push_front<
     typename super::index_type_list,
-    hashed_index>::type                       index_type_list;
+    hashed_index>                             index_type_list;
   typedef brigand::push_front<
     typename super::iterator_type_list,
     iterator>                                 iterator_type_list;

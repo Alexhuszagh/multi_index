@@ -10,6 +10,11 @@
 
 #pragma once
 
+#include <brigand/algorithms/find.hpp>     // TODO: remove
+#include <brigand/sequences/at.hpp>
+#include <brigand/sequences/contains.hpp>     // TODO: remove
+#include <brigand/sequences/front.hpp>
+#include <brigand/sequences/size.hpp>
 #include <algorithm>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/contains.hpp>
@@ -234,21 +239,21 @@ public:
   template<int N>
   struct nth_index
   {
-    static_assert(N>=0&&N<mpl::size<index_type_list>::type::value, "");
-    typedef typename mpl::at_c<index_type_list,N>::type type;
+    static_assert(N>=0&&N<brigand::size<index_type_list>::value, "");
+    typedef brigand::at_c<index_type_list,N> type;
   };
 
   template<int N>
   typename nth_index<N>::type& get()noexcept
   {
-    static_assert(N>=0&&N<mpl::size<index_type_list>::type::value, "");
+    static_assert(N>=0&&N<brigand::size<index_type_list>::value, "");
     return *this;
   }
 
   template<int N>
   const typename nth_index<N>::type& get()const noexcept
   {
-    static_assert(N>=0&&N<mpl::size<index_type_list>::type::value, "");
+    static_assert(N>=0&&N<brigand::size<index_type_list>::value, "");
     return *this;
   }
 
@@ -257,15 +262,42 @@ public:
   template<typename Tag>
   struct index
   {
-    typedef typename mpl::find_if<
-      index_type_list,
-      detail::has_tag<Tag>
-    >::type                                    iter;
+  // TODO: remove
+//    using list = brigand::find<
+//      index_type_list, //std::is_same<typename brigand::_1::tag_list, Tag>
+//    >;
+    template <typename list>
+    using size_bool = brigand::bool_<brigand::size<list>::value>;
 
-    static const bool index_found = !(std::is_same<iter,typename mpl::end<index_type_list>::type >::value);
-    static_assert(index_found, "");
+    template <typename tag_list>
+    // TODO: this needs to use mpl::contains
+    using find_tag = brigand::find<tag_list, std::is_same<brigand::_1, Tag>>;
 
-    typedef typename mpl::deref<iter>::type    type;
+    template <typename index>
+    // find_tag<typename index::tag_list>;
+    using has_tag = typename mpl::contains<typename index::tag_list,Tag>::type;
+
+    template <typename index_list>
+    using find_index = brigand::find<index_list, brigand::bind<has_tag, brigand::_1>>;
+
+    typedef find_index<index_type_list> items;
+//    static_assert(brigand::size<items>::value == 1, "");
+    //static const int;
+//    using y = typename x::tag_list;
+//    using z = brigand::find<y, std::is_same<brigand::_1, Tag>>;
+//    using zz = brigand::bool_<brigand::size<z>::value>;
+    using type = brigand::front<items>;
+
+  // TODO: restore
+//    typedef typename mpl::find_if<
+//      index_type_list,
+//      detail::has_tag<Tag>
+//    >::type                                    iter;
+//
+//    static const bool index_found = !(std::is_same<iter,typename mpl::end<index_type_list>::type >::value);
+//    static_assert(index_found, "");
+//
+//    typedef typename mpl::deref<iter>::type    type;
   };
 
   template<typename Tag>
@@ -687,10 +719,10 @@ private:
 template<typename MultiIndexContainer,int N>
 struct nth_index
 {
-  static const int M=mpl::size<typename MultiIndexContainer::index_type_list>::type::value;
+  static const int M=brigand::size<typename MultiIndexContainer::index_type_list>::value;
   static_assert(N>=0&&N<M, "");
-  typedef typename mpl::at_c<
-    typename MultiIndexContainer::index_type_list,N>::type type;
+  typedef brigand::at_c<
+    typename MultiIndexContainer::index_type_list,N> type;
 };
 
 template<int N,typename Value,typename IndexSpecifierList,typename Allocator>
@@ -709,9 +741,9 @@ get(
 
   static_assert(N>=0&&
     N<
-    mpl::size<
+    brigand::size<
       typename multi_index_type::index_type_list
-    >::type::value, "");
+    >::value, "");
 
   return detail::converter<multi_index_type,index_type>::index(m);
 }
@@ -733,9 +765,9 @@ get(
 
   static_assert(N>=0&&
     N<
-    mpl::size<
+    brigand::size<
       typename multi_index_type::index_type_list
-    >::type::value, "");
+    >::value, "");
 
   return detail::converter<multi_index_type,index_type>::index(m);
 }
@@ -747,15 +779,44 @@ struct index
 {
   typedef typename MultiIndexContainer::index_type_list index_type_list;
 
-  typedef typename mpl::find_if<
-    index_type_list,
-    detail::has_tag<Tag>
-  >::type                                      iter;
+  // TODO: remove
+//    using list = brigand::find<
+//      index_type_list, //std::is_same<typename brigand::_1::tag_list, Tag>
+//    >;
+    template <typename list>
+    using size_bool = brigand::bool_<brigand::size<list>::value>;
 
-  static const bool index_found = !std::is_same<iter,typename mpl::end<index_type_list>::type >::value;
-  static_assert(index_found, "");
+    template <typename tag_list>
+    // TODO: this needs to use mpl::contains
+    using find_tag = brigand::find<tag_list, std::is_same<brigand::_1, Tag>>;
 
-  typedef typename mpl::deref<iter>::type       type;
+    template <typename index>
+    // find_tag<typename index::tag_list>;
+    using has_tag = typename mpl::contains<typename index::tag_list,Tag>::type;
+
+    template <typename index_list>
+    using find_index = brigand::find<index_list, brigand::bind<has_tag, brigand::_1>>;
+
+    typedef find_index<index_type_list> items;
+    //static_assert(brigand::size<items>::value == 1, "");
+    //static const int;
+//    using y = typename x::tag_list;
+//    using z = brigand::find<y, std::is_same<brigand::_1, Tag>>;
+//    using zz = brigand::bool_<brigand::size<z>::value>;
+    using type = brigand::front<items>;
+
+// TODO: remove
+//  typedef brigand::front<index_type_list> type;
+// TODO: restore
+//  typedef typename mpl::find_if<
+//    index_type_list,
+//    detail::has_tag<Tag>
+//  >::type                                      iter;
+//
+//  static const bool index_found = !std::is_same<iter,typename mpl::end<index_type_list>::type >::value;
+//  static_assert(index_found, "");
+//
+//  typedef typename mpl::deref<iter>::type       type;
 };
 
 template<
