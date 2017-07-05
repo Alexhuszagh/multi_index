@@ -12,7 +12,6 @@
 #include <boost/functional/hash_fwd.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
@@ -229,11 +228,11 @@ template
   typename EqualCons
 >
 struct equal_ckey_ckey:
-  mpl::if_<
+  std::conditional<
     mpl::or_<
       std::is_same<KeyCons1,tuples::null_type>,
       std::is_same<KeyCons2,tuples::null_type>
-    >,
+    >::value,
     equal_ckey_ckey_terminal<KeyCons1,Value1,KeyCons2,Value2,EqualCons>,
     equal_ckey_ckey_normal<KeyCons1,Value1,KeyCons2,Value2,EqualCons>
   >::type
@@ -305,11 +304,11 @@ template
   typename ValCons,typename EqualCons
 >
 struct equal_ckey_cval:
-  mpl::if_<
+  std::conditional<
     mpl::or_<
       std::is_same<KeyCons,tuples::null_type>,
       std::is_same<ValCons,tuples::null_type>
-    >,
+    >::value,
     equal_ckey_cval_terminal<KeyCons,Value,ValCons,EqualCons>,
     equal_ckey_cval_normal<KeyCons,Value,ValCons,EqualCons>
   >::type
@@ -371,11 +370,11 @@ template
   typename CompareCons
 >
 struct compare_ckey_ckey:
-  mpl::if_<
+  std::conditional<
     mpl::or_<
       std::is_same<KeyCons1,tuples::null_type>,
       std::is_same<KeyCons2,tuples::null_type>
-    >,
+    >::value,
     compare_ckey_ckey_terminal<KeyCons1,Value1,KeyCons2,Value2,CompareCons>,
     compare_ckey_ckey_normal<KeyCons1,Value1,KeyCons2,Value2,CompareCons>
   >::type
@@ -449,11 +448,11 @@ template
   typename ValCons,typename CompareCons
 >
 struct compare_ckey_cval:
-  mpl::if_<
+  std::conditional<
     mpl::or_<
       std::is_same<KeyCons,tuples::null_type>,
       std::is_same<ValCons,tuples::null_type>
-    >,
+    >::value,
     compare_ckey_cval_terminal<KeyCons,Value,ValCons,CompareCons>,
     compare_ckey_cval_normal<KeyCons,Value,ValCons,CompareCons>
   >::type
@@ -491,8 +490,8 @@ struct hash_ckey_normal
 
 template<typename KeyCons,typename Value,typename HashCons>
 struct hash_ckey:
-  mpl::if_<
-    std::is_same<KeyCons,tuples::null_type>,
+  std::conditional<
+    std::is_same<KeyCons,tuples::null_type>::value,
     hash_ckey_terminal<KeyCons,Value,HashCons>,
     hash_ckey_normal<KeyCons,Value,HashCons>
   >::type
@@ -527,8 +526,8 @@ struct hash_cval_normal
 
 template<typename ValCons,typename HashCons>
 struct hash_cval:
-  mpl::if_<
-    std::is_same<ValCons,tuples::null_type>,
+  std::conditional<
+    std::is_same<ValCons,tuples::null_type>::value,
     hash_cval_terminal<ValCons,HashCons>,
     hash_cval_normal<ValCons,HashCons>
   >::type
