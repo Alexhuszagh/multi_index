@@ -308,11 +308,11 @@ struct rank_policy
 
 /* ranked_index specifiers */
 
-template<typename Arg1,typename Arg2,typename Arg3>
+template<typename Arg1,typename... Ts>
 struct ranked_unique
 {
   typedef typename detail::ordered_index_args<
-    Arg1,Arg2,Arg3>                                index_args;
+    Arg1,Ts...>                                index_args;
   typedef typename index_args::tag_list_type::type tag_list_type;
   typedef typename index_args::key_from_value_type key_from_value_type;
   typedef typename index_args::compare_type        compare_type;
@@ -333,11 +333,11 @@ struct ranked_unique
   };
 };
 
-template<typename Arg1,typename Arg2,typename Arg3>
+template<typename Arg1,typename ...Ts>
 struct ranked_non_unique
 {
   typedef detail::ordered_index_args<
-    Arg1,Arg2,Arg3>                                index_args;
+    Arg1,Ts...>                                index_args;
   typedef typename index_args::tag_list_type::type tag_list_type;
   typedef typename index_args::key_from_value_type key_from_value_type;
   typedef typename index_args::compare_type        compare_type;

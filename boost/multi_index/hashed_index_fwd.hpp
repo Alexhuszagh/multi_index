@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <boost/multi_index/detail/hash_index_args.hpp>
-
 namespace boost{
 
 namespace multi_index{
@@ -50,16 +48,10 @@ void swap(
 
 /* hashed_index specifiers */
 
-template<
-  typename Arg1,typename Arg2=mpl::na,
-  typename Arg3=mpl::na,typename Arg4=mpl::na
->
+template<typename... Ts>
 struct hashed_unique;
 
-template<
-  typename Arg1,typename Arg2=mpl::na,
-  typename Arg3=mpl::na,typename Arg4=mpl::na
->
+template<typename... Ts>
 struct hashed_non_unique;
 
 } /* namespace multi_index */

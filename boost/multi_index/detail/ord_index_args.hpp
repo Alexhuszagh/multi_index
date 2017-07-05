@@ -9,10 +9,7 @@
 #pragma once
 
 #include <brigand/functions/eval_if.hpp>
-#include <brigand/functions/if.hpp>
-#include <brigand/functions/arithmetic/identity.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/aux_/na.hpp>
 #include <boost/multi_index/tag.hpp>
 #include <functional>
 
@@ -33,39 +30,47 @@ namespace detail{
  * polymorphism.
  */
 
-template<typename KeyFromValue>
-struct index_args_default_compare
+template<typename T>
+using index_args_default_compare = std::less<typename T::result_type>;
+
+template <typename T1, typename T2, typename T3 = index_args_default_compare<T2>>
+struct ordered_index_args_full_form_impl
 {
-  typedef std::less<typename KeyFromValue::result_type> type;
+  typedef T1 tag_list_type;
+  typedef T2 key_from_value_type;
+  typedef T3 compare_type;
 };
 
-template<typename Arg1,typename Arg2,typename Arg3>
-struct ordered_index_args
+template <typename T1, typename T2 = index_args_default_compare<T1>>
+struct ordered_index_args_short_form_impl
 {
-  typedef is_tag<Arg1> full_form;
-
-  typedef typename brigand::if_<
-    full_form,
-    Arg1,
-    tag< > >::type                                   tag_list_type;
-  typedef typename brigand::if_<
-    full_form,
-    Arg2,
-    Arg1>::type                                      key_from_value_type;
-  typedef typename brigand::if_<
-    full_form,
-    Arg3,
-    Arg2>::type                                      supplied_compare_type;
-  typedef typename brigand::eval_if<
-    mpl::is_na<supplied_compare_type>,
-    index_args_default_compare<key_from_value_type>,
-    brigand::identity<supplied_compare_type>
-  >::type                                            compare_type;
-
-  static_assert(is_tag<tag_list_type>::value, "");
-  static_assert(!mpl::is_na<key_from_value_type>::value, "");
-  static_assert(!mpl::is_na<compare_type>::value, "");
+  typedef tag<> tag_list_type;
+  typedef T1 key_from_value_type;
+  typedef T2 compare_type;
 };
+
+
+template <typename T1, typename... Ts>
+struct ordered_index_args_full_form
+{
+  typedef ordered_index_args_full_form_impl<T1, Ts...> type;
+};
+
+
+template <typename T1, typename... Ts>
+struct ordered_index_args_short_form
+{
+  typedef ordered_index_args_short_form_impl<T1, Ts...> type;
+};
+
+
+template <typename T1, typename... Ts>
+struct ordered_index_args: brigand::eval_if<
+    is_tag<T1>,
+    ordered_index_args_full_form<T1, Ts...>,
+    ordered_index_args_short_form<T1, Ts...>
+  >::type
+{};
 
 } /* namespace multi_index::detail */
 

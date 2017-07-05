@@ -9,13 +9,12 @@
 #pragma once
 
 #include <brigand/functions/eval_if.hpp>
-#include <brigand/functions/arithmetic/identity.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/functional/hash.hpp>
-#include <boost/mpl/aux_/na.hpp>
 #include <boost/multi_index/tag.hpp>
 #include <functional>
 #include <type_traits>
+//#include <utility>
 
 namespace boost{
 
@@ -39,56 +38,54 @@ namespace detail{
  * argument-dependent polymorphism.
  */
 
-template<typename KeyFromValue>
-struct index_args_default_hash
+// TODO: replace with std::hash
+template<typename T>
+using index_args_default_hash = ::boost::hash<typename T::result_type>;
+
+template<typename T>
+using index_args_default_pred = std::equal_to<typename T::result_type>;
+
+
+template <typename T1, typename T2, typename T3 = index_args_default_hash<T2>, typename T4 = index_args_default_pred<T2>>
+struct hashed_index_args_full_form_impl
 {
-  // TODO: this sucks... Needs to be std::hash, ideally
-    typedef ::boost::hash<typename KeyFromValue::result_type> type;
+  typedef T1 tag_list_type;
+  typedef T2 key_from_value_type;
+  typedef T3 hash_type;
+  typedef T4 pred_type;
 };
 
-template<typename KeyFromValue>
-struct index_args_default_pred
+template <typename T1, typename T2 = index_args_default_hash<T1>, typename T3 = index_args_default_pred<T1>>
+struct hashed_index_args_short_form_impl
 {
-    typedef std::equal_to<typename KeyFromValue::result_type> type;
+  typedef tag<> tag_list_type;
+  typedef T1 key_from_value_type;
+  typedef T2 hash_type;
+  typedef T3 pred_type;
 };
 
-template<typename Arg1,typename Arg2,typename Arg3,typename Arg4>
-struct hashed_index_args
+
+template <typename T1, typename... Ts>
+struct hashed_index_args_full_form
 {
-  typedef is_tag<Arg1> full_form;
-
-  typedef typename std::conditional<
-    full_form::value,
-    Arg1,
-    tag< > >::type                                   tag_list_type;
-  typedef typename std::conditional<
-    full_form::value,
-    Arg2,
-    Arg1>::type                                      key_from_value_type;
-  typedef typename std::conditional<
-    full_form::value,
-    Arg3,
-    Arg2>::type                                      supplied_hash_type;
-  typedef typename brigand::eval_if<
-    mpl::is_na<supplied_hash_type>,
-    index_args_default_hash<key_from_value_type>,
-    brigand::identity<supplied_hash_type>
-  >::type                                            hash_type;
-  typedef typename std::conditional<
-    full_form::value,
-    Arg4,
-    Arg3>::type                                      supplied_pred_type;
-  typedef typename brigand::eval_if<
-    mpl::is_na<supplied_pred_type>,
-    index_args_default_pred<key_from_value_type>,
-    brigand::identity<supplied_pred_type>
-  >::type                                            pred_type;
-
-  static_assert(is_tag<tag_list_type>::value, "");
-  static_assert(!mpl::is_na<key_from_value_type>::value, "");
-  static_assert(!mpl::is_na<hash_type>::value, "");
-  static_assert(!mpl::is_na<pred_type>::value, "");
+  typedef hashed_index_args_full_form_impl<T1, Ts...> type;
 };
+
+
+template <typename T1, typename... Ts>
+struct hashed_index_args_short_form
+{
+  typedef hashed_index_args_short_form_impl<T1, Ts...> type;
+};
+
+
+template <typename T1, typename... Ts>
+struct hashed_index_args: brigand::eval_if<
+    is_tag<T1>,
+    hashed_index_args_full_form<T1, Ts...>,
+    hashed_index_args_short_form<T1, Ts...>
+  >::type
+{};
 
 } /* namespace multi_index::detail */
 

@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <boost/multi_index/detail/ord_index_args.hpp>
-#include <boost/multi_index/detail/ord_index_impl_fwd.hpp>
+//#include <boost/multi_index/detail/ord_index_impl_fwd.hpp>
 
 namespace boost{
 
@@ -17,10 +16,10 @@ namespace multi_index{
 
 /* ordered_index specifiers */
 
-template<typename Arg1,typename Arg2=mpl::na,typename Arg3=mpl::na>
+template <typename T1, typename... Ts>
 struct ordered_unique;
 
-template<typename Arg1,typename Arg2=mpl::na,typename Arg3=mpl::na>
+template<typename T1, typename... Ts>
 struct ordered_non_unique;
 
 } /* namespace multi_index */

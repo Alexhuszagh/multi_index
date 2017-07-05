@@ -8,9 +8,11 @@
 
 #pragma once
 
+#include <brigand/functions/logical/or.hpp>
+#include <brigand/types/bool.hpp>
+#include <type_traits>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/contains.hpp>
-#include <brigand/sequences/contains.hpp>
+#include <boost/mpl/vector.hpp>         // TODO: remove
 
 namespace boost{
 
@@ -20,13 +22,27 @@ namespace detail{
 
 /* determines whether an index type has a given tag in its tag list */
 
-template<typename Tag>
-struct has_tag
+
+template <typename Tag, typename... Ts>
+struct has_tag_impl;
+
+
+template <typename Tag>
+struct has_tag_impl<Tag> : brigand::false_type {};
+
+
+template <typename Tag, typename T, typename... Ts>
+struct has_tag_impl<Tag, T, Ts...> : brigand::or_<std::is_same<Tag, T>, has_tag_impl<Tag, Ts...>> {};
+
+
+template <typename Tag, typename... Ts>
+struct has_tag;
+
+
+template <typename Tag, typename... Ts>
+struct has_tag<Tag, mpl::vector<Ts...>>
 {
-  template<typename Index>
-  struct apply:mpl::contains<typename Index::tag_list,Tag>
-  {
-  };
+    using type = has_tag_impl<Tag, Ts...>;
 };
 
 } /* namespace multi_index::detail */

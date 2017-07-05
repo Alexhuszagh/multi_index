@@ -10,6 +10,7 @@
 
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/ord_index_impl.hpp>
+#include <boost/multi_index/detail/ord_index_args.hpp>
 #include <boost/multi_index/ordered_index_fwd.hpp>
 
 namespace boost{
@@ -45,14 +46,13 @@ struct null_augment_policy
 
 /* ordered_index specifiers */
 
-template<typename Arg1,typename Arg2,typename Arg3>
+template<typename T1, typename... Ts>
 struct ordered_unique
 {
-  typedef typename detail::ordered_index_args<
-    Arg1,Arg2,Arg3>                                index_args;
-  typedef typename index_args::tag_list_type::type tag_list_type;
-  typedef typename index_args::key_from_value_type key_from_value_type;
-  typedef typename index_args::compare_type        compare_type;
+  typedef typename detail::ordered_index_args<T1,Ts...> index_args;
+  typedef typename index_args::tag_list_type::type      tag_list_type;
+  typedef typename index_args::key_from_value_type      key_from_value_type;
+  typedef typename index_args::compare_type             compare_type;
 
   template<typename Super>
   struct node_class
@@ -70,14 +70,13 @@ struct ordered_unique
   };
 };
 
-template<typename Arg1,typename Arg2,typename Arg3>
+template<typename T1, typename... Ts>
 struct ordered_non_unique
 {
-  typedef detail::ordered_index_args<
-    Arg1,Arg2,Arg3>                                index_args;
-  typedef typename index_args::tag_list_type::type tag_list_type;
-  typedef typename index_args::key_from_value_type key_from_value_type;
-  typedef typename index_args::compare_type        compare_type;
+  typedef detail::ordered_index_args<T1,Ts...>      index_args;
+  typedef typename index_args::tag_list_type::type  tag_list_type;
+  typedef typename index_args::key_from_value_type  key_from_value_type;
+  typedef typename index_args::compare_type         compare_type;
 
   template<typename Super>
   struct node_class

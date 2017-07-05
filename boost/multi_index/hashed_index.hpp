@@ -18,6 +18,7 @@
 #include <boost/multi_index/detail/auto_space.hpp>
 #include <boost/multi_index/detail/bucket_array.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
+#include <boost/multi_index/detail/hash_index_args.hpp>
 #include <boost/multi_index/detail/hash_index_iterator.hpp>
 #include <boost/multi_index/detail/index_node_base.hpp>
 #include <boost/multi_index/detail/modify_key_adaptor.hpp>
@@ -1378,15 +1379,14 @@ void swap(
 
 /* hashed index specifiers */
 
-template<typename Arg1,typename Arg2,typename Arg3,typename Arg4>
+template<typename... Ts>
 struct hashed_unique
 {
-  typedef typename detail::hashed_index_args<
-    Arg1,Arg2,Arg3,Arg4>                           index_args;
-  typedef typename index_args::tag_list_type::type tag_list_type;
-  typedef typename index_args::key_from_value_type key_from_value_type;
-  typedef typename index_args::hash_type           hash_type;
-  typedef typename index_args::pred_type           pred_type;
+  typedef typename detail::hashed_index_args<Ts...> index_args;
+  typedef typename index_args::tag_list_type::type  tag_list_type;
+  typedef typename index_args::key_from_value_type  key_from_value_type;
+  typedef typename index_args::hash_type            hash_type;
+  typedef typename index_args::pred_type            pred_type;
 
   template<typename Super>
   struct node_class
@@ -1403,15 +1403,14 @@ struct hashed_unique
   };
 };
 
-template<typename Arg1,typename Arg2,typename Arg3,typename Arg4>
+template<typename... Ts>
 struct hashed_non_unique
 {
-  typedef typename detail::hashed_index_args<
-    Arg1,Arg2,Arg3,Arg4>                           index_args;
-  typedef typename index_args::tag_list_type::type tag_list_type;
-  typedef typename index_args::key_from_value_type key_from_value_type;
-  typedef typename index_args::hash_type           hash_type;
-  typedef typename index_args::pred_type           pred_type;
+  typedef typename detail::hashed_index_args<Ts...> index_args;
+  typedef typename index_args::tag_list_type::type  tag_list_type;
+  typedef typename index_args::key_from_value_type  key_from_value_type;
+  typedef typename index_args::hash_type            hash_type;
+  typedef typename index_args::pred_type            pred_type;
 
   template<typename Super>
   struct node_class
