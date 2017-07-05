@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/operators.hpp>
+#include <iterator>
 
 namespace boost{
 
@@ -21,8 +20,7 @@ namespace detail{
 
 template<typename Node>
 class rnd_node_iterator:
-  public random_access_iterator_helper<
-    rnd_node_iterator<Node>,
+  public std::iterator<std::random_access_iterator_tag,
     typename Node::value_type,
     std::ptrdiff_t,
     const typename Node::value_type*,
@@ -38,10 +36,22 @@ public:
     return node->value();
   }
 
+  const typename Node::value_type* operator->()const
+  {
+    return &node->value();
+  }
+
   rnd_node_iterator& operator++()
   {
     Node::increment(node);
     return *this;
+  }
+
+  rnd_node_iterator operator++(int)
+  {
+    rnd_node_iterator copy(*this);
+    operator++();
+    return copy;
   }
 
   rnd_node_iterator& operator--()
@@ -50,16 +60,44 @@ public:
     return *this;
   }
 
+  rnd_node_iterator operator--(int)
+  {
+    rnd_node_iterator copy(*this);
+    operator--();
+    return copy;
+  }
+
   rnd_node_iterator& operator+=(std::ptrdiff_t n)
   {
     Node::advance(node,n);
     return *this;
   }
 
+  rnd_node_iterator operator+(std::ptrdiff_t n) const
+  {
+    rnd_node_iterator copy(*this);
+    copy += n;
+    return copy;
+  }
+
   rnd_node_iterator& operator-=(std::ptrdiff_t n)
   {
     Node::advance(node,-n);
     return *this;
+  }
+
+  rnd_node_iterator operator-(std::ptrdiff_t n) const
+  {
+    rnd_node_iterator copy(*this);
+    copy -= n;
+    return copy;
+  }
+
+  const typename Node::value_type& operator[](std::ptrdiff_t n)
+  {
+    rnd_node_iterator copy(*this);
+    copy += n;
+    return *copy;
   }
 
   /* get_node is not to be used by the user */
@@ -81,11 +119,43 @@ bool operator==(
 }
 
 template<typename Node>
+bool operator!=(
+  const rnd_node_iterator<Node>& x,
+  const rnd_node_iterator<Node>& y)
+{
+  return !(x == y);
+}
+
+template<typename Node>
 bool operator<(
   const rnd_node_iterator<Node>& x,
   const rnd_node_iterator<Node>& y)
 {
   return Node::distance(x.get_node(),y.get_node())>0;
+}
+
+template<typename Node>
+bool operator<=(
+  const rnd_node_iterator<Node>& x,
+  const rnd_node_iterator<Node>& y)
+{
+  return !(y < x);
+}
+
+template<typename Node>
+bool operator>(
+  const rnd_node_iterator<Node>& x,
+  const rnd_node_iterator<Node>& y)
+{
+  return y < x;
+}
+
+template<typename Node>
+bool operator>=(
+  const rnd_node_iterator<Node>& x,
+  const rnd_node_iterator<Node>& y)
+{
+  return !(x < y);
 }
 
 template<typename Node>

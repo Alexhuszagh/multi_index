@@ -5,10 +5,6 @@
   - Remove `mpl.fold`, `mpl.reverse_iter_fold`.
   - Reimplement in terms of brigand.
 
-
-- Remove boost/operators from here:
-    - bidir_node_iterator.hpp
-
 - Remove mpl::deref from here:
     - node_type.hpp
 

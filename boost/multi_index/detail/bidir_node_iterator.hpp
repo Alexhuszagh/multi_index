@@ -10,9 +10,6 @@
 
 #include <iterator>
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/operators.hpp>
-
 namespace boost{
 
 namespace multi_index{
@@ -25,8 +22,7 @@ namespace detail{
 
 template<typename Node>
 class bidir_node_iterator:
-  public bidirectional_iterator_helper<
-    bidir_node_iterator<Node>,
+  public std::iterator<std::bidirectional_iterator_tag,
     typename Node::value_type,
     std::ptrdiff_t,
     const typename Node::value_type*,
@@ -42,16 +38,35 @@ public:
     return node->value();
   }
 
+  const typename Node::value_type* operator->()const
+  {
+    return &node->value();
+  }
+
   bidir_node_iterator& operator++()
   {
     Node::increment(node);
     return *this;
   }
 
+  bidir_node_iterator operator++(int)
+  {
+    bidir_node_iterator copy(*this);
+    operator++();
+    return copy;
+  }
+
   bidir_node_iterator& operator--()
   {
     Node::decrement(node);
     return *this;
+  }
+
+  bidir_node_iterator operator--(int)
+  {
+    bidir_node_iterator copy(*this);
+    operator--();
+    return copy;
   }
 
   /* get_node is not to be used by the user */
@@ -70,6 +85,15 @@ bool operator==(
   const bidir_node_iterator<Node>& y)
 {
   return x.get_node()==y.get_node();
+}
+
+
+template<typename Node>
+bool operator!=(
+  const bidir_node_iterator<Node>& x,
+  const bidir_node_iterator<Node>& y)
+{
+  return !(x == y);
 }
 
 } /* namespace multi_index::detail */
