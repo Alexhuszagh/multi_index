@@ -8,13 +8,12 @@
 
 #pragma once
 
+#include <brigand/functions/if.hpp>
 #include <brigand/types/bool.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <boost/call_traits.hpp>
 #include <boost/detail/allocator_utilities.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/if.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/multi_index/detail/auto_space.hpp>
 #include <boost/multi_index/detail/bucket_array.hpp>
@@ -885,7 +884,7 @@ private:
     node_impl_base_pointer first,last;
   };
 
-  typedef typename mpl::if_<
+  typedef typename brigand::if_<
     std::is_same<Category,hashed_unique_tag>,
     node_impl_base_pointer,
     link_info_non_unique

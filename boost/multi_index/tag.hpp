@@ -8,9 +8,9 @@
 
 #pragma once
 
+#include <brigand/functions/arithmetic/identity.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/no_duplicate_tags.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/preprocessor/facilities/intercept.hpp>
@@ -67,7 +67,7 @@ struct tag:private detail::tag_marker
 
   typedef typename mpl::transform<
     mpl::vector<BOOST_PP_ENUM_PARAMS(BOOST_MULTI_INDEX_TAG_SIZE,T)>,
-    mpl::identity<mpl::_1>
+    brigand::identity<mpl::_1>
   >::type type;
 
   static_assert(detail::no_duplicate_tags<type>::value, "");

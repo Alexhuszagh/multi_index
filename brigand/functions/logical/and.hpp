@@ -14,7 +14,7 @@ namespace brigand
   struct and_;
 
   template<>
-  struct and_<>: true_type {};
+  struct and_<>: brigand::integral_constant < bool, true > {};
 
   template<typename T, typename... Ts>
   struct and_<T, Ts...> : brigand::integral_constant < typename T::value_type, T::value && and_<Ts...>::value > {};

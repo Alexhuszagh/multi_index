@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <brigand/functions/if.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/set/set0.hpp>
@@ -36,7 +37,7 @@ struct duplicate_tag_marker
   struct apply
   {
     typedef mpl::s_item<
-      typename mpl::if_<mpl::has_key<MplSet,Tag>,duplicate_tag_mark,Tag>::type,
+      typename brigand::if_<mpl::has_key<MplSet,Tag>,duplicate_tag_mark,Tag>::type,
       MplSet
     > type;
   };

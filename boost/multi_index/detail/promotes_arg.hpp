@@ -10,7 +10,6 @@
 
 #include <brigand/functions/logical/and.hpp>
 #include <brigand/functions/logical/not.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/is_transparent.hpp>
 #include <type_traits>
 
@@ -22,7 +21,6 @@ namespace detail{
 
 template<typename F,typename Arg1,typename Arg2>
 struct promotes_1st_arg:
-  // TODO: convert to brigand
   brigand::and_<
     brigand::not_<is_transparent<F,Arg1,Arg2> >,
     std::is_convertible<const Arg1,Arg2>,
@@ -32,7 +30,6 @@ struct promotes_1st_arg:
 
 template<typename F,typename Arg1,typename Arg2>
 struct promotes_2nd_arg:
-  // TODO: convert to brigand
   brigand::and_<
     brigand::not_<is_transparent<F,Arg1,Arg2> >,
     std::is_convertible<const Arg2,Arg1>,

@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <brigand/functions/if.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/ord_index_impl.hpp>
 #include <boost/multi_index/detail/rnk_index_ops.hpp>
@@ -120,14 +121,14 @@ public:
   std::pair<std::size_t,std::size_t>
   range_rank(LowerBounder lower,UpperBounder upper)const
   {
-    typedef typename mpl::if_<
+    typedef typename brigand::if_<
       std::is_same<LowerBounder,unbounded_type>,
-      typename mpl::if_<
+      typename brigand::if_<
         std::is_same<UpperBounder,unbounded_type>,
         both_unbounded_tag,
         lower_unbounded_tag
       >::type,
-      typename mpl::if_<
+      typename brigand::if_<
         std::is_same<UpperBounder,unbounded_type>,
         upper_unbounded_tag,
         none_unbounded_tag

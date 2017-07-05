@@ -8,8 +8,9 @@
 
 #pragma once
 
+#include <brigand/functions/logical/and.hpp>
+#include <brigand/types/bool.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/and.hpp>
 #include <boost/multi_index/detail/promotes_arg.hpp>
 #include <cstddef>
 #include <utility>
@@ -77,7 +78,7 @@ inline std::size_t ranked_index_find_rank(
 
   return ranked_index_find_rank(
     top,y,key,x,comp,
-    mpl::and_<
+    brigand::and_<
       promotes_1st_arg<CompatibleCompare,CompatibleKey,key_type>,
       promotes_2nd_arg<CompatibleCompare,key_type,CompatibleKey> >());
 }
@@ -89,9 +90,9 @@ template<
 inline std::size_t ranked_index_find_rank(
   Node* top,Node* y,const KeyFromValue& key,
   const typename KeyFromValue::result_type& x,
-  const CompatibleCompare& comp,mpl::true_)
+  const CompatibleCompare& comp,brigand::true_type)
 {
-  return ranked_index_find_rank(top,y,key,x,comp,mpl::false_());
+  return ranked_index_find_rank(top,y,key,x,comp,brigand::false_type());
 }
 
 template<
@@ -100,7 +101,7 @@ template<
 >
 inline std::size_t ranked_index_find_rank(
   Node* top,Node* y,const KeyFromValue& key,const CompatibleKey& x,
-  const CompatibleCompare& comp,mpl::false_)
+  const CompatibleCompare& comp,brigand::false_type)
 {
   if(!top)return 0;
 
@@ -142,9 +143,9 @@ template<
 inline std::size_t ranked_index_lower_bound_rank(
   Node* top,Node* y,const KeyFromValue& key,
   const typename KeyFromValue::result_type& x,
-  const CompatibleCompare& comp,mpl::true_)
+  const CompatibleCompare& comp,brigand::true_type)
 {
-  return ranked_index_lower_bound_rank(top,y,key,x,comp,mpl::false_());
+  return ranked_index_lower_bound_rank(top,y,key,x,comp,brigand::false_type());
 }
 
 template<
@@ -153,7 +154,7 @@ template<
 >
 inline std::size_t ranked_index_lower_bound_rank(
   Node* top,Node* y,const KeyFromValue& key,const CompatibleKey& x,
-  const CompatibleCompare& comp,mpl::false_)
+  const CompatibleCompare& comp,brigand::false_type)
 {
   if(!top)return 0;
 
@@ -193,9 +194,9 @@ template<
 inline std::size_t ranked_index_upper_bound_rank(
   Node* top,Node* y,const KeyFromValue& key,
   const typename KeyFromValue::result_type& x,
-  const CompatibleCompare& comp,mpl::true_)
+  const CompatibleCompare& comp,brigand::true_type)
 {
-  return ranked_index_upper_bound_rank(top,y,key,x,comp,mpl::false_());
+  return ranked_index_upper_bound_rank(top,y,key,x,comp,brigand::false_type());
 }
 
 template<
@@ -204,7 +205,7 @@ template<
 >
 inline std::size_t ranked_index_upper_bound_rank(
   Node* top,Node* y,const KeyFromValue& key,const CompatibleKey& x,
-  const CompatibleCompare& comp,mpl::false_)
+  const CompatibleCompare& comp,brigand::false_type)
 {
   if(!top)return 0;
 
@@ -234,7 +235,7 @@ inline std::pair<std::size_t,std::size_t> ranked_index_equal_range_rank(
 
   return ranked_index_equal_range_rank(
     top,y,key,x,comp,
-    mpl::and_<
+    brigand::and_<
       promotes_1st_arg<CompatibleCompare,CompatibleKey,key_type>,
       promotes_2nd_arg<CompatibleCompare,key_type,CompatibleKey> >());
 }
@@ -246,9 +247,9 @@ template<
 inline std::pair<std::size_t,std::size_t> ranked_index_equal_range_rank(
   Node* top,Node* y,const KeyFromValue& key,
   const typename KeyFromValue::result_type& x,
-  const CompatibleCompare& comp,mpl::true_)
+  const CompatibleCompare& comp,brigand::true_type)
 {
-  return ranked_index_equal_range_rank(top,y,key,x,comp,mpl::false_());
+  return ranked_index_equal_range_rank(top,y,key,x,comp,brigand::false_type());
 }
 
 template<
@@ -257,7 +258,7 @@ template<
 >
 inline std::pair<std::size_t,std::size_t> ranked_index_equal_range_rank(
   Node* top,Node* y,const KeyFromValue& key,const CompatibleKey& x,
-  const CompatibleCompare& comp,mpl::false_)
+  const CompatibleCompare& comp,brigand::false_type)
 {
   if(!top)return std::pair<std::size_t,std::size_t>(0,0);
 
@@ -276,10 +277,10 @@ inline std::pair<std::size_t,std::size_t> ranked_index_equal_range_rank(
       return std::pair<std::size_t,std::size_t>(
         s-top->impl()->size+
           ranked_index_lower_bound_rank(
-           Node::from_impl(top->left()),top,key,x,comp,mpl::false_()),
+           Node::from_impl(top->left()),top,key,x,comp,brigand::false_type()),
         s-ranked_node_size(top->right())+
           ranked_index_upper_bound_rank(
-            Node::from_impl(top->right()),y,key,x,comp,mpl::false_()));
+            Node::from_impl(top->right()),y,key,x,comp,brigand::false_type()));
     }
   }while(top);
 

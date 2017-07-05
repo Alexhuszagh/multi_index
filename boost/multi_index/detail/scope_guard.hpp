@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include <boost/mpl/if.hpp>
+#include <brigand/functions/if.hpp>
 
 namespace boost{
 
@@ -113,7 +113,7 @@ struct null_guard : public scope_guard_impl_base
 template< bool cond, class T >
 struct null_guard_return
 {
-    typedef typename boost::mpl::if_c<cond,T,null_guard>::type type;
+    typedef typename brigand::if_c<cond,T,null_guard>::type type;
 };
 
 template<typename F>

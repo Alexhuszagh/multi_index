@@ -8,11 +8,11 @@
 
 #pragma once
 
+#include <brigand/functions/logical/not.hpp>
+#include <brigand/types/bool.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/call_traits.hpp>
 #include <boost/detail/allocator_utilities.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/not.hpp>
 #include <boost/mpl/push_front.hpp>
 #include <boost/multi_index/detail/bidir_node_iterator.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
@@ -122,7 +122,7 @@ public:
   template <class InputIterator>
   void assign(InputIterator first,InputIterator last)
   {
-    assign_iter(first,last,mpl::not_<std::is_integral<InputIterator> >());
+    assign_iter(first,last,brigand::not_<std::is_integral<InputIterator> >());
   }
 
   void assign(std::initializer_list<value_type> list)
@@ -255,7 +255,7 @@ public:
   template<typename InputIterator>
   void insert(iterator position,InputIterator first,InputIterator last)
   {
-    insert_iter(position,first,last,mpl::not_<std::is_integral<InputIterator> >());
+    insert_iter(position,first,last,brigand::not_<std::is_integral<InputIterator> >());
   }
 
   void insert(iterator position,std::initializer_list<value_type> list)
@@ -582,13 +582,13 @@ private:
   }
 
   template <class InputIterator>
-  void assign_iter(InputIterator first,InputIterator last,mpl::true_)
+  void assign_iter(InputIterator first,InputIterator last,brigand::true_type)
   {
     clear();
     for(;first!=last;++first)this->final_insert_ref_(*first);
   }
 
-  void assign_iter(size_type n,value_param_type value,mpl::false_)
+  void assign_iter(size_type n,value_param_type value,brigand::false_type)
   {
     clear();
     for(size_type i=0;i<n;++i)push_back(value);
@@ -596,7 +596,7 @@ private:
 
   template<typename InputIterator>
   void insert_iter(
-    iterator position,InputIterator first,InputIterator last,mpl::true_)
+    iterator position,InputIterator first,InputIterator last,brigand::true_type)
   {
     for(;first!=last;++first){
       std::pair<final_node_type*,bool> p=
@@ -608,7 +608,7 @@ private:
   }
 
   void insert_iter(
-    iterator position,size_type n,value_param_type x,mpl::false_)
+    iterator position,size_type n,value_param_type x,brigand::false_type)
   {
     for(size_type i=0;i<n;++i)insert(position,x);
   }
