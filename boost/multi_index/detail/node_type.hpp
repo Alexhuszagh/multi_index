@@ -15,11 +15,6 @@
 #include <boost/multi_index/detail/is_index_list.hpp>
 #include <boost/multi_index/detail/tuple_support.hpp>
 
-// TODO: remove
-#include <boost/mpl/bind.hpp>
-#include <boost/mpl/reverse_iter_fold.hpp>
-#include <boost/mpl/vector.hpp>
-
 namespace boost{
 
 namespace multi_index{
@@ -40,14 +35,8 @@ struct index_node_applier
   };
 };
 
-
-template<typename IndexSpecifierIterator,typename Super>
-struct next_index_node
-{
-  using index_specifier = IndexSpecifierIterator;
-  using type = typename index_specifier::template node_class<Super>::type;
-};
-
+template<typename IndexSpecifier,typename Super>
+using next_index_node = typename IndexSpecifier::template node_class<Super>::type;
 
 template <typename... Ts>
 struct multi_index_node_type_impl;
@@ -55,24 +44,11 @@ struct multi_index_node_type_impl;
 template <typename Value, typename Allocator, typename... Ts>
 struct multi_index_node_type_impl<Value, Allocator, std::tuple<Ts...>>
 {
-//  using list = brigand::reverse_fold<
-//    brigand::list<Ts...>,
-//    index_node_base<Value,Allocator>,
-//    brigand::bind<next_index_node, brigand::_2, brigand::_1>
-//  >;
-
-  // I need ordered_index_node
-  // Brigand is giving me ordered_index
-//  using tuple = std::tuple<Ts...>;
-//  using g = index_node_base<Value,Allocator>;
-//  using f = typename std::tuple_element<1, tuple>::type;
-//  using type = mpl::vector<typename f::template node_class<g>::type>;
-
-  using type = typename mpl::reverse_iter_fold<
-    mpl::vector<Ts...>,
+  using type = brigand::reverse_fold<
+    brigand::list<Ts...>,
     index_node_base<Value,Allocator>,
-    mpl::bind2<index_node_applier,mpl::_2,mpl::_1>
-  >::type;
+    brigand::bind<next_index_node, brigand::_2, brigand::_1>
+  >;
 };
 
 
@@ -81,8 +57,8 @@ struct multi_index_node_type
 {
   static_assert(detail::is_index_list<IndexSpecifierList>::value, "");
 
-// TODO: need to use the brigand fold....
-  using type = typename multi_index_node_type_impl<Value, Allocator, IndexSpecifierList>::type;
+  using impl = multi_index_node_type_impl<Value, Allocator, IndexSpecifierList>;
+  using type = typename impl::type;
 };
 
 } /* namespace multi_index::detail */

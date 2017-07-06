@@ -10,9 +10,10 @@
 
 #include <brigand/algorithms/transform.hpp>
 #include <brigand/functions/if.hpp>
-#include <brigand/functions/logical/not.hpp>    // TODO: remove, for na
+#include <brigand/functions/logical/not.hpp>
 #include <brigand/sequences/list.hpp>
 #include <brigand/sequences/set.hpp>
+#include <brigand/sequences/size.hpp>
 
 namespace boost{
 
@@ -45,6 +46,13 @@ struct index_list_to_tag_list
 };
 
 
+template <typename T>
+struct not_empty
+{
+  using type = brigand::not_<brigand::size<T>>;
+};
+
+
 template <typename... Tags>
 struct no_duplicate_tags;
 
@@ -53,7 +61,7 @@ template <typename... Tags, template <typename...> class C>
 struct no_duplicate_tags<C<Tags...>>
 {
   using tag_list = brigand::list<Tags...>;
-  using tag_set = brigand::set<Tags...>;
+  using tag_set = brigand::as_set<tag_list>;
 
   static const bool value = brigand::size<tag_list>::value == brigand::size<tag_set>::value;
 };
@@ -63,20 +71,14 @@ template <typename... Indices>
 struct no_duplicate_tags_in_index_list;
 
 
-template <typename T>
-struct is_not_na
-{
-  using type = typename brigand::not_<mpl::is_na<T>>::type;
-};
-
-
 template <typename... Indices, template <typename...> class C>
 struct no_duplicate_tags_in_index_list<C<Indices...>>
 {
-  using list = brigand::find<brigand::list<Indices...>, is_not_na<brigand::_1>>;
-  using tag_list = typename index_list_to_tag_list<list>::type;
-  // no_duplicate_tags<tag_list>::value
-  static const bool value = true;
+  using list = brigand::list<Indices...>;
+  using not_empty = brigand::find<list, not_empty<brigand::_1>>;
+  using tag_list = typename index_list_to_tag_list<not_empty>::type;
+
+  static const bool value = no_duplicate_tags<tag_list>::value;
 };
 
 } /* namespace multi_index::detail */
