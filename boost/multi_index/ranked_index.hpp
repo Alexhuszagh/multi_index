@@ -9,7 +9,6 @@
 #pragma once
 
 #include <brigand/functions/if.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/ord_index_impl.hpp>
 #include <boost/multi_index/detail/rnk_index_ops.hpp>
 #include <boost/multi_index/ranked_index_fwd.hpp>

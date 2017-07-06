@@ -9,12 +9,10 @@
 #pragma once
 
 #include <brigand/functions/eval_if.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/functional/hash.hpp>
 #include <boost/multi_index/tag.hpp>
 #include <functional>
 #include <type_traits>
-//#include <utility>
 
 namespace boost{
 

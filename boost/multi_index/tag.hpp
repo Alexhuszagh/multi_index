@@ -9,8 +9,8 @@
 #pragma once
 
 #include <brigand/sequences/list.hpp>
+#include <boost/multi_index/detail/is_base_and_derived.hpp>
 #include <boost/multi_index/detail/no_duplicate_tags.hpp>
-#include <boost/type_traits/is_base_and_derived.hpp>
 
 namespace boost{
 

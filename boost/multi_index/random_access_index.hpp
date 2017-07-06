@@ -11,9 +11,7 @@
 #include <brigand/functions/logical/not.hpp>
 #include <brigand/sequences/front.hpp>
 #include <brigand/types/bool.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <algorithm>
-#include <boost/call_traits.hpp>
+#include <boost/multi_index/detail/call_traits.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
 #include <boost/multi_index/detail/index_node_base.hpp>
 #include <boost/multi_index/detail/rnd_node_iterator.hpp>
@@ -23,7 +21,8 @@
 #include <boost/multi_index/detail/scope_guard.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/multi_index/random_access_index_fwd.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/multi_index/tuple.hpp>
+#include <algorithm>
 #include <cstddef>
 #include <functional>
 #include <initializer_list>

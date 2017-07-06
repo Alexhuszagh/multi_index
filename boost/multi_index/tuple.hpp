@@ -10,13 +10,9 @@
 
 // -----------------------------------------------------------------
 
-#ifndef BOOST_TUPLE_HPP
-#define BOOST_TUPLE_HPP
+#pragma once
 
-#include "boost/config.hpp"
-
-// other compilers
-#include "boost/tuple/detail/tuple_basic.hpp"
+#include "boost/multi_index/detail/tuple_basic.hpp"
 
 
 namespace boost {
@@ -53,6 +49,3 @@ get(const tuples::cons<HT, TT>& c) {
 #endif // BOOST_NO_USING_TEMPLATE
 
 } // end namespace boost
-
-
-#endif // BOOST_TUPLE_HPP

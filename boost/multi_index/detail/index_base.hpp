@@ -16,7 +16,7 @@
 #include <boost/multi_index/detail/tuple_support.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/multi_index_container_fwd.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/multi_index/tuple.hpp>
 #include <utility>
 
 namespace boost{
@@ -42,8 +42,6 @@ class index_base
 {
 protected:
   typedef index_node_base<Value,Allocator>    node_type;
-//  typedef typename multi_index_node_type<
-//    Value,IndexSpecifierList,Allocator>::list final_node_type;
   typedef typename multi_index_node_type<
     Value,
     IndexSpecifierList,

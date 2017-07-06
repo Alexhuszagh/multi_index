@@ -38,7 +38,7 @@
 #include <brigand/functions/if.hpp>
 #include <brigand/sequences/front.hpp>
 #include <algorithm>
-#include <boost/call_traits.hpp>
+#include <boost/multi_index/detail/call_traits.hpp>
 #include <boost/multi_index/detail/bidir_node_iterator.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
 #include <boost/multi_index/detail/index_node_base.hpp>
@@ -50,7 +50,7 @@
 #include <boost/multi_index/detail/value_compare.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/multi_index/detail/ord_index_impl_fwd.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/multi_index/tuple.hpp>
 #include <initializer_list>
 #include <iterator>
 #include <utility>

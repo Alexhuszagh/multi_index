@@ -9,8 +9,7 @@
 #pragma once
 
 #include <brigand/functions/if.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/tuple/tuple.hpp>
+#include <boost/multi_index/tuple.hpp>
 #include <tuple>
 
 namespace boost{

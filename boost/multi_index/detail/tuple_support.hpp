@@ -12,7 +12,7 @@
 #include <brigand/algorithms/transform.hpp>
 #include <brigand/functions/eval_if.hpp>
 #include <brigand/functions/arithmetic/identity.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/multi_index/tuple.hpp>
 #include <tuple>
 
 

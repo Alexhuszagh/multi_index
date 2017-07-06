@@ -8,8 +8,7 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/call_traits.hpp>
+#include <boost/multi_index/detail/call_traits.hpp>
 
 namespace boost{
 

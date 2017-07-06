@@ -10,7 +10,6 @@
 
 #include <brigand/functions/logical/and.hpp>
 #include <brigand/types/bool.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/promotes_arg.hpp>
 #include <cstddef>
 #include <utility>

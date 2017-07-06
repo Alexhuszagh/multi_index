@@ -29,22 +29,13 @@
 //      Added default constructor for cons<>.
 // -----------------------------------------------------------------
 
-#ifndef BOOST_TUPLE_BASIC_HPP
-#define BOOST_TUPLE_BASIC_HPP
-
+#pragma once
 
 #include <functional>
 #include <type_traits>
-#include <utility> // needed for the assignment from pair to tuple
+#include <utility>
 
-#include "boost/type_traits/function_traits.hpp"
-
-#include "boost/detail/workaround.hpp" // needed for BOOST_WORKAROUND
-
-#if BOOST_GCC >= 40700
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-local-typedefs"
-#endif
+#include "boost/multi_index/detail/function_traits.hpp"
 
 namespace boost {
 namespace tuples {
@@ -417,27 +408,27 @@ struct cons<HT, null_type> {
 
 template<class T>
 struct length  {
-  BOOST_STATIC_CONSTANT(int, value = 1 + length<typename T::tail_type>::value);
+  static const int value = 1 + length<typename T::tail_type>::value;
 };
 
 template<>
 struct length<tuple<> > {
-  BOOST_STATIC_CONSTANT(int, value = 0);
+  static const int value = 0;
 };
 
 template<>
 struct length<tuple<> const> {
-  BOOST_STATIC_CONSTANT(int, value = 0);
+  static const int value = 0;
 };
 
 template<>
 struct length<null_type> {
-  BOOST_STATIC_CONSTANT(int, value = 0);
+  static const int value = 0;
 };
 
 template<>
 struct length<null_type const> {
-  BOOST_STATIC_CONSTANT(int, value = 0);
+  static const int value = 0;
 };
 
 namespace detail {
@@ -973,13 +964,3 @@ inline void swap(tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9>& lhs,
 
 } // end of namespace tuples
 } // end of namespace boost
-
-
-#if BOOST_GCC >= 40700
-#pragma GCC diagnostic pop
-#endif
-
-
-#endif // BOOST_TUPLE_BASIC_HPP
-
-

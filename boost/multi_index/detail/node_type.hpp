@@ -9,9 +9,6 @@
 #pragma once
 
 #include <brigand/algorithms/fold.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/bind.hpp>
-#include <boost/mpl/reverse_iter_fold.hpp>
 #include <boost/multi_index_container_fwd.hpp>
 #include <boost/multi_index/detail/header_holder.hpp>
 #include <boost/multi_index/detail/index_node_base.hpp>
@@ -20,7 +17,7 @@
 
 // TODO: remove
 #include <boost/mpl/bind.hpp>
-#include <boost/mpl/fold.hpp>
+#include <boost/mpl/reverse_iter_fold.hpp>
 #include <boost/mpl/vector.hpp>
 
 namespace boost{
@@ -47,7 +44,7 @@ struct index_node_applier
 template<typename IndexSpecifierIterator,typename Super>
 struct next_index_node
 {
-  using index_specifier = typename IndexSpecifierIterator::type;
+  using index_specifier = IndexSpecifierIterator;
   using type = typename index_specifier::template node_class<Super>::type;
 };
 
@@ -58,19 +55,24 @@ struct multi_index_node_type_impl;
 template <typename Value, typename Allocator, typename... Ts>
 struct multi_index_node_type_impl<Value, Allocator, std::tuple<Ts...>>
 {
-  using list = brigand::reverse_fold<
-    brigand::list<Ts...>,
-    index_node_base<Value,Allocator>,
-    brigand::bind<next_index_node, brigand::_2, brigand::_1>
-  >;
-  using f = typename list::fuck;
+//  using list = brigand::reverse_fold<
+//    brigand::list<Ts...>,
+//    index_node_base<Value,Allocator>,
+//    brigand::bind<next_index_node, brigand::_2, brigand::_1>
+//  >;
+
+  // I need ordered_index_node
+  // Brigand is giving me ordered_index
+//  using tuple = std::tuple<Ts...>;
+//  using g = index_node_base<Value,Allocator>;
+//  using f = typename std::tuple_element<1, tuple>::type;
+//  using type = mpl::vector<typename f::template node_class<g>::type>;
 
   using type = typename mpl::reverse_iter_fold<
     mpl::vector<Ts...>,
     index_node_base<Value,Allocator>,
     mpl::bind2<index_node_applier,mpl::_2,mpl::_1>
   >::type;
-  using g = typename type::fuck;
 };
 
 
@@ -79,8 +81,7 @@ struct multi_index_node_type
 {
   static_assert(detail::is_index_list<IndexSpecifierList>::value, "");
 
-  // TODO: copnvert list to type
-  using list = typename multi_index_node_type_impl<Value, Allocator, IndexSpecifierList>::list;
+// TODO: need to use the brigand fold....
   using type = typename multi_index_node_type_impl<Value, Allocator, IndexSpecifierList>::type;
 };
 

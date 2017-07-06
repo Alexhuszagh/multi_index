@@ -11,9 +11,7 @@
 #include <brigand/functions/if.hpp>
 #include <brigand/sequences/front.hpp>
 #include <brigand/types/bool.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <algorithm>
-#include <boost/call_traits.hpp>
+#include <boost/multi_index/detail/call_traits.hpp>
 #include <boost/multi_index/detail/allocator_utilities.hpp>
 #include <boost/multi_index/detail/auto_space.hpp>
 #include <boost/multi_index/detail/bucket_array.hpp>
@@ -26,7 +24,8 @@
 #include <boost/multi_index/detail/scope_guard.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/multi_index/hashed_index_fwd.hpp>
-#include <boost/tuple/tuple.hpp>
+#include <boost/multi_index/tuple.hpp>
+#include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <functional>
