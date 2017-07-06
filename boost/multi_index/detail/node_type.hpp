@@ -18,6 +18,11 @@
 #include <boost/multi_index/detail/is_index_list.hpp>
 #include <boost/multi_index/detail/tuple_support.hpp>
 
+// TODO: remove
+#include <boost/mpl/bind.hpp>
+#include <boost/mpl/fold.hpp>
+#include <boost/mpl/vector.hpp>
+
 namespace boost{
 
 namespace multi_index{

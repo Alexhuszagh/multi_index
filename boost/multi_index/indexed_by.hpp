@@ -8,22 +8,13 @@
 
 #pragma once
 
-#include <brigand/sequences/list.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/vector.hpp>         // TODO: remove
-
+#include <tuple>
 
 namespace boost{
 namespace multi_index{
 
 template<typename... Ts>
-struct indexed_by:
-  mpl::vector<Ts...>
-{
-    // Need to get everything that isn't null...
-    using list = brigand::list<Ts...>;
-    using tuple = std::tuple<Ts...>;
-};
+using indexed_by = std::tuple<Ts...>;
 
 } /* namespace multi_index */
 } /* namespace boost */

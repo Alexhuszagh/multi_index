@@ -98,7 +98,7 @@ struct as_inserted{};
 struct ssn{};
 struct randomly{};
 
-struct employee_set_indices:
+using employee_set_indices =
   boost::multi_index::indexed_by<
     boost::multi_index::ordered_unique<
       boost::multi_index::identity<employee> >,
@@ -115,7 +115,7 @@ struct employee_set_indices:
       ::boost::multi_index::member<employee,int,&employee::ssn>>,
     boost::multi_index::random_access<
       boost::multi_index::tag<randomly> > >
-{};
+;
 
 typedef
   boost::multi_index::multi_index_container<

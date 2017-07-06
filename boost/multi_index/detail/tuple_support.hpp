@@ -16,9 +16,9 @@
 #include <tuple>
 
 // TODO: remove
-#include <boost/mpl/bind.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/vector.hpp>
+//#include <boost/mpl/bind.hpp>
+//#include <boost/mpl/fold.hpp>
+//#include <boost/mpl/vector.hpp>
 
 
 namespace boost
@@ -112,14 +112,5 @@ struct tuple_as_class_impl<C, tuple<Ts...>>
 
 template <template <typename...> class C, typename ... Ts>
 using tuple_as_class = typename tuple_as_class_impl<C, Ts...>::type;
-
-// TODO: remove
-
-template <typename T>
-using mpl_to_tuple = typename mpl::fold<
-  T,
-  std::tuple<>,
-  to_stdtuple<mpl::_1, mpl::_2>
->::type;
 
 }   /* boost */

@@ -38,7 +38,7 @@ class multi_index_container:
     typename Allocator::template rebind<
       typename detail::multi_index_node_type<
         Value,
-        typename IndexSpecifierList::tuple,
+        IndexSpecifierList,
         Allocator
       >::type
     >::other>,
@@ -46,7 +46,7 @@ class multi_index_container:
     typename Allocator::template rebind<
       typename detail::multi_index_node_type<
         Value,
-        typename IndexSpecifierList::tuple,
+        IndexSpecifierList,
         Allocator
       >::type
     >::other::pointer,
@@ -54,7 +54,7 @@ class multi_index_container:
 
   public detail::multi_index_base_type<
     Value,
-    typename IndexSpecifierList::tuple,
+    IndexSpecifierList,
     Allocator
   >::type
 {
@@ -65,7 +65,7 @@ private:
 
   typedef typename detail::multi_index_base_type<
       Value,
-      typename IndexSpecifierList::tuple,
+      IndexSpecifierList,
       Allocator
   >::type                                         super;
 

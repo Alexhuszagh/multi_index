@@ -9,7 +9,6 @@
 #pragma once
 
 #include <brigand/sequences/list.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/allocator_utilities.hpp>
 #include <boost/multi_index/detail/copy_map.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
@@ -47,7 +46,7 @@ protected:
 //    Value,IndexSpecifierList,Allocator>::list final_node_type;
   typedef typename multi_index_node_type<
     Value,
-    typename IndexSpecifierList::tuple,
+    IndexSpecifierList,
     Allocator
   >::type                                     final_node_type;
   typedef multi_index_container<
