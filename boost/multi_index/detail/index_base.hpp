@@ -47,7 +47,7 @@ protected:
 //    Value,IndexSpecifierList,Allocator>::list final_node_type;
   typedef typename multi_index_node_type<
     Value,
-    mpl_to_tuple<IndexSpecifierList>,
+    typename IndexSpecifierList::tuple,
     Allocator
   >::type                                     final_node_type;
   typedef multi_index_container<

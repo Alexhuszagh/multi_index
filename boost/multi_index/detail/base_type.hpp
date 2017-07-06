@@ -10,6 +10,7 @@
 
 #include <brigand/functions/eval_if.hpp>
 #include <brigand/functions/arithmetic/identity.hpp>
+#include <boost/multi_index/indexed_by.hpp>
 #include <boost/multi_index/detail/index_base.hpp>
 #include <boost/multi_index/detail/is_index_list.hpp>
 #include <boost/multi_index/detail/tuple_support.hpp>
@@ -37,9 +38,6 @@ template <int N,typename... Ts>
 struct nth_layer_impl;
 
 
-// TODO: need to remove the MPL vector check
-
-
 template <int N,typename V, typename A, typename... Ts>
 struct nth_layer_impl<N, V, A, std::tuple<Ts...>>
 {
@@ -48,7 +46,7 @@ struct nth_layer_impl<N, V, A, std::tuple<Ts...>>
 
   typedef typename brigand::eval_if_c<
     N==length,
-    brigand::identity<index_base<V, mpl::vector<Ts...>, A>>,
+    brigand::identity<index_base<V, indexed_by<Ts...>, A>>,
     next_index_layer<
       std::tuple_element<N, T>,
       nth_layer_impl<N+1, V, A, std::tuple<Ts...>>

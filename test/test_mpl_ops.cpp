@@ -59,7 +59,7 @@ void test_mpl_ops()
 
   typedef multi_index_container<
     int,
-    boost::mpl::vector<
+    boost::multi_index::indexed_by<
       ordered_unique<identity<int> >,
       ordered_non_unique<identity<int> >
     >

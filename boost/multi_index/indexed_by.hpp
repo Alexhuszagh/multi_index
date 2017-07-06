@@ -22,6 +22,7 @@ struct indexed_by:
 {
     // Need to get everything that isn't null...
     using list = brigand::list<Ts...>;
+    using tuple = std::tuple<Ts...>;
 };
 
 } /* namespace multi_index */
