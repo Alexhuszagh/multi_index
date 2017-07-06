@@ -537,11 +537,6 @@ struct hash_cval:
 
 /* composite_key_result */
 
-#if defined(BOOST_MSVC)
-#pragma warning(push)
-#pragma warning(disable:4512)
-#endif
-
 template<typename CompositeKey>
 struct composite_key_result
 {
@@ -557,30 +552,23 @@ struct composite_key_result
   const value_type&         value;
 };
 
-#if defined(BOOST_MSVC)
-#pragma warning(pop)
-#endif
-
 /* composite_key */
 
-template<
-  typename Value,
-  BOOST_MULTI_INDEX_CK_ENUM(BOOST_MULTI_INDEX_CK_TEMPLATE_PARM,KeyFromValue)
->
+template<typename Value, typename... Us>
 struct composite_key:
-  private tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(KeyFromValue)>
+  private tuple<Us...>
 {
 private:
-  typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(KeyFromValue)> super;
+  typedef tuple<Us...> super;
 
 public:
   typedef super                               key_extractor_tuple;
   typedef Value                               value_type;
   typedef composite_key_result<composite_key> result_type;
 
-  composite_key(
-    BOOST_MULTI_INDEX_CK_ENUM(BOOST_MULTI_INDEX_CK_CTOR_ARG,KeyFromValue)):
-    super(BOOST_MULTI_INDEX_CK_ENUM_PARAMS(k))
+  template <typename... Ts>
+  composite_key(Ts&&... ts):
+    super(std::forward<Ts>(ts)...)
   {}
 
   composite_key(const key_extractor_tuple& x):super(x){}
@@ -642,17 +630,15 @@ inline bool operator==(
     detail::generic_operator_equal_tuple());
 }
 
-template<
-  typename CompositeKey,
-  BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value)
->
+
+template <typename CompositeKey, typename... Us>
 inline bool operator==(
   const composite_key_result<CompositeKey>& x,
-  const tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>& y)
+  const tuple<Us...>& y)
 {
   typedef typename CompositeKey::key_extractor_tuple     key_extractor_tuple;
   typedef typename CompositeKey::value_type              value_type;
-  typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)> key_tuple;
+  typedef tuple<Us...> key_tuple;
 
   static_assert(
     tuples::length<key_extractor_tuple>::value==
@@ -666,18 +652,14 @@ inline bool operator==(
     y,detail::generic_operator_equal_tuple());
 }
 
-template
-<
-  BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value),
-  typename CompositeKey
->
+template <typename... Us, typename CompositeKey>
 inline bool operator==(
-  const tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>& x,
+  const tuple<Us...>& x,
   const composite_key_result<CompositeKey>& y)
 {
   typedef typename CompositeKey::key_extractor_tuple     key_extractor_tuple;
   typedef typename CompositeKey::value_type              value_type;
-  typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)> key_tuple;
+  typedef tuple<Us...> key_tuple;
 
   static_assert(
     tuples::length<key_extractor_tuple>::value==
@@ -759,18 +741,14 @@ inline bool operator<(
     detail::generic_operator_less_tuple());
 }
 
-template
-<
-  typename CompositeKey,
-  BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value)
->
+template <typename CompositeKey, typename... Us>
 inline bool operator<(
   const composite_key_result<CompositeKey>& x,
-  const tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>& y)
+  const tuple<Us...>& y)
 {
   typedef typename CompositeKey::key_extractor_tuple     key_extractor_tuple;
   typedef typename CompositeKey::value_type              value_type;
-  typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)> key_tuple;
+  typedef tuple<Us...>                                   key_tuple;
 
   return detail::compare_ckey_cval<
     key_extractor_tuple,value_type,
@@ -780,18 +758,14 @@ inline bool operator<(
     y,detail::generic_operator_less_tuple());
 }
 
-template
-<
-  BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value),
-  typename CompositeKey
->
+template <typename... Us, typename CompositeKey>
 inline bool operator<(
-  const tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>& x,
+  const tuple<Us...>& x,
   const composite_key_result<CompositeKey>& y)
 {
   typedef typename CompositeKey::key_extractor_tuple     key_extractor_tuple;
   typedef typename CompositeKey::value_type              value_type;
-  typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)> key_tuple;
+  typedef tuple<Us...>                                   key_tuple;
 
   return detail::compare_ckey_cval<
     key_extractor_tuple,value_type,
@@ -871,15 +845,15 @@ BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
 
 BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
   typename CompositeKey,
-  BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value),
+  typename... Us,
   composite_key_result<CompositeKey>,
-  tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>
+  tuple<Us...>
 )
 
 BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
-  BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value),
+  typename... Us,
   typename CompositeKey,
-  tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>,
+  tuple<Us...>,
   composite_key_result<CompositeKey>
 )
 
@@ -899,10 +873,7 @@ BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
 
 /* composite_key_equal_to */
 
-template
-<
-  typename... Us
->
+template <typename... Us>
 struct composite_key_equal_to:
   private tuple<Us...>
 {
@@ -916,9 +887,6 @@ public:
   composite_key_equal_to(Ts&&... ts):
     super(std::forward<Ts>(ts)...)
   {}
-
-// TODO: remove
-//  composite_key_equal_to(const key_eq_tuple& x):super(x){}
 
   const key_eq_tuple& key_eqs()const{return *this;}
   key_eq_tuple&       key_eqs(){return *this;}
@@ -1061,9 +1029,6 @@ public:
   composite_key_compare(Ts&&... ts):
     super(std::forward<Ts>(ts)...)
   {}
-
-// TODO: remove
-//  composite_key_compare(const key_comp_tuple& x):super(x){}
 
   const key_comp_tuple& key_comps()const{return *this;}
   key_comp_tuple&       key_comps(){return *this;}
@@ -1244,11 +1209,10 @@ public:
     >::hash(x.composite_key.key_extractors(),x.value,key_hash_functions());
   }
 
-  template<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value)>
-  std::size_t operator()(
-    const tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>& x)const
+  template <typename... Ts>
+  std::size_t operator()(const tuple<Ts...>& x) const
   {
-    typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)> key_tuple;
+    typedef tuple<Ts...> key_tuple;
 
     static_assert(
       tuples::length<key_tuple>::value==
