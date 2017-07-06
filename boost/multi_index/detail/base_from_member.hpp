@@ -9,11 +9,6 @@
 
 #pragma once
 
-//#include <boost/config.hpp>
-//#include <boost/preprocessor/arithmetic/inc.hpp>
-//#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-//#include <boost/preprocessor/repetition/enum_params.hpp>
-//#include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <type_traits>
 
 //  Base-from-member arity configuration macro  ------------------------------//

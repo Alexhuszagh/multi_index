@@ -12,20 +12,11 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#ifndef BOOST_INTEGER_COMMON_FACTOR_RT_HPP
-#define BOOST_INTEGER_COMMON_FACTOR_RT_HPP
+#pragma once
 
-#include <boost/integer_fwd.hpp>  // self include
+#include <limits>
+#include <climits>
 
-#include <boost/config.hpp>  // for BOOST_NESTED_TEMPLATE, etc.
-#include <limits>  // for std::numeric_limits
-#include <climits>           // for CHAR_MIN
-#include <boost/detail/workaround.hpp>
-
-#ifdef BOOST_MSVC
-#pragma warning(push)
-#pragma warning(disable:4127 4244)  // Conditional expression is constant
-#endif
 
 namespace boost
 {
@@ -213,7 +204,6 @@ namespace detail
     }
 
     // Function objects to find the best way of computing GCD or LCM
-#ifndef BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
     template < typename T, bool IsSpecialized, bool IsSigned >
     struct gcd_optimal_evaluator_helper_t
     {
@@ -247,16 +237,6 @@ namespace detail
             return solver( a, b );
         }
     };
-#else // BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
-    template < typename T >
-    struct gcd_optimal_evaluator
-    {
-        T  operator ()( T const &a, T const &b )
-        {
-            return gcd_integer( a, b );
-        }
-    };
-#endif
 
     // Specialize for the built-in integers
 #define BOOST_PRIVATE_GCD_UF( Ut )                  \
@@ -267,16 +247,7 @@ namespace detail
     BOOST_PRIVATE_GCD_UF( unsigned short );
     BOOST_PRIVATE_GCD_UF( unsigned );
     BOOST_PRIVATE_GCD_UF( unsigned long );
-
-#ifdef BOOST_HAS_LONG_LONG
-    BOOST_PRIVATE_GCD_UF( boost::ulong_long_type );
-#elif defined(BOOST_HAS_MS_INT64)
-    BOOST_PRIVATE_GCD_UF( unsigned __int64 );
-#endif
-
-#if CHAR_MIN == 0
-    BOOST_PRIVATE_GCD_UF( char ); // char is unsigned
-#endif
+    BOOST_PRIVATE_GCD_UF( unsigned long long );
 
 #undef BOOST_PRIVATE_GCD_UF
 
@@ -291,16 +262,8 @@ namespace detail
     BOOST_PRIVATE_GCD_SF( short, unsigned short );
     BOOST_PRIVATE_GCD_SF( int, unsigned );
     BOOST_PRIVATE_GCD_SF( long, unsigned long );
-
-#if CHAR_MIN < 0
-    BOOST_PRIVATE_GCD_SF( char, unsigned char ); // char is signed
-#endif
-
-#ifdef BOOST_HAS_LONG_LONG
-    BOOST_PRIVATE_GCD_SF( boost::long_long_type, boost::ulong_long_type );
-#elif defined(BOOST_HAS_MS_INT64)
-    BOOST_PRIVATE_GCD_SF( __int64, unsigned __int64 );
-#endif
+    BOOST_PRIVATE_GCD_SF( char, unsigned char );
+    BOOST_PRIVATE_GCD_SF( long long, unsigned long long );
 
 #undef BOOST_PRIVATE_GCD_SF
 
@@ -444,9 +407,3 @@ lcm
 
 }  // namespace integer
 }  // namespace boost
-
-#ifdef BOOST_MSVC
-#pragma warning(pop)
-#endif
-
-#endif  // BOOST_INTEGER_COMMON_FACTOR_RT_HPP
