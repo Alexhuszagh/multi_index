@@ -15,6 +15,7 @@
 #include <brigand/sequences/front.hpp>
 #include <brigand/sequences/size.hpp>
 #include <algorithm>
+#include <boost/config.hpp>     // TODO: remove
 #include <boost/multi_index_container_fwd.hpp>
 #include <boost/multi_index/detail/base_from_member.hpp>
 #include <boost/multi_index/detail/base_type.hpp>
