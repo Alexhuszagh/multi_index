@@ -8,12 +8,10 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <algorithm>
-#include <boost/detail/allocator_utilities.hpp>
+#include <boost/multi_index/detail/allocator_utilities.hpp>
 #include <boost/multi_index/detail/auto_space.hpp>
 #include <boost/multi_index/detail/rnd_index_node.hpp>
-#include <boost/core/noncopyable.hpp>
+#include <algorithm>
 #include <cstddef>
 
 namespace boost{
@@ -25,7 +23,7 @@ namespace detail{
 /* pointer structure for use by random access indices */
 
 template<typename Allocator>
-class random_access_index_ptr_array:private noncopyable
+class random_access_index_ptr_array
 {
   typedef random_access_index_node_impl<
     typename boost::detail::allocator::rebind_to<
@@ -102,6 +100,10 @@ public:
     std::swap(capacity_,x.capacity_);
     spc.swap(x.spc);
   }
+
+protected:
+  random_access_index_ptr_array( const random_access_index_ptr_array& ) = delete;
+  random_access_index_ptr_array& operator=( const random_access_index_ptr_array& ) = delete;
 
 private:
   std::size_t                      size_;

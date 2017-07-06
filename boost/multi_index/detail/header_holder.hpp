@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <boost/core/noncopyable.hpp>
-
 namespace boost{
 
 namespace multi_index{
@@ -25,12 +23,16 @@ namespace detail{
  */
 
 template<typename NodeTypePtr,typename Final>
-struct header_holder:private noncopyable
+struct header_holder
 {
   header_holder():member(final().allocate_node()){}
   ~header_holder(){final().deallocate_node(&*member);}
 
   NodeTypePtr member;
+
+protected:
+  header_holder( const header_holder& ) = delete;
+  header_holder& operator=( const header_holder& ) = delete;
 
 private:
   Final& final(){return *static_cast<Final*>(this);}

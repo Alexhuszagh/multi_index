@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include <algorithm>
-#include <boost/detail/allocator_utilities.hpp>
+#include <boost/multi_index/detail/allocator_utilities.hpp>
 #include <boost/integer/common_factor_rt.hpp>
 #include <boost/multi_index/detail/raw_ptr.hpp>
+#include <algorithm>
 #include <cstddef>
 #include <functional>
 

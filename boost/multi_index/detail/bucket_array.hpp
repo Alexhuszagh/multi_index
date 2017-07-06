@@ -8,15 +8,9 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <algorithm>
 #include <boost/multi_index/detail/auto_space.hpp>
 #include <boost/multi_index/detail/hash_index_node.hpp>
-#include <boost/core/noncopyable.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
-#include <boost/preprocessor/seq/elem.hpp>
-#include <boost/preprocessor/seq/enum.hpp>
-#include <boost/preprocessor/seq/size.hpp>
+#include <algorithm>
 #include <cstddef>
 #include <limits.h>
 
@@ -28,19 +22,21 @@ namespace detail{
 
 /* bucket structure for use by hashed indices */
 
-#define BOOST_MULTI_INDEX_BA_SIZES_32BIT                                  \
-(53ul)(97ul)(193ul)(389ul)(769ul)                                         \
-(1543ul)(3079ul)(6151ul)(12289ul)(24593ul)                                \
-(49157ul)(98317ul)(196613ul)(393241ul)(786433ul)                          \
-(1572869ul)(3145739ul)(6291469ul)(12582917ul)(25165843ul)                 \
-(50331653ul)(100663319ul)(201326611ul)(402653189ul)(805306457ul)          \
-(1610612741ul)(3221225473ul)
+// MACROS
+// ------
 
-#if ((((ULONG_MAX>>16)>>16)>>16)>>15)==0 /* unsigned long less than 64 bits */
-#define BOOST_MULTI_INDEX_BA_SIZES                                         \
-BOOST_MULTI_INDEX_BA_SIZES_32BIT                                           \
-(4294967291ul)
-#else
+#define IS_ULONG32 ((((ULONG_MAX>>16)>>16)>>16)>>15)==0
+
+// CONSTANTS
+// ---------
+
+#if IS_ULONG32                            // IS_ULONG32
+
+#define BOOST_MULTI_INDEX_BA_SIZES {53ul, 97ul, 193ul, 389ul, 769ul, 1543ul, 3079ul, 6151ul, 12289ul, 24593ul, 49157ul, 98317ul, 196613ul, 393241ul, 786433ul, 1572869ul, 3145739ul, 6291469ul, 12582917ul, 25165843ul, 50331653ul, 100663319ul, 201326611ul, 402653189ul, 805306457ul, 1610612741ul, 3221225473ul, 4294967291ul}
+#define BOOST_MULTI_INDEX_BA_LENGTH 28
+
+#else                                     // IS_ULONG64
+
   /* obtained with aid from
    *   http://javaboutique.internet.com/prime_numb/
    *   http://www.rsok.com/~jrm/next_ten_primes.html
@@ -48,26 +44,21 @@ BOOST_MULTI_INDEX_BA_SIZES_32BIT                                           \
    *   http://www.alpertron.com.ar/ECM.HTM
    */
 
-#define BOOST_MULTI_INDEX_BA_SIZES                                         \
-BOOST_MULTI_INDEX_BA_SIZES_32BIT                                           \
-(6442450939ul)(12884901893ul)(25769803751ul)(51539607551ul)                \
-(103079215111ul)(206158430209ul)(412316860441ul)(824633720831ul)           \
-(1649267441651ul)(3298534883309ul)(6597069766657ul)(13194139533299ul)      \
-(26388279066623ul)(52776558133303ul)(105553116266489ul)(211106232532969ul) \
-(422212465066001ul)(844424930131963ul)(1688849860263953ul)                 \
-(3377699720527861ul)(6755399441055731ul)(13510798882111483ul)              \
-(27021597764222939ul)(54043195528445957ul)(108086391056891903ul)           \
-(216172782113783843ul)(432345564227567621ul)(864691128455135207ul)         \
-(1729382256910270481ul)(3458764513820540933ul)(6917529027641081903ul)      \
-(13835058055282163729ul)(18446744073709551557ul)
-#endif
+#define BOOST_MULTI_INDEX_BA_SIZES {53ul, 97ul, 193ul, 389ul, 769ul, 1543ul, 3079ul, 6151ul, 12289ul, 24593ul, 49157ul, 98317ul, 196613ul, 393241ul, 786433ul, 1572869ul, 3145739ul, 6291469ul, 12582917ul, 25165843ul, 50331653ul, 100663319ul, 201326611ul, 402653189ul, 805306457ul, 1610612741ul, 3221225473ul, 6442450939ul, 12884901893ul, 25769803751ul, 51539607551ul, 103079215111ul, 206158430209ul, 412316860441ul, 824633720831ul, 1649267441651ul, 3298534883309ul, 6597069766657ul, 13194139533299ul, 26388279066623ul, 52776558133303ul, 105553116266489ul, 211106232532969ul, 422212465066001ul, 844424930131963ul, 1688849860263953ul, 3377699720527861ul, 6755399441055731ul, 13510798882111483ul, 27021597764222939ul, 54043195528445957ul, 108086391056891903ul, 216172782113783843ul, 432345564227567621ul, 864691128455135207ul, 1729382256910270481ul, 3458764513820540933ul, 6917529027641081903ul, 13835058055282163729ul, 18446744073709551557ul}
+#define BOOST_MULTI_INDEX_BA_LENGTH 60
+
+#endif                                    // IS_ULONG32
 
 template<bool _=true> /* templatized to have in-header static var defs */
-class bucket_array_base:private noncopyable
+class bucket_array_base
 {
 protected:
-  static const std::size_t sizes[
-    BOOST_PP_SEQ_SIZE(BOOST_MULTI_INDEX_BA_SIZES)];
+  constexpr bucket_array_base() = default;
+  ~bucket_array_base() = default;
+  bucket_array_base( const bucket_array_base& ) = delete;
+  bucket_array_base& operator=( const bucket_array_base& ) = delete;
+
+  static const std::size_t sizes[BOOST_MULTI_INDEX_BA_LENGTH];
 
   static std::size_t size_index(std::size_t n)
   {
@@ -76,21 +67,82 @@ protected:
     return bound-sizes;
   }
 
-#define BOOST_MULTI_INDEX_BA_POSITION_CASE(z,n,_)                    \
-  case n:return hash%BOOST_PP_SEQ_ELEM(n,BOOST_MULTI_INDEX_BA_SIZES);
-
   static std::size_t position(std::size_t hash,std::size_t size_index_)
   {
     /* Accelerate hash%sizes[size_index_] by replacing with a switch on
      * hash%Ci expressions, each Ci a compile-time constant, which the
      * compiler can implement without using integer division.
+     *
+     * Replaced to remove to Boost preprocessor, these are manually
+     * expanded.
      */
 
     switch(size_index_){
       default: /* never used */
-      BOOST_PP_REPEAT(
-        BOOST_PP_SEQ_SIZE(BOOST_MULTI_INDEX_BA_SIZES),
-        BOOST_MULTI_INDEX_BA_POSITION_CASE,~)
+      case 0:     return hash % 53ul;
+      case 1:     return hash % 97ul;
+      case 2:     return hash % 193ul;
+      case 3:     return hash % 389ul;
+      case 4:     return hash % 769ul;
+      case 5:     return hash % 1543ul;
+      case 6:     return hash % 3079ul;
+      case 7:     return hash % 6151ul;
+      case 8:     return hash % 12289ul;
+      case 9:     return hash % 24593ul;
+      case 10:    return hash % 49157ul;
+      case 11:    return hash % 98317ul;
+      case 12:    return hash % 196613ul;
+      case 13:    return hash % 393241ul;
+      case 14:    return hash % 786433ul;
+      case 15:    return hash % 1572869ul;
+      case 16:    return hash % 3145739ul;
+      case 17:    return hash % 6291469ul;
+      case 18:    return hash % 12582917ul;
+      case 19:    return hash % 25165843ul;
+      case 20:    return hash % 50331653ul;
+      case 21:    return hash % 100663319ul;
+      case 22:    return hash % 201326611ul;
+      case 23:    return hash % 402653189ul;
+      case 24:    return hash % 805306457ul;
+      case 25:    return hash % 1610612741ul;
+      case 26:    return hash % 3221225473ul;
+#if IS_ULONG32                                // IS_ULONG32
+      case 27:    return hash % 4294967291ul;
+#else                                         // IS_ULONG64
+      case 27:    return hash % 6442450939ul;
+      case 28:    return hash % 12884901893ul;
+      case 29:    return hash % 25769803751ul;
+      case 30:    return hash % 51539607551ul;
+      case 31:    return hash % 103079215111ul;
+      case 32:    return hash % 206158430209ul;
+      case 33:    return hash % 412316860441ul;
+      case 34:    return hash % 824633720831ul;
+      case 35:    return hash % 1649267441651ul;
+      case 36:    return hash % 3298534883309ul;
+      case 37:    return hash % 6597069766657ul;
+      case 38:    return hash % 13194139533299ul;
+      case 39:    return hash % 26388279066623ul;
+      case 40:    return hash % 52776558133303ul;
+      case 41:    return hash % 105553116266489ul;
+      case 42:    return hash % 211106232532969ul;
+      case 43:    return hash % 422212465066001ul;
+      case 44:    return hash % 844424930131963ul;
+      case 45:    return hash % 1688849860263953ul;
+      case 46:    return hash % 3377699720527861ul;
+      case 47:    return hash % 6755399441055731ul;
+      case 48:    return hash % 13510798882111483ul;
+      case 49:    return hash % 27021597764222939ul;
+      case 50:    return hash % 54043195528445957ul;
+      case 51:    return hash % 108086391056891903ul;
+      case 52:    return hash % 216172782113783843ul;
+      case 53:    return hash % 432345564227567621ul;
+      case 54:    return hash % 864691128455135207ul;
+      case 55:    return hash % 1729382256910270481ul;
+      case 56:    return hash % 3458764513820540933ul;
+      case 57:    return hash % 6917529027641081903ul;
+      case 58:    return hash % 13835058055282163729ul;
+      case 59:    return hash % 18446744073709551557ul;
+#endif                                        // IS_ULONG32
     }
   }
 
@@ -99,18 +151,11 @@ private:
 };
 
 template<bool _>
-const std::size_t bucket_array_base<_>::sizes[]={
-  BOOST_PP_SEQ_ENUM(BOOST_MULTI_INDEX_BA_SIZES)
-};
+const std::size_t bucket_array_base<_>::sizes[] = BOOST_MULTI_INDEX_BA_SIZES;
 
 template<bool _>
-const std::size_t bucket_array_base<_>::sizes_length=
-  sizeof(bucket_array_base<_>::sizes)/
-  sizeof(bucket_array_base<_>::sizes[0]);
+const std::size_t bucket_array_base<_>::sizes_length = BOOST_MULTI_INDEX_BA_LENGTH;
 
-#undef BOOST_MULTI_INDEX_BA_POSITION_CASE
-#undef BOOST_MULTI_INDEX_BA_SIZES
-#undef BOOST_MULTI_INDEX_BA_SIZES_32BIT
 
 template<typename Allocator>
 class bucket_array:bucket_array_base<>
@@ -176,6 +221,12 @@ void swap(bucket_array<Allocator>& x,bucket_array<Allocator>& y)
 {
   x.swap(y);
 }
+
+// CLEANUP
+// -------
+
+#undef BOOST_MULTI_INDEX_BA_SIZES
+#undef BOOST_MULTI_INDEX_BA_LENGTH
 
 } /* namespace multi_index::detail */
 

@@ -35,7 +35,7 @@
 
 #pragma once
 
-#include <boost/detail/allocator_utilities.hpp>
+#include <boost/multi_index/detail/allocator_utilities.hpp>
 #include <boost/multi_index/detail/raw_ptr.hpp>
 #include <cstddef>
 #include <type_traits>

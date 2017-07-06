@@ -8,11 +8,9 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <algorithm>
 #include <boost/multi_index/detail/auto_space.hpp>
 #include <boost/multi_index/detail/raw_ptr.hpp>
-#include <boost/core/noncopyable.hpp>
+#include <algorithm>
 #include <cstddef>
 #include <functional>
 
@@ -49,7 +47,7 @@ struct copy_map_entry
 };
 
 template <typename Node,typename Allocator>
-class copy_map:private noncopyable
+class copy_map
 {
 public:
   typedef const copy_map_entry<Node>* const_iterator;
@@ -105,6 +103,10 @@ public:
   {
     released=true;
   }
+
+protected:
+  copy_map( const copy_map& ) = delete;
+  copy_map& operator=( const copy_map& ) = delete;
 
 private:
   typedef typename boost::detail::allocator::rebind_to<

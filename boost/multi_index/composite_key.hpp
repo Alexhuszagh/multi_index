@@ -13,8 +13,8 @@
 #include <brigand/functions/logical/or.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/functional/hash_fwd.hpp>
+#include <boost/multi_index/detail/cons_stdtuple.hpp>
 // TODO: remove the preprocessor shit...
-#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/list/at.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
@@ -23,7 +23,6 @@
 #include <functional>
 #include <type_traits>
 
-#include <boost/multi_index/detail/cons_stdtuple.hpp>
 
 /* A composite key stores n key extractors and "computes" the
  * result on a given value as a packed reference to the value and
@@ -70,12 +69,12 @@
  */
 
 #define BOOST_MULTI_INDEX_CK_TEMPLATE_PARM(z,n,text)                         \
-  typename BOOST_PP_CAT(text,n) BOOST_PP_EXPR_IF(n,=tuples::null_type)
+  typename text##n BOOST_PP_EXPR_IF(n,=tuples::null_type)
 
 /* const textn& kn=textn() */
 
 #define BOOST_MULTI_INDEX_CK_CTOR_ARG(z,n,text)                              \
-  const BOOST_PP_CAT(text,n)& BOOST_PP_CAT(k,n) = BOOST_PP_CAT(text,n)()
+  const text##n & k##n = text##n()
 
 /* typename list(0)<list(1),n>::type */
 
@@ -108,24 +107,24 @@ struct nth_key_from_value
  * if N exceeds the length of the composite key.
  */
 
-#define BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(name,functor)         \
-template<typename KeyFromValue>                                              \
-struct BOOST_PP_CAT(key_,name)                                               \
-{                                                                            \
-  typedef functor<typename KeyFromValue::result_type> type;                  \
-};                                                                           \
-                                                                             \
-template<>                                                                   \
-struct BOOST_PP_CAT(key_,name)<tuples::null_type>                            \
-{                                                                            \
-  typedef tuples::null_type type;                                            \
-};                                                                           \
-                                                                             \
-template<typename CompositeKey,int  N>                                       \
-struct BOOST_PP_CAT(nth_composite_key_,name)                                 \
-{                                                                            \
-  typedef typename nth_key_from_value<CompositeKey,N>::type key_from_value;  \
-  typedef typename BOOST_PP_CAT(key_,name)<key_from_value>::type type;       \
+#define BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(name,functor)          \
+template<typename KeyFromValue>                                               \
+struct key_##name                                                             \
+{                                                                             \
+  typedef functor<typename KeyFromValue::result_type> type;                   \
+};                                                                            \
+                                                                              \
+template<>                                                                    \
+struct key_##name <tuples::null_type>                                         \
+{                                                                             \
+  typedef tuples::null_type type;                                             \
+};                                                                            \
+                                                                              \
+template<typename CompositeKey,int  N>                                        \
+struct nth_composite_key_##name                                               \
+{                                                                             \
+  typedef typename nth_key_from_value<CompositeKey,N>::type key_from_value;   \
+  typedef typename key_##name <key_from_value>::type type;                    \
 };
 
 /* nth_composite_key_equal_to
@@ -137,7 +136,6 @@ struct BOOST_PP_CAT(nth_composite_key_,name)                                 \
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(equal_to,std::equal_to)
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(less,std::less)
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(greater,std::greater)
-// TODO: I can change this to STD::HASH
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(hash,boost::hash)
 
 /* used for defining equality and comparison ops of composite_key_result */

@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <boost/core/noncopyable.hpp>
 #include <algorithm>
 #include <memory>
 #include <utility>
@@ -36,7 +35,7 @@ namespace detail{
  */
 
 template<typename T,typename Allocator=std::allocator<T> >
-struct auto_space:private noncopyable
+struct auto_space
 {
   typedef typename Allocator::template rebind<T
   >::other::pointer pointer;
@@ -61,6 +60,10 @@ struct auto_space:private noncopyable
     std::swap(n_,x.n_);
     std::swap(data_,x.data_);
   }
+
+protected:
+  auto_space( const auto_space& ) = delete;
+  auto_space& operator=( const auto_space& ) = delete;
 
 private:
   typename boost::detail::allocator::rebind_to<

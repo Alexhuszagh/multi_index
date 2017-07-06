@@ -10,7 +10,7 @@
 
 #include <brigand/sequences/list.hpp>
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/detail/allocator_utilities.hpp>
+#include <boost/multi_index/detail/allocator_utilities.hpp>
 #include <boost/multi_index/detail/copy_map.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
 #include <boost/multi_index/detail/node_type.hpp>
@@ -93,7 +93,7 @@ protected:
     try {
       /* This shoud have used a modified, T&&-compatible version of
        * boost::detail::allocator::construct, but
-       * <boost/detail/allocator_utilities.hpp> is too old and venerable to
+       *  <boost/multi_index/detail/allocator_utilities.hpp> is too old and venerable to
        * mess with; besides, it is a general internal utility and the imperfect
        * perfect forwarding emulation of Boost.Move might break other libs.
        */
