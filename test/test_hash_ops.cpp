@@ -11,7 +11,7 @@
 #include "test_hash_ops.hpp"
 
 #include <iterator>
-#include <boost/detail/lightweight_test.hpp>
+#include "lightweight_test.hpp"
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/identity.hpp>

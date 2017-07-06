@@ -16,6 +16,7 @@
 #include <brigand/sequences/size.hpp>
 #include <algorithm>
 #include <boost/multi_index_container_fwd.hpp>
+#include <boost/multi_index/detail/base_from_member.hpp>
 #include <boost/multi_index/detail/base_type.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
 #include <boost/multi_index/detail/converter.hpp>
@@ -24,7 +25,6 @@
 #include <boost/multi_index/detail/no_duplicate_tags.hpp>
 #include <boost/multi_index/detail/scope_guard.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
-#include <boost/utility/base_from_member.hpp>
 #include <initializer_list>
 #include <utility>
 

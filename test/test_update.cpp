@@ -14,7 +14,7 @@
 #include <cstddef>
 #include <iterator>
 #include "employee.hpp"
-#include <boost/detail/lightweight_test.hpp>
+#include "lightweight_test.hpp"
 
 struct do_nothing
 {

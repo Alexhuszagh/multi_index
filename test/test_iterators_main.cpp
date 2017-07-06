@@ -8,7 +8,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#include <boost/detail/lightweight_test.hpp>
+#include "lightweight_test.hpp"
 #include "test_iterators.hpp"
 
 int main()

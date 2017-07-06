@@ -10,7 +10,7 @@
 
 #include "test_modifiers.hpp"
 
-#include <boost/detail/lightweight_test.hpp>
+#include "lightweight_test.hpp"
 #include <iterator>
 #include <memory>
 #include <utility>

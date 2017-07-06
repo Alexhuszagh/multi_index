@@ -7,14 +7,13 @@
 
 //  See <http://www.boost.org/libs/utility/> for the library's home page.
 
-#ifndef BOOST_UTILITY_BASE_FROM_MEMBER_HPP
-#define BOOST_UTILITY_BASE_FROM_MEMBER_HPP
+#pragma once
 
-#include <boost/config.hpp>
-#include <boost/preprocessor/arithmetic/inc.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
+//#include <boost/config.hpp>
+//#include <boost/preprocessor/arithmetic/inc.hpp>
+//#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+//#include <boost/preprocessor/repetition/enum_params.hpp>
+//#include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <type_traits>
 
 //  Base-from-member arity configuration macro  ------------------------------//
@@ -29,26 +28,7 @@
 
 // Contributed by Jonathan Turkanis
 
-#ifndef BOOST_BASE_FROM_MEMBER_MAX_ARITY
-#define BOOST_BASE_FROM_MEMBER_MAX_ARITY  10
-#endif
-
-
-//  An iteration of a constructor template for base_from_member  -------------//
-
-// A macro that should expand to:
-//     template < typename T1, ..., typename Tn >
-//     base_from_member( T1 x1, ..., Tn xn )
-//         : member( x1, ..., xn )
-//         {}
-// This macro should only persist within this file.
-
-#define BOOST_PRIVATE_CTR_DEF( z, n, data )                   \
-    template < BOOST_PP_ENUM_PARAMS(n, typename T) >          \
-    base_from_member( BOOST_PP_ENUM_BINARY_PARAMS(n, T, x) )  \
-        : member( BOOST_PP_ENUM_PARAMS(n, x) )                \
-        {}                                                    \
-    /**/
+#pragma once
 
 
 namespace boost
@@ -92,7 +72,6 @@ struct is_related
 
 // Contributed by Daryle Walker, based on a work-around by Luc Danton
 
-#ifndef BOOST_NO_CXX11_VARIADIC_TEMPLATES
 template<typename ...T>
 struct enable_if_unrelated
     : public std::enable_if<true>
@@ -102,7 +81,6 @@ template<typename T, typename U, typename ...U2>
 struct enable_if_unrelated<T, U, U2...>
     : public std::enable_if< !::boost::detail::is_related<T, U>::value >
 {};
-#endif
 
 }  // namespace boost::detail
 
@@ -122,26 +100,10 @@ class base_from_member
 protected:
     MemberType  member;
 
-#if !defined(BOOST_NO_CXX11_RVALUE_REFERENCES) && \
-    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES) && \
-    !defined(BOOST_NO_CXX11_FUNCTION_TEMPLATE_DEFAULT_ARGS) && \
-    !(defined(__GNUC__) && (__GNUC__ == 4) && (__GNUC_MINOR__ < 4))
     template <typename ...T, typename EnableIf = typename
      ::boost::detail::enable_if_unrelated<base_from_member, T...>::type>
-    explicit constexpr base_from_member( T&& ...x )
-        BOOST_NOEXCEPT_IF( BOOST_NOEXCEPT_EXPR(::new ((void*) 0) MemberType(
-         static_cast<T&&>(x)... )) )  // no std::is_nothrow_constructible...
-        : member( static_cast<T&&>(x)... )     // ...nor std::forward needed
-        {}
-#else
-    base_from_member()
-        : member()
-        {}
-
-    template < typename T0 > explicit base_from_member( T0 x0 ) : member( x0 ) {}
-    BOOST_PP_REPEAT_FROM_TO( 2, BOOST_PP_INC(BOOST_BASE_FROM_MEMBER_MAX_ARITY),
-     BOOST_PRIVATE_CTR_DEF, _ )
-#endif
+    explicit constexpr base_from_member( T&& ...x ): member( static_cast<T&&>(x)... )
+    {}
 
 };  // boost::base_from_member
 
@@ -151,18 +113,10 @@ class base_from_member<MemberType&, UniqueID>
 protected:
     MemberType& member;
 
-    explicit constexpr base_from_member( MemberType& x )
-        BOOST_NOEXCEPT
-        : member( x )
-        {}
+    explicit constexpr base_from_member( MemberType& x ) noexcept :
+        member( x )
+    {}
 
 };  // boost::base_from_member
 
 }  // namespace boost
-
-
-// Undo any private macros
-#undef BOOST_PRIVATE_CTR_DEF
-
-
-#endif  // BOOST_UTILITY_BASE_FROM_MEMBER_HPP

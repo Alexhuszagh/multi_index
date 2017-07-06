@@ -10,7 +10,7 @@
 
 #include "test_key_extractors.hpp"
 
-#include <boost/detail/lightweight_test.hpp>
+#include "lightweight_test.hpp"
 #include <boost/multi_index/key_extractors.hpp>
 #include <functional>
 #include <list>

@@ -15,7 +15,7 @@
 #include <numeric>
 #include <vector>
 #include "employee.hpp"
-#include <boost/detail/lightweight_test.hpp>
+#include "lightweight_test.hpp"
 
 using namespace boost::multi_index;
 

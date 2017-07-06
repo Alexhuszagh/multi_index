@@ -12,7 +12,7 @@
 //  http://www.boost.org/LICENSE_1_0.txt
 //
 
-#include <boost/current_function.hpp>
+#include "current_function.hpp"
 #include <cassert>
 #include <cstring>
 #include <iostream>

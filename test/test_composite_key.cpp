@@ -11,7 +11,7 @@
 #include "test_composite_key.hpp"
 
 #include <brigand/functions/if.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include "lightweight_test.hpp"
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/composite_key.hpp>
 #include <boost/multi_index/hashed_index.hpp>
