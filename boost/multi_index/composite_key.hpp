@@ -11,13 +11,9 @@
 #include <brigand/functions/eval_if.hpp>
 #include <brigand/functions/arithmetic/identity.hpp>
 #include <brigand/functions/logical/or.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/functional/hash_fwd.hpp>
 #include <boost/multi_index/detail/cons_stdtuple.hpp>
 #include <boost/multi_index/detail/tuple_support.hpp>
-// TODO: remove the preprocessor shit...
-#include <boost/preprocessor/list/at.hpp>
-#include <boost/preprocessor/repetition/enum.hpp>
 #include <functional>
 #include <type_traits>
 
@@ -40,18 +36,6 @@
  */
 
 #define BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE 10
-
-/* BOOST_PP_ENUM of BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE elements */
-
-#define BOOST_MULTI_INDEX_CK_ENUM(macro,data)                                \
-  BOOST_PP_ENUM(BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,macro,data)
-
-/* typename list(0)<list(1),n>::type */
-
-#define BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N(z,n,list)                  \
-  typename BOOST_PP_LIST_AT(list,0)<                           \
-    BOOST_PP_LIST_AT(list,1),n                                               \
-  >::type
 
 namespace boost{
 
@@ -1294,23 +1278,20 @@ public:
   using super::operator();
 };
 
-#define BOOST_MULTI_INDEX_CK_RESULT_HASH_SUPER                               \
-composite_key_hash<                                                          \
-    BOOST_MULTI_INDEX_CK_ENUM(                                               \
-      BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N,                             \
-      /* the argument is a PP list */                                        \
-      (detail::nth_composite_key_hash,                                       \
-        (typename CompositeKeyResult::composite_key_type,      \
-          BOOST_PP_NIL)))                                                    \
-  >
+
+template <typename CompositeKeyResult>
+using ck_hash_super = composite_key_super<
+  composite_key_hash,
+  CompositeKeyResult,
+  detail::nth_composite_key_hash
+>;
+
 
 template<typename CompositeKeyResult>
-struct composite_key_result_hash:
-private
-BOOST_MULTI_INDEX_CK_RESULT_HASH_SUPER
+struct composite_key_result_hash: private ck_hash_super<CompositeKeyResult>
 {
 private:
-  typedef BOOST_MULTI_INDEX_CK_RESULT_HASH_SUPER super;
+  typedef ck_hash_super<CompositeKeyResult> super;
 
 public:
   typedef CompositeKeyResult argument_type;
@@ -1367,12 +1348,6 @@ struct hash<boost::multi_index::composite_key_result<CompositeKey> >:
 
 } /* namespace boost */
 
-#undef BOOST_MULTI_INDEX_CK_RESULT_HASH_SUPER
-#undef BOOST_MULTI_INDEX_CK_RESULT_GREATER_SUPER
-#undef BOOST_MULTI_INDEX_CK_RESULT_LESS_SUPER
-#undef BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER
 #undef BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS
 #undef BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR
-#undef BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N
-#undef BOOST_MULTI_INDEX_CK_ENUM
 #undef BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE
