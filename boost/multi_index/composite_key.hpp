@@ -112,15 +112,13 @@ BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(hash,boost::hash)
 
 /* used for defining equality and comparison ops of composite_key_result */
 
-#define BOOST_MULTI_INDEX_CK_IDENTITY_ENUM_MACRO(z,n,text) text
-
 struct generic_operator_equal
 {
   template<typename T,typename Q>
   bool operator()(const T& x,const Q& y)const{return x==y;}
 };
 
-using generic_operator_equal_tuple = tuple_creator<
+using generic_operator_equal_tuple = tuple_builder<
   BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,
   generic_operator_equal
 >;
@@ -131,16 +129,10 @@ struct generic_operator_less
   bool operator()(const T& x,const Q& y)const{return x<y;}
 };
 
-using generic_operator_less_tuple = tuple_creator<
+using generic_operator_less_tuple = tuple_builder<
   BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,
   generic_operator_less
 >;
-
-// TODO: this can be DONE.
-// WE HAVE THE TECHNOLOGY
-// Why not use brigand??
-// BOOST_MULTI_INDEX_CK_IDENTITY_ENUM_MACRO
-// BOOST_MULTI_INDEX_CK_ENUM
 
 /* Metaprogramming machinery for implementing equality, comparison and
  * hashing operations of composite_key_result.
@@ -1376,7 +1368,6 @@ struct hash<boost::multi_index::composite_key_result<CompositeKey> >:
 #undef BOOST_MULTI_INDEX_CK_RESULT_LESS_SUPER
 #undef BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER
 #undef BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS
-#undef BOOST_MULTI_INDEX_CK_IDENTITY_ENUM_MACRO
 #undef BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR
 #undef BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N
 #undef BOOST_MULTI_INDEX_CK_ENUM

@@ -12,39 +12,20 @@
 namespace boost
 {
 
-//template <int N, typename T, typename... Ts>
-//struct tuple_creator_impl<N, T, tuple<Ts...>>
-//{
-//  typedef tuple<T, Ts...> U;
-//  static const int length = std::tuple_size<U>::value;
-//
-//  typedef typename brigand::eval_if_c<
-//    N!=length,
-//    tuple_creator_impl<N+1, T, U>,
-//    brigand::identity<U>
-//  >::type type;
-//};
-//
-//
-//// TODO: write a recursive implementation....
-//
-//template <int N, typename T>
-//struct tuple_creator_impl
-//{
-//    using impl = typename tuple_creator_impl<N-1, T>::type;
-//    using type = to_tuple<impl, T>;
-//};
+template <int, typename ... Ns>
+struct tuple_builder_impl;
 
-
-
-//
-//template <typename T>
-//struct tuple_creator_impl<10, T>
-//{
-//    using type = tuple<T, T, T, T, T, T, T, T, T, T>;
-//};
+template <int I, typename N, typename ... Ns>
+struct tuple_builder_impl<I, N, Ns...>
+{
+    using type = typename brigand::eval_if_c<
+        I == 0,
+        brigand::identity<tuple<Ns...>>,
+        tuple_builder_impl<I - 1, N, N, Ns...>
+    >::type;
+};
 
 template <int N, typename T>
-using tuple_creator = typename tuple_creator_impl<N, T>::type;
+using tuple_builder = typename tuple_builder_impl<N, T>::type;
 
 }   /* boost */
