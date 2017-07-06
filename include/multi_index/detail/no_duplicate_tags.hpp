@@ -45,7 +45,7 @@ struct index_list_to_tag_list
 
 
 template <typename T>
-struct not_empty
+struct is_not_empty
 {
   using type = brigand::not_<brigand::size<T>>;
 };
@@ -73,7 +73,7 @@ template <typename... Indices, template <typename...> class C>
 struct no_duplicate_tags_in_index_list<C<Indices...>>
 {
   using list = brigand::list<Indices...>;
-  using not_empty = brigand::find<list, not_empty<brigand::_1>>;
+  using not_empty = brigand::find<list, is_not_empty<brigand::_1>>;
   using tag_list = typename index_list_to_tag_list<not_empty>::type;
 
   static const bool value = no_duplicate_tags<tag_list>::value;
