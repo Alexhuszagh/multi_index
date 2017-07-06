@@ -9,7 +9,7 @@ build:
     - git submodule update --init --recursive
     - mkdir -p build
     - cd build
-    - cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTS=ON ..
+    - cmake -DCMAKE_BUILD_TYPE=Debug ..
     - make -j 8
     - ctest -C Release -V
 

@@ -63,7 +63,6 @@ inline Node* ordered_index_find(
 
   return ordered_index_find(
     top,y,key,x,comp,
-    // TODO: this is bugging out..
     brigand::and_<
       promotes_1st_arg<CompatibleCompare,CompatibleKey,key_type>,
       promotes_2nd_arg<CompatibleCompare,key_type,CompatibleKey> >());
