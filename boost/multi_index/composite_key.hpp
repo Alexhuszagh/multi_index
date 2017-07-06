@@ -901,23 +901,24 @@ BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
 
 template
 <
-  BOOST_MULTI_INDEX_CK_ENUM(BOOST_MULTI_INDEX_CK_TEMPLATE_PARM,Pred)
+  typename... Us
 >
 struct composite_key_equal_to:
-  private tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Pred)>
+  private tuple<Us...>
 {
 private:
-  typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Pred)> super;
+  typedef tuple<Us...> super;
 
 public:
   typedef super key_eq_tuple;
 
-  composite_key_equal_to(
-    BOOST_MULTI_INDEX_CK_ENUM(BOOST_MULTI_INDEX_CK_CTOR_ARG,Pred)):
-    super(BOOST_MULTI_INDEX_CK_ENUM_PARAMS(k))
+  template <typename... Ts>
+  composite_key_equal_to(Ts&&... ts):
+    super(std::forward<Ts>(ts)...)
   {}
 
-  composite_key_equal_to(const key_eq_tuple& x):super(x){}
+// TODO: remove
+//  composite_key_equal_to(const key_eq_tuple& x):super(x){}
 
   const key_eq_tuple& key_eqs()const{return *this;}
   key_eq_tuple&       key_eqs(){return *this;}
@@ -948,18 +949,14 @@ public:
       key_eqs());
   }
 
-  template
-  <
-    typename CompositeKey,
-    BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value)
-  >
+  template <typename CompositeKey, typename... Ts>
   bool operator()(
     const composite_key_result<CompositeKey>& x,
-    const tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>& y)const
+    const tuple<Ts...>& y)const
   {
     typedef typename CompositeKey::key_extractor_tuple     key_extractor_tuple;
     typedef typename CompositeKey::value_type              value_type;
-    typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)> key_tuple;
+    typedef tuple<Ts...>                                   key_tuple;
 
     static_assert(
       tuples::length<key_extractor_tuple>::value<=
@@ -973,18 +970,14 @@ public:
     >::compare(x.composite_key.key_extractors(),x.value,y,key_eqs());
   }
 
-  template
-  <
-    BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value),
-    typename CompositeKey
-  >
+  template <typename... Ts, typename CompositeKey>
   bool operator()(
-    const tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>& x,
+    const tuple<Ts...>& x,
     const composite_key_result<CompositeKey>& y)const
   {
     typedef typename CompositeKey::key_extractor_tuple     key_extractor_tuple;
     typedef typename CompositeKey::value_type              value_type;
-    typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)> key_tuple;
+    typedef tuple<Ts...>                                   key_tuple;
 
     static_assert(
       tuples::length<key_tuple>::value<=
@@ -1064,12 +1057,13 @@ private:
 public:
   typedef super key_comp_tuple;
 
-  composite_key_compare(
-    BOOST_MULTI_INDEX_CK_ENUM(BOOST_MULTI_INDEX_CK_CTOR_ARG,Compare)):
-    super(BOOST_MULTI_INDEX_CK_ENUM_PARAMS(k))
+  template <typename... Ts>
+  composite_key_compare(Ts&&... ts):
+    super(std::forward<Ts>(ts)...)
   {}
 
-  composite_key_compare(const key_comp_tuple& x):super(x){}
+// TODO: remove
+//  composite_key_compare(const key_comp_tuple& x):super(x){}
 
   const key_comp_tuple& key_comps()const{return *this;}
   key_comp_tuple&       key_comps(){return *this;}
@@ -1108,18 +1102,14 @@ public:
     return operator()(x,boost::make_tuple(std::cref(y)));
   }
 
-  template
-  <
-    typename CompositeKey,
-    BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value)
-  >
+  template <typename CompositeKey, typename... Ts>
   bool operator()(
     const composite_key_result<CompositeKey>& x,
-    const tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>& y)const
+    const tuple<Ts...>& y)const
   {
     typedef typename CompositeKey::key_extractor_tuple     key_extractor_tuple;
     typedef typename CompositeKey::value_type              value_type;
-    typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)> key_tuple;
+    typedef tuple<Ts...> key_tuple;
 
     static_assert(
       tuples::length<key_extractor_tuple>::value<=
@@ -1141,18 +1131,14 @@ public:
     return operator()(boost::make_tuple(std::cref(x)),y);
   }
 
-  template
-  <
-    BOOST_MULTI_INDEX_CK_ENUM_PARAMS(typename Value),
-    typename CompositeKey
-  >
+  template <typename... Ts, typename CompositeKey>
   bool operator()(
-    const tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)>& x,
+    const tuple<Ts...>& x,
     const composite_key_result<CompositeKey>& y)const
   {
     typedef typename CompositeKey::key_extractor_tuple     key_extractor_tuple;
     typedef typename CompositeKey::value_type              value_type;
-    typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Value)> key_tuple;
+    typedef tuple<Ts...> key_tuple;
 
     static_assert(
       tuples::length<key_tuple>::value<=
