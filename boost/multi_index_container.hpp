@@ -37,16 +37,26 @@ class multi_index_container:
   private ::boost::base_from_member<
     typename Allocator::template rebind<
       typename detail::multi_index_node_type<
-        Value,IndexSpecifierList,Allocator>::type
+        Value,
+        mpl_to_tuple<IndexSpecifierList>,
+        Allocator
+      >::type
     >::other>,
   private detail::header_holder<
     typename Allocator::template rebind<
       typename detail::multi_index_node_type<
-        Value,IndexSpecifierList,Allocator>::type
+        Value,
+        mpl_to_tuple<IndexSpecifierList>,
+        Allocator
+      >::type
     >::other::pointer,
     multi_index_container<Value,IndexSpecifierList,Allocator> >,
+
   public detail::multi_index_base_type<
-    Value,IndexSpecifierList,Allocator>::type
+    Value,
+    mpl_to_tuple<IndexSpecifierList>,
+    Allocator
+  >::type
 {
 private:
   template <typename,typename,typename> friend class  detail::index_base;
@@ -54,7 +64,11 @@ private:
   template <typename,typename>          friend struct detail::converter;
 
   typedef typename detail::multi_index_base_type<
-      Value,IndexSpecifierList,Allocator>::type   super;
+      Value,
+      mpl_to_tuple<IndexSpecifierList>,
+      Allocator
+  >::type                                         super;
+
   typedef typename
   Allocator::template rebind<
     typename super::node_type
@@ -108,8 +122,7 @@ public:
   }
 
   template<typename InputIterator>
-  multi_index_container(
-    InputIterator first,InputIterator last,
+  multi_index_container(InputIterator first,InputIterator last,
 
     const ctor_args_list& args_list=ctor_args_list(),
     const allocator_type& al=allocator_type()):

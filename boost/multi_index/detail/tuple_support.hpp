@@ -13,11 +13,28 @@
 #include <brigand/functions/eval_if.hpp>
 #include <brigand/functions/arithmetic/identity.hpp>
 #include <boost/tuple/tuple.hpp>
-#include <array>
-#include <type_traits>
+#include <tuple>
+
+// TODO: remove
+#include <boost/mpl/bind.hpp>
+#include <boost/mpl/fold.hpp>
+#include <boost/mpl/vector.hpp>
+
 
 namespace boost
 {
+/* fold tuple */
+
+template <typename T, typename R>
+struct to_stdtuple;
+
+
+template <typename... Ts, typename T>
+struct to_stdtuple<std::tuple< Ts... >, T>
+{
+    typedef std::tuple<Ts..., T> type;
+};
+
 /* generic-use */
 
 template <typename T>
@@ -95,5 +112,14 @@ struct tuple_as_class_impl<C, tuple<Ts...>>
 
 template <template <typename...> class C, typename ... Ts>
 using tuple_as_class = typename tuple_as_class_impl<C, Ts...>::type;
+
+// TODO: remove
+
+template <typename T>
+using mpl_to_tuple = typename mpl::fold<
+  T,
+  std::tuple<>,
+  to_stdtuple<mpl::_1, mpl::_2>
+>::type;
 
 }   /* boost */

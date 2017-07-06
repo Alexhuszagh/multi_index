@@ -10,11 +10,9 @@
 
 #include <brigand/functions/eval_if.hpp>
 #include <brigand/functions/arithmetic/identity.hpp>
-#include <boost/mpl/fold.hpp>
-#include <boost/mpl/vector.hpp>
 #include <boost/multi_index/detail/index_base.hpp>
 #include <boost/multi_index/detail/is_index_list.hpp>
-#include <tuple>
+#include <boost/multi_index/detail/tuple_support.hpp>
 #include <type_traits>
 
 namespace boost{
@@ -35,23 +33,11 @@ struct next_index_layer
     using type = typename index_specifier::template index_class<SuperMeta>::type;
 };
 
-
-template < typename T, typename R >
-struct to_tuple;
-
-
-template < typename... Ts, typename X >
-struct to_tuple< std::tuple< Ts... >, X >
-{
-  typedef std::tuple< Ts..., X > type;
-};
-
-
-// TODO: this needs to change the index_base to an abstract type...
-
-
 template <int N,typename... Ts>
 struct nth_layer_impl;
+
+
+// TODO: need to remove the MPL vector check
 
 
 template <int N,typename V, typename A, typename... Ts>
@@ -78,17 +64,11 @@ struct nth_layer;
 template <int N,typename Value, typename Index, typename Allocator>
 struct nth_layer<N, Value, Index, Allocator>
 {
-  typedef typename mpl::fold<
-    Index,
-    std::tuple<>,
-    to_tuple<mpl::_1, mpl::_2>
-  >::type tuple;
-
-  using type = typename nth_layer_impl<N, Value, Allocator, tuple>::type;
+  using type = typename nth_layer_impl<N, Value, Allocator, Index>::type;
 };
 
 
-template<typename Value,typename IndexSpecifierList,typename Allocator>
+template <typename Value, typename IndexSpecifierList, typename Allocator>
 struct multi_index_base_type: nth_layer<0,Value, IndexSpecifierList, Allocator>
 {
   static_assert(detail::is_index_list<IndexSpecifierList>::value, "");

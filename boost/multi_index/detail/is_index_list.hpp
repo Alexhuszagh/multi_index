@@ -8,9 +8,8 @@
 
 #pragma once
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/empty.hpp>
-#include <boost/mpl/is_sequence.hpp>
+#include <tuple>
+
 
 namespace boost{
 
@@ -18,12 +17,11 @@ namespace multi_index{
 
 namespace detail{
 
-template<typename T>
+template <typename T>
 struct is_index_list
 {
-  static const bool mpl_sequence = mpl::is_sequence<T>::value;
-  static const bool non_empty = !mpl::empty<T>::value;
-  static const bool value = mpl_sequence&&non_empty;
+  static const bool non_empty = std::tuple_size<T>::value != 0;
+  static const bool value = non_empty;
 };
 
 } /* namespace multi_index::detail */

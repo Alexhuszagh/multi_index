@@ -14,6 +14,7 @@
 #include <boost/multi_index/detail/copy_map.hpp>
 #include <boost/multi_index/detail/do_not_copy_elements_tag.hpp>
 #include <boost/multi_index/detail/node_type.hpp>
+#include <boost/multi_index/detail/tuple_support.hpp>
 #include <boost/multi_index/detail/vartempl_support.hpp>
 #include <boost/multi_index_container_fwd.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -42,8 +43,13 @@ class index_base
 {
 protected:
   typedef index_node_base<Value,Allocator>    node_type;
+//  typedef typename multi_index_node_type<
+//    Value,IndexSpecifierList,Allocator>::list final_node_type;
   typedef typename multi_index_node_type<
-    Value,IndexSpecifierList,Allocator>::type final_node_type;
+    Value,
+    mpl_to_tuple<IndexSpecifierList>,
+    Allocator
+  >::type                                     final_node_type;
   typedef multi_index_container<
     Value,IndexSpecifierList,Allocator>       final_type;
   typedef tuples::null_type                   ctor_args_list;

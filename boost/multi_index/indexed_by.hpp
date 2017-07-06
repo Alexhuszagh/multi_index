@@ -16,9 +16,7 @@
 namespace boost{
 namespace multi_index{
 
-template<
-  typename... Ts
->
+template<typename... Ts>
 struct indexed_by:
   mpl::vector<Ts...>
 {
