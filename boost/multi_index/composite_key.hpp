@@ -14,12 +14,12 @@
 #include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/functional/hash_fwd.hpp>
 #include <boost/multi_index/detail/cons_stdtuple.hpp>
+#include <boost/multi_index/detail/tuple_support.hpp>
 // TODO: remove the preprocessor shit...
 #include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/list/at.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <functional>
 #include <type_traits>
 
@@ -41,40 +41,12 @@
  * boost::tuple. In Boost 1.32, the limit is 10.
  */
 
-#if !defined(BOOST_MULTI_INDEX_LIMIT_COMPOSITE_KEY_SIZE)
-#define BOOST_MULTI_INDEX_LIMIT_COMPOSITE_KEY_SIZE 10
-#endif
-
-/* maximum number of key extractors in a composite key */
-
-#if BOOST_MULTI_INDEX_LIMIT_COMPOSITE_KEY_SIZE<10 /* max length of a tuple */
-#define BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE \
-  BOOST_MULTI_INDEX_LIMIT_COMPOSITE_KEY_SIZE
-#else
 #define BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE 10
-#endif
 
 /* BOOST_PP_ENUM of BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE elements */
 
 #define BOOST_MULTI_INDEX_CK_ENUM(macro,data)                                \
   BOOST_PP_ENUM(BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,macro,data)
-
-/* BOOST_PP_ENUM_PARAMS of BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE elements */
-
-#define BOOST_MULTI_INDEX_CK_ENUM_PARAMS(param)                              \
-  BOOST_PP_ENUM_PARAMS(BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,param)
-
-/* if n==0 ->   text0
- * otherwise -> textn=tuples::null_type
- */
-
-#define BOOST_MULTI_INDEX_CK_TEMPLATE_PARM(z,n,text)                         \
-  typename text##n BOOST_PP_EXPR_IF(n,=tuples::null_type)
-
-/* const textn& kn=textn() */
-
-#define BOOST_MULTI_INDEX_CK_CTOR_ARG(z,n,text)                              \
-  const text##n & k##n = text##n()
 
 /* typename list(0)<list(1),n>::type */
 
@@ -148,10 +120,10 @@ struct generic_operator_equal
   bool operator()(const T& x,const Q& y)const{return x==y;}
 };
 
-typedef tuple<
-  BOOST_MULTI_INDEX_CK_ENUM(
-    BOOST_MULTI_INDEX_CK_IDENTITY_ENUM_MACRO,
-    detail::generic_operator_equal)>          generic_operator_equal_tuple;
+using generic_operator_equal_tuple = tuple_creator<
+  BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,
+  generic_operator_equal
+>;
 
 struct generic_operator_less
 {
@@ -159,10 +131,16 @@ struct generic_operator_less
   bool operator()(const T& x,const Q& y)const{return x<y;}
 };
 
-typedef tuple<
-  BOOST_MULTI_INDEX_CK_ENUM(
-    BOOST_MULTI_INDEX_CK_IDENTITY_ENUM_MACRO,
-    detail::generic_operator_less)>           generic_operator_less_tuple;
+using generic_operator_less_tuple = tuple_creator<
+  BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,
+  generic_operator_less
+>;
+
+// TODO: this can be DONE.
+// WE HAVE THE TECHNOLOGY
+// Why not use brigand??
+// BOOST_MULTI_INDEX_CK_IDENTITY_ENUM_MACRO
+// BOOST_MULTI_INDEX_CK_ENUM
 
 /* Metaprogramming machinery for implementing equality, comparison and
  * hashing operations of composite_key_result.
@@ -1012,15 +990,11 @@ public:
 
 /* composite_key_compare */
 
-template
-<
-  BOOST_MULTI_INDEX_CK_ENUM(BOOST_MULTI_INDEX_CK_TEMPLATE_PARM,Compare)
->
-struct composite_key_compare:
-  private tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Compare)>
+template <typename... Us>
+struct composite_key_compare: private tuple<Us...>
 {
 private:
-  typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Compare)> super;
+  typedef tuple<Us...> super;
 
 public:
   typedef super key_comp_tuple;
@@ -1170,22 +1144,18 @@ public:
 
 /* composite_key_hash */
 
-template
-<
-  BOOST_MULTI_INDEX_CK_ENUM(BOOST_MULTI_INDEX_CK_TEMPLATE_PARM,Hash)
->
-struct composite_key_hash:
-  private tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Hash)>
+template <typename... Us>
+struct composite_key_hash: private tuple<Us...>
 {
 private:
-  typedef tuple<BOOST_MULTI_INDEX_CK_ENUM_PARAMS(Hash)> super;
+  typedef tuple<Us...> super;
 
 public:
   typedef super key_hasher_tuple;
 
-  composite_key_hash(
-    BOOST_MULTI_INDEX_CK_ENUM(BOOST_MULTI_INDEX_CK_CTOR_ARG,Hash)):
-    super(BOOST_MULTI_INDEX_CK_ENUM_PARAMS(k))
+  template <typename... Ts>
+  composite_key_hash(Ts&&... ts):
+    super(std::forward<Ts>(ts)...)
   {}
 
   composite_key_hash(const key_hasher_tuple& x):super(x){}
@@ -1246,6 +1216,9 @@ public:
  * composite_key_result_greater  uses std::greater.
  * composite_key_result_hash     uses boost::hash.
  */
+
+// TODO: replace the following with this...
+// composite_key_equal_to< typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 0 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 1 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 2 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 3 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 4 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 5 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 6 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 7 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 8 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 9 >::type >
 
 #define BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER                           \
 composite_key_equal_to<                                                      \
@@ -1406,8 +1379,5 @@ struct hash<boost::multi_index::composite_key_result<CompositeKey> >:
 #undef BOOST_MULTI_INDEX_CK_IDENTITY_ENUM_MACRO
 #undef BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR
 #undef BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N
-#undef BOOST_MULTI_INDEX_CK_CTOR_ARG
-#undef BOOST_MULTI_INDEX_CK_TEMPLATE_PARM
-#undef BOOST_MULTI_INDEX_CK_ENUM_PARAMS
 #undef BOOST_MULTI_INDEX_CK_ENUM
 #undef BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE
