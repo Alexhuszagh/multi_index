@@ -1223,7 +1223,7 @@ using composite_key_extractor = extract_tuple_element<
 template <template <typename...> class Super, typename CompositeKeyResult, template <typename, int> class Pred>
 using composite_key_super = tuple_as_class<
   Super,
-  composite_key_extractor<CompositeKeyResult, detail::nth_composite_key_equal_to>
+  composite_key_extractor<CompositeKeyResult, Pred>
 >;
 
 template <typename CompositeKeyResult>
@@ -1234,22 +1234,34 @@ using ck_equal_to_super = composite_key_super<
 >;
 
 
-#define BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER                           \
-composite_key_equal_to<                                                      \
-    BOOST_MULTI_INDEX_CK_ENUM(                                               \
-      BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N,                             \
-      /* the argument is a PP list */                                        \
-      (detail::nth_composite_key_equal_to,                                   \
-        (typename CompositeKeyResult::composite_key_type,                    \
-          BOOST_PP_NIL)))                                                    \
-  >
+template <typename CompositeKeyResult>
+struct composite_key_result_equal_to: private ck_equal_to_super<CompositeKeyResult>
+{
+private:
+  typedef ck_equal_to_super<CompositeKeyResult> super;
+
+public:
+  typedef CompositeKeyResult  first_argument_type;
+  typedef first_argument_type second_argument_type;
+  typedef bool                result_type;
+
+  using super::operator();
+};
 
 
 template <typename CompositeKeyResult>
-struct composite_key_result_equal_to: private BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER
+using ck_less_super = composite_key_super<
+  composite_key_compare,
+  CompositeKeyResult,
+  detail::nth_composite_key_less
+>;
+
+
+template<typename CompositeKeyResult>
+struct composite_key_result_less: private ck_less_super<CompositeKeyResult>
 {
 private:
-  typedef BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER super;
+  typedef ck_less_super<CompositeKeyResult> super;
 
 public:
   typedef CompositeKeyResult  first_argument_type;
@@ -1259,49 +1271,20 @@ public:
   using super::operator();
 };
 
-#define BOOST_MULTI_INDEX_CK_RESULT_LESS_SUPER                               \
-composite_key_compare<                                                       \
-    BOOST_MULTI_INDEX_CK_ENUM(                                               \
-      BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N,                             \
-      /* the argument is a PP list */                                        \
-      (detail::nth_composite_key_less,                                       \
-        (typename CompositeKeyResult::composite_key_type,      \
-          BOOST_PP_NIL)))                                                    \
-  >
+
+template <typename CompositeKeyResult>
+using ck_greater_super = composite_key_super<
+  composite_key_compare,
+  CompositeKeyResult,
+  detail::nth_composite_key_greater
+>;
+
 
 template<typename CompositeKeyResult>
-struct composite_key_result_less:
-private
-BOOST_MULTI_INDEX_CK_RESULT_LESS_SUPER
+struct composite_key_result_greater: private ck_greater_super<CompositeKeyResult>
 {
 private:
-  typedef BOOST_MULTI_INDEX_CK_RESULT_LESS_SUPER super;
-
-public:
-  typedef CompositeKeyResult  first_argument_type;
-  typedef first_argument_type second_argument_type;
-  typedef bool                result_type;
-
-  using super::operator();
-};
-
-#define BOOST_MULTI_INDEX_CK_RESULT_GREATER_SUPER                            \
-composite_key_compare<                                                       \
-    BOOST_MULTI_INDEX_CK_ENUM(                                               \
-      BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N,                             \
-      /* the argument is a PP list */                                        \
-      (detail::nth_composite_key_greater,                                    \
-        (typename CompositeKeyResult::composite_key_type,      \
-          BOOST_PP_NIL)))                                                    \
-  >
-
-template<typename CompositeKeyResult>
-struct composite_key_result_greater:
-private
-BOOST_MULTI_INDEX_CK_RESULT_GREATER_SUPER
-{
-private:
-  typedef BOOST_MULTI_INDEX_CK_RESULT_GREATER_SUPER super;
+  typedef ck_greater_super<CompositeKeyResult> super;
 
 public:
   typedef CompositeKeyResult  first_argument_type;
