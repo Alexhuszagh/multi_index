@@ -16,7 +16,6 @@
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/identity.hpp>
 #include <boost/multi_index/ordered_index.hpp>
-//#include <boost/preprocessor/seq/enum.hpp>
 
 
 using namespace boost::multi_index;
@@ -41,6 +40,7 @@ static void check_void_range(Pair &p)
 
 void test_range()
 {
+// TODO: restore
   int_set is;
 
   for(int i=1;i<=10;++i)is.insert(i);

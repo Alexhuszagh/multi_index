@@ -41,19 +41,19 @@ set(TEST_FILES
     test/test_basic.cpp
     test/test_capacity.cpp
     test/test_comparison.cpp
-    test/test_composite_key.cpp
+#    test/test_composite_key.cpp
     test/test_conv_iterators.cpp
     test/test_copy_assignment.cpp
     test/test_hash_ops.cpp
     test/test_iterators.cpp
     test/test_key_extractors.cpp
-    test/test_list_ops.cpp
+#    test/test_list_ops.cpp
     test/test_modifiers.cpp
     test/test_mpl_ops.cpp
     test/test_observers.cpp
     test/test_projection.cpp
     test/test_range.cpp
-    test/test_rearrange.cpp
+#    test/test_rearrange.cpp
     test/test_set_ops.cpp
     test/test_special_set_ops.cpp
     test/test_update.cpp
