@@ -16,10 +16,8 @@
 #include <boost/multi_index/detail/cons_stdtuple.hpp>
 #include <boost/multi_index/detail/tuple_support.hpp>
 // TODO: remove the preprocessor shit...
-#include <boost/preprocessor/control/expr_if.hpp>
 #include <boost/preprocessor/list/at.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
 #include <functional>
 #include <type_traits>
 
@@ -1209,8 +1207,32 @@ public:
  * composite_key_result_hash     uses boost::hash.
  */
 
-// TODO: replace the following with this...
-// composite_key_equal_to< typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 0 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 1 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 2 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 3 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 4 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 5 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 6 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 7 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 8 >::type , typename detail::nth_composite_key_equal_to< typename CompositeKeyResult::composite_key_type, 9 >::type >
+template <typename CompositeKeyResult, template <typename, int> class Pred>
+using key_result_builder = indexed_tuple_builder<
+  BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,
+  Pred,
+  typename CompositeKeyResult::composite_key_type
+>;
+
+
+template <typename CompositeKeyResult, template <typename, int> class Pred>
+using composite_key_extractor = extract_tuple_element<
+  key_result_builder<CompositeKeyResult, Pred>
+>;
+
+template <template <typename...> class Super, typename CompositeKeyResult, template <typename, int> class Pred>
+using composite_key_super = tuple_as_class<
+  Super,
+  composite_key_extractor<CompositeKeyResult, detail::nth_composite_key_equal_to>
+>;
+
+template <typename CompositeKeyResult>
+using ck_equal_to_super = composite_key_super<
+  composite_key_equal_to,
+  CompositeKeyResult,
+  detail::nth_composite_key_equal_to
+>;
+
 
 #define BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER                           \
 composite_key_equal_to<                                                      \
@@ -1218,14 +1240,13 @@ composite_key_equal_to<                                                      \
       BOOST_MULTI_INDEX_CK_APPLY_METAFUNCTION_N,                             \
       /* the argument is a PP list */                                        \
       (detail::nth_composite_key_equal_to,                                   \
-        (typename CompositeKeyResult::composite_key_type,      \
+        (typename CompositeKeyResult::composite_key_type,                    \
           BOOST_PP_NIL)))                                                    \
   >
 
-template<typename CompositeKeyResult>
-struct composite_key_result_equal_to:
-private
-BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER
+
+template <typename CompositeKeyResult>
+struct composite_key_result_equal_to: private BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER
 {
 private:
   typedef BOOST_MULTI_INDEX_CK_RESULT_EQUAL_TO_SUPER super;
