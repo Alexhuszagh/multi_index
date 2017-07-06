@@ -9,7 +9,6 @@
 #pragma once
 
 #include <brigand/functions/eval_if.hpp>
-#include <boost/functional/hash.hpp>
 #include <boost/multi_index/tag.hpp>
 #include <functional>
 #include <type_traits>
@@ -36,9 +35,8 @@ namespace detail{
  * argument-dependent polymorphism.
  */
 
-// TODO: replace with std::hash
 template<typename T>
-using index_args_default_hash = ::boost::hash<typename T::result_type>;
+using index_args_default_hash = std::hash<typename T::result_type>;
 
 template<typename T>
 using index_args_default_pred = std::equal_to<typename T::result_type>;

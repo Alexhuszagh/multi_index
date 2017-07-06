@@ -11,7 +11,6 @@
 #include <brigand/functions/eval_if.hpp>
 #include <brigand/functions/arithmetic/identity.hpp>
 #include <brigand/functions/logical/or.hpp>
-#include <boost/functional/hash_fwd.hpp>
 #include <boost/multi_index/detail/cons_stdtuple.hpp>
 #include <boost/multi_index/detail/tuple_support.hpp>
 #include <functional>
@@ -90,7 +89,7 @@ struct nth_composite_key_##name                                               \
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(equal_to,std::equal_to)
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(less,std::less)
 BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(greater,std::greater)
-BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(hash,boost::hash)
+BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(hash,std::hash)
 
 /* used for defining equality and comparison ops of composite_key_result */
 
@@ -1315,38 +1314,30 @@ struct equal_to<boost::multi_index::composite_key_result<CompositeKey> >:
   boost::multi_index::composite_key_result_equal_to<
     boost::multi_index::composite_key_result<CompositeKey>
   >
-{
-};
+{};
 
 template<typename CompositeKey>
 struct less<boost::multi_index::composite_key_result<CompositeKey> >:
   boost::multi_index::composite_key_result_less<
     boost::multi_index::composite_key_result<CompositeKey>
   >
-{
-};
+{};
 
 template<typename CompositeKey>
 struct greater<boost::multi_index::composite_key_result<CompositeKey> >:
   boost::multi_index::composite_key_result_greater<
     boost::multi_index::composite_key_result<CompositeKey>
   >
-{
-};
-
-} /* namespace std */
-
-namespace boost{
+{};
 
 template<typename CompositeKey>
 struct hash<boost::multi_index::composite_key_result<CompositeKey> >:
   boost::multi_index::composite_key_result_hash<
     boost::multi_index::composite_key_result<CompositeKey>
   >
-{
-};
+{};
 
-} /* namespace boost */
+} /* namespace std */
 
 #undef BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS
 #undef BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR

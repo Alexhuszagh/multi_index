@@ -10,7 +10,6 @@
 
 #include "test_copy_assignment.hpp"
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <list>
 #include <numeric>
@@ -20,14 +19,6 @@
 
 using namespace boost::multi_index;
 
-#if BOOST_WORKAROUND(__MWERKS__,<=0x3003)
-/* The "ISO C++ Template Parser" option makes CW8.3 incorrectly fail at
- * expressions of the form sizeof(x) where x is an array local to a
- * template function.
- */
-
-#pragma parse_func_templ off
-#endif
 
 typedef multi_index_container<int> copyable_and_movable;
 
@@ -50,11 +41,7 @@ static void test_assign()
   s.assign((const int*)(&a[0]),(const int*)(&a[sa]));
   BOOST_TEST(s.size()==sa&&std::equal(s.begin(),s.end(),&a[0]));
 
-#if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
   s.assign({0,1,2,3,4,5});
-#else
-  s.assign(&a[0],&a[sa]);
-#endif
 
   BOOST_TEST(s.size()==sa&&std::equal(s.begin(),s.end(),&a[0]));
 
@@ -64,10 +51,6 @@ static void test_assign()
   s.assign((std::size_t)12,167);
   BOOST_TEST(s.size()==12&&std::accumulate(s.begin(),s.end(),0)==2004);
 }
-
-#if BOOST_WORKAROUND(__MWERKS__,<=0x3003)
-#pragma parse_func_templ reset
-#endif
 
 template<typename Sequence>
 static void test_integral_assign()
@@ -153,7 +136,6 @@ void test_copy_assignment()
 
   BOOST_TEST(i5==get<5>(es2));
 
-#if !defined(BOOST_NO_CXX11_HDR_INITIALIZER_LIST)
   employee_set es8({{0,"Rose",40,4512},{1,"Mary",38,3345},{2,"Jo",25,7102}});
   employee_set es9;
   es9={{0,"Rose",40,4512},{1,"Mary",38,3345},{2,"Jo",25,7102},
@@ -193,7 +175,6 @@ void test_copy_assignment()
   get<5>(es9)={{1,"Mary",38,3345},{2,"Jo",25,7102},{0,"Rose",40,4512},
                {2,"Jo",25,7102}};
   BOOST_TEST(es9==es8);
-#endif
 
   employee_set es10(produce_employee_set()),es11(produce_employee_set());
   BOOST_TEST(es10==es11);

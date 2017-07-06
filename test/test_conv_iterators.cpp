@@ -11,7 +11,6 @@
 
 #include "test_conv_iterators.hpp"
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include "employee.hpp"
 #include <boost/detail/lightweight_test.hpp>
 

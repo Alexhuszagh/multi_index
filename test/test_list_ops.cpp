@@ -10,7 +10,6 @@
 
 #include "test_list_ops.hpp"
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <vector>
 #include <boost/detail/lightweight_test.hpp>
@@ -61,15 +60,6 @@ bool is_sorted(
     it=it2;
   }
 }
-
-#if BOOST_WORKAROUND(__MWERKS__,<=0x3003)
-/* The "ISO C++ Template Parser" option makes CW8.3 incorrectly fail at
- * expressions of the form sizeof(x) where x is an array local to a
- * template function.
- */
-
-#pragma parse_func_templ off
-#endif
 
 template<typename Sequence>
 static void test_list_ops_unique_seq()

@@ -10,7 +10,6 @@
 
 #include "test_hash_ops.hpp"
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <iterator>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/multi_index_container.hpp>

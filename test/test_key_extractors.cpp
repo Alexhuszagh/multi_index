@@ -10,7 +10,6 @@
 
 #include "test_key_extractors.hpp"
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/multi_index/key_extractors.hpp>
 #include <functional>

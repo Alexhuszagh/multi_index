@@ -10,7 +10,6 @@
 
 #include "test_rearrange.hpp"
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/sequenced_index.hpp>
@@ -34,15 +33,6 @@ using namespace boost::multi_index;
 
 #undef CHECK_VOID_RANGE
 #define CHECK_VOID_RANGE(p) BOOST_TEST((p).first==(p).second)
-
-#if BOOST_WORKAROUND(__MWERKS__,<=0x3003)
-/* The "ISO C++ Template Parser" option makes CW8.3 incorrectly fail at
- * expressions of the form sizeof(x) where x is an array local to a
- * template function.
- */
-
-#pragma parse_func_templ off
-#endif
 
 template<typename Sequence>
 static void local_test_rearrange()
@@ -107,10 +97,6 @@ static void local_test_rearrange()
   sc.rearrange(v.begin());
   BOOST_TEST(std::equal(sc.begin(),sc.end(),v.begin()));
 }
-
-#if BOOST_WORKAROUND(__MWERKS__,<=0x3003)
-#pragma parse_func_templ reset
-#endif
 
 void test_rearrange()
 {

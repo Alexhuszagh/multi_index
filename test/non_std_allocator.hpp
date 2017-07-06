@@ -11,7 +11,6 @@
 #ifndef BOOST_MULTI_INDEX_TEST_NON_STD_ALLOCATOR_HPP
 #define BOOST_MULTI_INDEX_TEST_NON_STD_ALLOCATOR_HPP
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <iterator>
 #include <cstddef>
 

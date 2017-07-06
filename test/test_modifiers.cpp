@@ -10,7 +10,6 @@
 
 #include "test_modifiers.hpp"
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/detail/lightweight_test.hpp>
 #include <iterator>
 #include <memory>
@@ -54,18 +53,24 @@ inline bool operator==(const always_one& x,const always_one& y)
   return x.get()==y.get();
 }
 
-#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
-namespace boost{
-#endif
-
 inline std::size_t hash_value(const always_one& x)
 {
   return static_cast<std::size_t>(x.get());
 }
 
-#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
-} /* namespace boost */
-#endif
+
+namespace std
+{
+  template <>
+  struct hash<always_one>
+  {
+    size_t operator()(const always_one& x) const
+    {
+      return static_cast<std::size_t>(x.get());
+    }
+  };
+}  /* std */
+
 
 class linked_object
 {
@@ -83,14 +88,8 @@ class linked_object
     impl,
     indexed_by<
 
-#if BOOST_WORKAROUND(__IBMCPP__,BOOST_TESTED_AT(1010))
-      ordered_unique<member<impl,int,&linked_object::impl::n> >,
-      hashed_non_unique<member<impl,int,&linked_object::impl::n> >,
-#else
       ordered_unique<member<impl,int,&impl::n> >,
       hashed_non_unique<member<impl,int,&impl::n> >,
-#endif
-
       sequenced<>,
       random_access<>
     >

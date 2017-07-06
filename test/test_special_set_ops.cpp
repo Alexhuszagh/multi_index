@@ -10,7 +10,6 @@
 
 #include "test_special_set_ops.hpp"
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <algorithm>
 #include <sstream>
 #include "employee.hpp"
@@ -43,7 +42,7 @@ struct hash_string_as_int
 {
   int operator()(const std::string& x)const
   {
-    return boost::hash<int>()(string_to_int(x));
+    return std::hash<int>()(string_to_int(x));
   }
 };
 

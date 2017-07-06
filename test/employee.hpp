@@ -11,8 +11,6 @@
 #ifndef BOOST_MULTI_INDEX_TEST_EMPLOYEE_HPP
 #define BOOST_MULTI_INDEX_TEST_EMPLOYEE_HPP
 
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
-#include <boost/mpl/vector.hpp>
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/identity.hpp>
