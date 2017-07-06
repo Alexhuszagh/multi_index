@@ -9,10 +9,7 @@
 #pragma once
 
 #include <brigand/sequences/list.hpp>
-#include <boost/config.hpp> /* keep it first to prevent nasty warns in MSVC */
 #include <boost/multi_index/detail/no_duplicate_tags.hpp>
-#include <boost/mpl/contains.hpp>
-#include <boost/mpl/vector.hpp>
 #include <boost/type_traits/is_base_and_derived.hpp>
 
 namespace boost{
@@ -29,13 +26,11 @@ struct is_tag: is_base_and_derived<tag_marker, T>
 
 } /* namespace multi_index::detail */
 
-// TODO: convert this to brigand::list
 template<typename... Ts>
 struct tag: private detail::tag_marker
 {
-  using type = mpl::vector<Ts...>;
-  using list = brigand::list<Ts...>;
-  static_assert(detail::no_duplicate_tags<list>::value, "");
+  using type = brigand::list<Ts...>;
+  static_assert(detail::no_duplicate_tags<type>::value, "");
 };
 
 } /* namespace multi_index */

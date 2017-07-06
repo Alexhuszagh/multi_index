@@ -56,8 +56,6 @@ struct composite_key_result_length
     >::value);
 };
 
-#if !defined(BOOST_NO_CXX11_HDR_TUPLE)&&\
-    !defined(BOOST_NO_CXX11_VARIADIC_TEMPLATES)
 struct is_boost_tuple_helper
 {
   typedef char yes;
@@ -95,19 +93,6 @@ struct composite_object_length
 
   BOOST_STATIC_CONSTANT(int,value=type::value);
 };
-#else
-template<typename T>
-struct composite_object_length
-{
-  typedef typename boost::mpl::if_c<
-    is_composite_key_result<T>::value,
-    composite_key_result_length<T>,
-    boost::tuples::length<T>
-  >::type type;
-
-  BOOST_STATIC_CONSTANT(int,value=type::value);
-};
-#endif
 
 template<typename CompositeKeyResult,typename T2>
 struct comparison_equal_length
