@@ -1,7 +1,3 @@
-#pragma once
-
-// MS compatible compilers support #pragma once
-
 //
 //  boost/current_function.hpp - BOOST_CURRENT_FUNCTION
 //
@@ -13,6 +9,8 @@
 //
 //  http://www.boost.org/libs/assert/current_function.html
 //
+
+#pragma once
 
 namespace boost
 {

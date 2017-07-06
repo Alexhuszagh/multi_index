@@ -82,7 +82,7 @@ void test_stable_update()
   }
 }
 
-using namespace boost::multi_index;
+using namespace multi_index;
 
 void test_update()
 {

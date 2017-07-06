@@ -15,7 +15,7 @@
 #include "employee.hpp"
 #include "lightweight_test.hpp"
 
-using namespace boost::multi_index;
+using namespace multi_index;
 
 static int string_to_int(const std::string& str)
 {

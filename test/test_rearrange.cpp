@@ -11,16 +11,16 @@
 #include "test_rearrange.hpp"
 
 #include "lightweight_test.hpp"
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/sequenced_index.hpp>
-#include <boost/multi_index/random_access_index.hpp>
-#include <boost/preprocessor/seq/enum.hpp>
+#include <multi_index_container.hpp>
+#include <multi_index/sequenced_index.hpp>
+#include <multi_index/random_access_index.hpp>
+#include <preprocessor/seq/enum.hpp>
 #include <algorithm>
 #include <functional>
 #include <iterator>
 #include <vector>
 
-using namespace boost::multi_index;
+using namespace multi_index;
 
 #undef CHECK_EQUAL
 #define CHECK_EQUAL(p,check_seq) \

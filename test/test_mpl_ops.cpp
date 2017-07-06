@@ -13,12 +13,12 @@
 #include <brigand/adapted/list.hpp>
 #include <brigand/adapted/tuple.hpp>
 #include <brigand/sequences/front.hpp>
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/sequenced_index.hpp>
+#include <multi_index_container.hpp>
+#include <multi_index/identity.hpp>
+#include <multi_index/ordered_index.hpp>
+#include <multi_index/sequenced_index.hpp>
 
-using namespace boost::multi_index;
+using namespace multi_index;
 
 void test_mpl_ops()
 {
@@ -65,7 +65,7 @@ void test_mpl_ops()
 
   typedef multi_index_container<
     int,
-    boost::multi_index::indexed_by<
+    multi_index::indexed_by<
       ordered_unique<identity<int> >,
       ordered_non_unique<identity<int> >
     >

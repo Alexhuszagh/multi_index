@@ -17,7 +17,7 @@
 #include <vector>
 #include "employee.hpp"
 
-using namespace boost::multi_index;
+using namespace multi_index;
 
 struct non_copyable_int
 {
@@ -305,7 +305,7 @@ void test_modifiers()
   BOOST_TEST(es==es2_backup&&es2==es_backup);
 
 #if defined(BOOST_FUNCTION_SCOPE_USING_DECLARATION_BREAKS_ADL)
-  ::boost::multi_index::detail::swap(i1,get<1>(es2));
+  multi_index::detail::swap(i1,get<1>(es2));
 #else
   using std::swap;
   swap(i1,get<1>(es2));
@@ -314,7 +314,7 @@ void test_modifiers()
   BOOST_TEST(es==es_backup&&es2==es2_backup);
 
 #if defined(BOOST_FUNCTION_SCOPE_USING_DECLARATION_BREAKS_ADL)
-  ::boost::multi_index::detail::swap(i2,get<2>(es2));
+  multi_index::detail::swap(i2,get<2>(es2));
 #else
   using std::swap;
   swap(i2,get<2>(es2));
@@ -323,7 +323,7 @@ void test_modifiers()
   BOOST_TEST(es==es2_backup&&es2==es_backup);
 
 #if defined(BOOST_FUNCTION_SCOPE_USING_DECLARATION_BREAKS_ADL)
-  ::boost::multi_index::detail::swap(i3,get<3>(es2));
+  multi_index::detail::swap(i3,get<3>(es2));
 #else
   using std::swap;
   swap(i3,get<3>(es2));
@@ -332,7 +332,7 @@ void test_modifiers()
   BOOST_TEST(es==es_backup&&es2==es2_backup);
 
 #if defined(BOOST_FUNCTION_SCOPE_USING_DECLARATION_BREAKS_ADL)
-  ::boost::multi_index::detail::swap(i4,get<4>(es2));
+  multi_index::detail::swap(i4,get<4>(es2));
 #else
   using std::swap;
   swap(i4,get<4>(es2));
@@ -341,7 +341,7 @@ void test_modifiers()
   BOOST_TEST(es==es2_backup&&es2==es_backup);
 
 #if defined(BOOST_FUNCTION_SCOPE_USING_DECLARATION_BREAKS_ADL)
-  ::boost::multi_index::detail::swap(i5,get<5>(es2));
+  multi_index::detail::swap(i5,get<5>(es2));
 #else
   using std::swap;
   swap(i5,get<5>(es2));

@@ -15,7 +15,7 @@
 #include "employee.hpp"
 #include "lightweight_test.hpp"
 
-using namespace boost::multi_index;
+using namespace multi_index;
 
 struct type1{};
 
@@ -118,7 +118,7 @@ void test_set_ops()
     indexed_by<
       ordered_unique<identity<type1>,bool(*)(type1,type1)>
     >
-  > c2(boost::make_tuple(boost::make_tuple(identity<type1>(),&less_type1_f)));
+  > c2(make_tuple(make_tuple(identity<type1>(),&less_type1_f)));
   c2.insert(type1());
 
   BOOST_TEST(c2.find(type3())==c2.begin());

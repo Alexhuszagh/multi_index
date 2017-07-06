@@ -13,12 +13,12 @@
 #include <algorithm>
 #include <functional>
 #include "lightweight_test.hpp"
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/identity.hpp>
-#include <boost/multi_index/ordered_index.hpp>
+#include <multi_index_container.hpp>
+#include <multi_index/identity.hpp>
+#include <multi_index/ordered_index.hpp>
 
 
-using namespace boost::multi_index;
+using namespace multi_index;
 
 typedef multi_index_container<int>  int_set;
 typedef int_set::iterator int_set_iterator;

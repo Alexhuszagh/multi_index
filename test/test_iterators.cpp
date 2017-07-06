@@ -14,7 +14,7 @@
 #include "lightweight_test.hpp"
 #include <iterator>
 
-using namespace boost::multi_index;
+using namespace multi_index;
 
 template<typename Index>
 void test_non_const_iterators(Index& i,int target)

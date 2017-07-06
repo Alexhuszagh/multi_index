@@ -12,14 +12,14 @@
 
 #include <iterator>
 #include "lightweight_test.hpp"
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/hashed_index.hpp>
-#include <boost/multi_index/identity.hpp>
+#include <multi_index_container.hpp>
+#include <multi_index/hashed_index.hpp>
+#include <multi_index/identity.hpp>
 #include <vector>
 
 #include <iostream>
 
-using namespace boost::multi_index;
+using namespace multi_index;
 
 template<typename HashedContainer>
 void check_load_factor(const HashedContainer& hc)

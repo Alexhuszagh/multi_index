@@ -12,16 +12,16 @@
 
 #include <brigand/functions/if.hpp>
 #include "lightweight_test.hpp"
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/composite_key.hpp>
-#include <boost/multi_index/hashed_index.hpp>
-#include <boost/multi_index/member.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#include <multi_index_container.hpp>
+#include <multi_index/composite_key.hpp>
+#include <multi_index/hashed_index.hpp>
+#include <multi_index/member.hpp>
+#include <multi_index/ordered_index.hpp>
+#include <preprocessor/repetition/enum_binary_params.hpp>
+#include <preprocessor/repetition/enum_params.hpp>
+#include <preprocessor/repetition/repeat_from_to.hpp>
 
-using namespace boost::multi_index;
+using namespace multi_index;
 using namespace boost::tuples;
 
 struct is_composite_key_result_helper
@@ -335,9 +335,9 @@ void test_composite_key_template()
 {
   typedef composite_key<
     xyz,
-    ::boost::multi_index::member<xyz,int,&xyz::x>,
-    ::boost::multi_index::member<xyz,int,&xyz::y>,
-    ::boost::multi_index::member<xyz,int,&xyz::z>
+    multi_index::member<xyz,int,&xyz::x>,
+    multi_index::member<xyz,int,&xyz::y>,
+    multi_index::member<xyz,int,&xyz::z>
   > ckey_t1;
 
   typedef multi_index_container<
@@ -380,9 +380,9 @@ void test_composite_key_template()
   ckey_t1 ck2(ck1);
   ckey_t1 ck3(
     boost::make_tuple(
-      ::boost::multi_index::member<xyz,int,&xyz::x>(),
-      ::boost::multi_index::member<xyz,int,&xyz::y>(),
-      ::boost::multi_index::member<xyz,int,&xyz::z>()));
+      multi_index::member<xyz,int,&xyz::x>(),
+      multi_index::member<xyz,int,&xyz::y>(),
+      multi_index::member<xyz,int,&xyz::z>()));
   ckey_t1 ck4(get<0>(ck1.key_extractors()));
 
   ck3=ck3; /* prevent unused var */
@@ -530,8 +530,8 @@ void test_composite_key_template()
 
   typedef composite_key<
     xyz,
-    ::boost::multi_index::member<xyz,int,&xyz::y>, /* members reversed */
-    ::boost::multi_index::member<xyz,int,&xyz::x>
+    multi_index::member<xyz,int,&xyz::y>, /* members reversed */
+    multi_index::member<xyz,int,&xyz::x>
   > ckey_t2;
 
   ckey_t2 ck5;
@@ -584,9 +584,9 @@ void test_composite_key_template()
 
   typedef composite_key<
     xystr,
-    ::boost::multi_index::member<xystr,std::string,&xystr::str>,
-    ::boost::multi_index::member<xystr,int,&xystr::x>,
-    ::boost::multi_index::member<xystr,int,&xystr::y>
+    multi_index::member<xystr,std::string,&xystr::str>,
+    multi_index::member<xystr,int,&xystr::x>,
+    multi_index::member<xystr,int,&xystr::y>
   > ckey_t3;
 
   ckey_t3 ck6;
