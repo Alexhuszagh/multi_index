@@ -12,7 +12,7 @@ enable_testing()
 set(CMAKE_CXX_STANDARD 14)
 set(CXX_STANDARD TRUE)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR} include)
+include_directories(include third_party/brigand/include)
 
 if(UNIX)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
