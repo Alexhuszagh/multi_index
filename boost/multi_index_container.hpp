@@ -15,7 +15,6 @@
 #include <brigand/sequences/front.hpp>
 #include <brigand/sequences/size.hpp>
 #include <algorithm>
-#include <boost/config.hpp>     // TODO: remove
 #include <boost/multi_index_container_fwd.hpp>
 #include <boost/multi_index/detail/base_from_member.hpp>
 #include <boost/multi_index/detail/base_type.hpp>
@@ -269,8 +268,8 @@ public:
   template<typename Tag>
   struct index
   {
-    template <typename index>
-    using has_tag = typename detail::has_tag<Tag, typename index::tag_list>::type;
+    template <typename index_t>
+    using has_tag = typename detail::has_tag<Tag, typename index_t::tag_list>::type;
 
     using list = brigand::find<index_type_list, brigand::bind<has_tag, brigand::_1>>;
     using type = brigand::front<list>;
@@ -755,8 +754,8 @@ struct index
 {
   typedef typename MultiIndexContainer::index_type_list index_type_list;
 
-  template <typename index>
-  using has_tag = typename detail::has_tag<Tag, typename index::tag_list>::type;
+  template <typename index_t>
+  using has_tag = typename detail::has_tag<Tag, typename index_t::tag_list>::type;
 
   using list = brigand::find<index_type_list, brigand::bind<has_tag, brigand::_1>>;
   using type = brigand::front<list>;
