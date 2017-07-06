@@ -15,11 +15,6 @@
 #include <boost/tuple/tuple.hpp>
 #include <tuple>
 
-// TODO: remove
-//#include <boost/mpl/bind.hpp>
-//#include <boost/mpl/fold.hpp>
-//#include <boost/mpl/vector.hpp>
-
 
 namespace boost
 {
@@ -27,7 +22,6 @@ namespace boost
 
 template <typename T, typename R>
 struct to_stdtuple;
-
 
 template <typename... Ts, typename T>
 struct to_stdtuple<std::tuple< Ts... >, T>

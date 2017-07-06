@@ -63,12 +63,14 @@ struct multi_index_node_type_impl<Value, Allocator, std::tuple<Ts...>>
     index_node_base<Value,Allocator>,
     brigand::bind<next_index_node, brigand::_2, brigand::_1>
   >;
+  using f = typename list::fuck;
 
   using type = typename mpl::reverse_iter_fold<
     mpl::vector<Ts...>,
     index_node_base<Value,Allocator>,
     mpl::bind2<index_node_applier,mpl::_2,mpl::_1>
   >::type;
+  using g = typename type::fuck;
 };
 
 
