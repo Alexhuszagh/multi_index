@@ -14,8 +14,7 @@ set(CXX_STANDARD TRUE)
 
 include_directories(include third_party/brigand/include)
 
-if(UNIX)
-    if(MINGW OR MSYS)
+if(MINGW OR MSYS)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -static")
 elseif(UNIX)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
