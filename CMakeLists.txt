@@ -27,7 +27,7 @@ elseif(MSVC)
 endif()
 
 if(BUILD_STATIC)
-    if(MINGW OR MSYS)
+    if(MINGW OR MSYS OR CYGWIN)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
     elseif(UNIX)
         set(CMAKE_POSITION_INDEPENDENT_CODE ON)
