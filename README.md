@@ -48,7 +48,7 @@ Visual Studio 2015 has various bugs with nested templates, and is therefore not 
 
 - Alex Huszagh
 
-MultiIndex is forked from Boost's implementation, and shares nearly all of it's code from it. Joaquin M Lopez Munoz is the author of the Boost implementation, and therefore of the nearly all of the source code, although he is unaffilitate with the project.
+MultiIndex is forked from Boost's implementation, and shares nearly all of its code from it. Joaquin M Lopez Munoz is the author of the Boost implementation, and therefore of the nearly all of the source code, although he is unaffilitated with the fork.
 
 ## License
 
