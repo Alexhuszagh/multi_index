@@ -94,9 +94,7 @@ public:
   typedef typename super::iterator                 iterator;
   typedef typename super::const_iterator           const_iterator;
 
-  // Bug fix for #1, -Winjected-class-name
-  using list_type = typename index_type_list::list;
-  static_assert(detail::no_duplicate_tags_in_index_list<list_type>::value, "");
+  static_assert(detail::no_duplicate_tags_in_index_list<index_type_list>::value, "");
 
   /* global project() needs to see this publicly */
 
