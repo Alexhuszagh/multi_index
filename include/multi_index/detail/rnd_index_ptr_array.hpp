@@ -32,9 +32,9 @@ class random_access_index_ptr_array
 
 public:
   typedef typename node_impl_type::pointer              value_type;
-  typedef typename multi_index::detail::allocator::rebind_to<
+  std::allocator_traits<typedef typename multi_index::detail::allocator::rebind_to<
     Allocator,value_type
-  >::type::pointer                                      pointer;
+  >::type>::pointer                                     pointer;
 
   random_access_index_ptr_array(
     const Allocator& al,value_type end_,std::size_t sz):

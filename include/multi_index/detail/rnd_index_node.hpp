@@ -23,17 +23,17 @@ template<typename Allocator>
 struct random_access_index_node_impl
 {
   typedef typename
-  multi_index::detail::allocator::rebind_to<
+  std::allocator_traits<typename multi_index::detail::allocator::rebind_to<
     Allocator,random_access_index_node_impl
-  >::type::pointer                          pointer;
+  >::type>::pointer                         pointer;
   typedef typename
-  multi_index::detail::allocator::rebind_to<
+  std::allocator_traits<typename multi_index::detail::allocator::rebind_to<
     Allocator,random_access_index_node_impl
-  >::type::const_pointer                    const_pointer;
+  >::type>::const_pointer                   const_pointer;
   typedef typename
-  multi_index::detail::allocator::rebind_to<
+  std::allocator_traits<typename multi_index::detail::allocator::rebind_to<
     Allocator,pointer
-  >::type::pointer                          ptr_pointer;
+  >::type>::pointer                         ptr_pointer;
 
   ptr_pointer& up(){return up_;}
   ptr_pointer  up()const{return up_;}

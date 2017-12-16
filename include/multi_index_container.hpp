@@ -33,21 +33,21 @@ namespace multi_index{
 template<typename Value,typename IndexSpecifierList,typename Allocator>
 class multi_index_container:
   private ::multi_index::base_from_member<
-    typename Allocator::template rebind<
+    typename std::allocator_traits<Allocator>::template rebind_alloc<
       typename detail::multi_index_node_type<
         Value,
         IndexSpecifierList,
         Allocator
       >::type
-    >::other>,
+    >>,
   private detail::header_holder<
-    typename Allocator::template rebind<
+    typename std::allocator_traits<Allocator>::template rebind_traits<
       typename detail::multi_index_node_type<
         Value,
         IndexSpecifierList,
         Allocator
       >::type
-    >::other::pointer,
+    >::pointer,
     multi_index_container<Value,IndexSpecifierList,Allocator> >,
 
   public detail::multi_index_base_type<
@@ -68,13 +68,13 @@ private:
   >::type                                         super;
 
   typedef typename
-  Allocator::template rebind<
+  std::allocator_traits<Allocator>::template rebind_alloc<
     typename super::node_type
-  >::other                                         node_allocator;
+  >                                               node_allocator;
   typedef ::multi_index::base_from_member<
     node_allocator>                               bfm_allocator;
   typedef detail::header_holder<
-    typename node_allocator::pointer,
+    typename std::allocator_traits<node_allocator>::pointer,
     multi_index_container>                        bfm_header;
 
 public:
@@ -366,7 +366,7 @@ protected:
 
   void deallocate_node(node_type* x)
   {
-    typedef typename node_allocator::pointer node_pointer;
+    typedef typename std::allocator_traits<node_allocator>::pointer node_pointer;
     bfm_allocator::member.deallocate(static_cast<node_pointer>(x),1);
   }
 

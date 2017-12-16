@@ -55,15 +55,19 @@ public:
   typedef typename node_type::value_type              value_type;
   typedef tuples::null_type                           ctor_args;
   typedef typename super::final_allocator_type        allocator_type;
-  typedef typename allocator_type::reference          reference;
-  typedef typename allocator_type::const_reference    const_reference;
+  typedef typename std::allocator_traits<
+    allocator_type>::value_type&                      reference;
+  typedef typename std::allocator_traits<
+    allocator_type>::value_type const&                const_reference;
   typedef bidir_node_iterator<node_type>              iterator;
   typedef iterator                                    const_iterator;
 
   typedef std::size_t                                 size_type;
   typedef std::ptrdiff_t                              difference_type;
-  typedef typename allocator_type::pointer            pointer;
-  typedef typename allocator_type::const_pointer      const_pointer;
+  typedef typename std::allocator_traits<
+    allocator_type>::pointer                          pointer;
+  typedef typename std::allocator_traits<
+    allocator_type>::const_pointer                    const_pointer;
   typedef typename
     std::reverse_iterator<iterator>                 reverse_iterator;
   typedef typename

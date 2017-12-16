@@ -32,11 +32,11 @@ namespace detail{
  *     http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#199
  */
 
-template<typename T,typename Allocator=std::allocator<T> >
+template<typename T,typename Allocator=std::allocator<T>>
 struct auto_space
 {
-  typedef typename Allocator::template rebind<T
-  >::other::pointer pointer;
+  typedef typename std::allocator_traits<Allocator>::template rebind_traits<T
+  >::pointer pointer;
 
   explicit auto_space(const Allocator& al=Allocator(),std::size_t n=1):
   al_(al),n_(n),data_(n_?al_.allocate(n_):pointer(0))

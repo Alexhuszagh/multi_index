@@ -57,13 +57,13 @@ template<typename AugmentPolicy,typename Allocator>
 struct ordered_index_node_std_base
 {
   typedef typename
-  Allocator::template rebind<
+  std::allocator_traits<Allocator>::template rebind_traits<
     ordered_index_node_impl<AugmentPolicy,Allocator>
-  >::other::pointer                                   pointer;
+  >::pointer                                         pointer;
   typedef typename
-  Allocator::template rebind<
+  std::allocator_traits<Allocator>::template rebind_traits<
     ordered_index_node_impl<AugmentPolicy,Allocator>
-  >::other::const_pointer                             const_pointer;
+  >::const_pointer                                   const_pointer;
   typedef ordered_index_color&                       color_ref;
   typedef pointer&                                   parent_ref;
 

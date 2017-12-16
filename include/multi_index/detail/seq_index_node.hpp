@@ -22,13 +22,13 @@ template<typename Allocator>
 struct sequenced_index_node_impl
 {
   typedef typename
-  multi_index::detail::allocator::rebind_to<
+  std::allocator_traits<typename multi_index::detail::allocator::rebind_to<
     Allocator,sequenced_index_node_impl
-  >::type::pointer                      pointer;
+  >::type>::pointer                     pointer;
   typedef typename
-  multi_index::detail::allocator::rebind_to<
+  std::allocator_traits<typename multi_index::detail::allocator::rebind_to<
     Allocator,sequenced_index_node_impl
-  >::type::const_pointer                const_pointer;
+  >::type>::const_pointer               const_pointer;
 
   pointer& prior(){return prior_;}
   pointer  prior()const{return prior_;}

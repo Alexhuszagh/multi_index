@@ -73,16 +73,14 @@ struct rebinder
   template<typename Type>
   struct result
   {
-      typedef typename Allocator::template
-          rebind<Type>::other other;
+      typedef typename std::allocator_traits<Allocator>::template rebind_alloc<Type> other;
   };
 };
 
 template<typename Allocator,typename Type>
 struct compliant_allocator_rebind_to
 {
-  typedef typename rebinder<Allocator>::
-      template result<Type>::other type;
+  typedef typename rebinder<Allocator>::template result<Type>::other type;
 };
 
 /* rebind front-end */
