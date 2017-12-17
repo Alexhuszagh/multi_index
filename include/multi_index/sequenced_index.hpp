@@ -20,6 +20,7 @@
 #include <multi_index/detail/seq_index_node.hpp>
 #include <multi_index/detail/seq_index_ops.hpp>
 #include <multi_index/detail/vartempl_support.hpp>
+#include <multi_index/config.hpp>
 #include <multi_index/sequenced_index_fwd.hpp>
 #include <multi_index/tuple.hpp>
 #include <cstddef>
@@ -361,7 +362,7 @@ public:
     using namespace std::placeholders;
     sequenced_index_remove(
       *this,
-      ::std::bind(std::equal_to<value_type>(),_1,value));
+      ::std::bind(MULTI_INDEX_EQUAL_TO<value_type>(),_1,value));
   }
 
   template<typename Predicate>
@@ -372,7 +373,7 @@ public:
 
   void unique()
   {
-    sequenced_index_unique(*this,std::equal_to<value_type>());
+    sequenced_index_unique(*this,MULTI_INDEX_EQUAL_TO<value_type>());
   }
 
   template <class BinaryPredicate>
@@ -383,7 +384,7 @@ public:
 
   void merge(sequenced_index<SuperMeta,TagList>& x)
   {
-    sequenced_index_merge(*this,x,std::less<value_type>());
+    sequenced_index_merge(*this,x,MULTI_INDEX_LESS<value_type>());
   }
 
   template <typename Compare>
@@ -394,7 +395,7 @@ public:
 
   void sort()
   {
-    sequenced_index_sort(header(),std::less<value_type>());
+    sequenced_index_sort(header(),MULTI_INDEX_LESS<value_type>());
   }
 
   template <typename Compare>

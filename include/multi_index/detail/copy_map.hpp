@@ -10,6 +10,7 @@
 
 #include <multi_index/detail/auto_space.hpp>
 #include <multi_index/detail/raw_ptr.hpp>
+#include <multi_index/config.hpp>
 #include <algorithm>
 #include <cstddef>
 #include <functional>
@@ -40,7 +41,7 @@ struct copy_map_entry
 
   bool operator<(const copy_map_entry<Node>& x)const
   {
-    return std::less<Node*>()(first,x.first);
+    return MULTI_INDEX_LESS<Node*>()(first,x.first);
   }
 };
 

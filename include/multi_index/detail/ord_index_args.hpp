@@ -28,7 +28,7 @@ namespace detail{
  */
 
 template<typename T>
-using index_args_default_compare = std::less<typename T::result_type>;
+using index_args_default_compare = MULTI_INDEX_LESS<typename T::result_type>;
 
 template <typename T1, typename T2, typename T3 = index_args_default_compare<T2>>
 struct ordered_index_args_full_form_impl

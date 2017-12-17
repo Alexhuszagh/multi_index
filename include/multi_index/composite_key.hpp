@@ -13,6 +13,7 @@
 #include <brigand/functions/logical/or.hpp>
 #include <multi_index/detail/cons_stdtuple.hpp>
 #include <multi_index/detail/tuple_support.hpp>
+#include <multi_index/config.hpp>
 #include <functional>
 #include <type_traits>
 
@@ -84,10 +85,10 @@ struct nth_composite_key_##name                                               \
  * nth_composite_key_hash
  */
 
-BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(equal_to,std::equal_to)
-BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(less,std::less)
-BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(greater,std::greater)
-BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(hash,std::hash)
+BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(equal_to,MULTI_INDEX_EQUAL_TO)
+BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(less,MULTI_INDEX_LESS)
+BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(greater,MULTI_INDEX_GREATER)
+BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(hash,MULTI_INDEX_HASH)
 
 /* used for defining equality and comparison ops of composite_key_result */
 

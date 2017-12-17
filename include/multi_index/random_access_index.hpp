@@ -20,6 +20,7 @@
 #include <multi_index/detail/rnd_index_ptr_array.hpp>
 #include <multi_index/detail/scope_guard.hpp>
 #include <multi_index/detail/vartempl_support.hpp>
+#include <multi_index/config.hpp>
 #include <multi_index/random_access_index_fwd.hpp>
 #include <multi_index/tuple.hpp>
 #include <algorithm>
@@ -421,7 +422,7 @@ public:
       end()-make_iterator(
         random_access_index_remove<node_type>(
           ptrs,
-          ::std::bind(std::equal_to<value_type>(),_1,value)));
+          ::std::bind(MULTI_INDEX_EQUAL_TO<value_type>(),_1,value)));
     while(n--)pop_back();
   }
 
@@ -438,7 +439,7 @@ public:
     difference_type n=
       end()-make_iterator(
         random_access_index_unique<node_type>(
-          ptrs,std::equal_to<value_type>()));
+          ptrs,MULTI_INDEX_EQUAL_TO<value_type>()));
     while(n--)pop_back();
   }
 
@@ -457,7 +458,7 @@ public:
       size_type s=size();
       splice(end(),x);
       random_access_index_inplace_merge<node_type>(
-        get_allocator(),ptrs,ptrs.at(s),std::less<value_type>());
+        get_allocator(),ptrs,ptrs.at(s),MULTI_INDEX_LESS<value_type>());
     }
   }
 
@@ -475,7 +476,7 @@ public:
   void sort()
   {
     random_access_index_sort<node_type>(
-      get_allocator(),ptrs,std::less<value_type>());
+      get_allocator(),ptrs,MULTI_INDEX_LESS<value_type>());
   }
 
   template <typename Compare>

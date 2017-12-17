@@ -9,6 +9,7 @@
 #pragma once
 
 #include <brigand/functions/eval_if.hpp>
+#include <multi_index/config.hpp>
 #include <multi_index/tag.hpp>
 #include <functional>
 #include <type_traits>
@@ -34,10 +35,10 @@ namespace detail{
  */
 
 template<typename T>
-using index_args_default_hash = std::hash<typename T::result_type>;
+using index_args_default_hash = MULTI_INDEX_HASH<typename T::result_type>;
 
 template<typename T>
-using index_args_default_pred = std::equal_to<typename T::result_type>;
+using index_args_default_pred = MULTI_INDEX_EQUAL_TO<typename T::result_type>;
 
 
 template <typename T1, typename T2, typename T3 = index_args_default_hash<T2>, typename T4 = index_args_default_pred<T2>>
