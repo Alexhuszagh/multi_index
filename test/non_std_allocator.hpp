@@ -8,8 +8,7 @@
  * See http://www.boost.org/libs/multi_index for library home page.
  */
 
-#ifndef BOOST_MULTI_INDEX_TEST_NON_STD_ALLOCATOR_HPP
-#define BOOST_MULTI_INDEX_TEST_NON_STD_ALLOCATOR_HPP
+#pragma once
 
 #include <iterator>
 #include <cstddef>
@@ -121,5 +120,3 @@ public:
     return false;
   }
 };
-
-#endif

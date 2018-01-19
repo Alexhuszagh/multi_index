@@ -115,8 +115,6 @@ struct drop_front<0> {
 // Nth element ot T, first element is at index 0
 // -------------------------------------------------------
 
-#ifndef BOOST_NO_CV_SPECIALIZATIONS
-
 template<int N, class T>
 struct element
 {
@@ -133,36 +131,6 @@ private:
 public:
   typedef typename std::add_const<unqualified_type>::type type;
 };
-#else // def BOOST_NO_CV_SPECIALIZATIONS
-
-namespace detail {
-
-template<int N, class T, bool IsConst>
-struct element_impl
-{
-  typedef typename detail::drop_front<N>::template
-      apply<T>::type::head_type type;
-};
-
-template<int N, class T>
-struct element_impl<N, T, true /* IsConst */>
-{
-  typedef typename detail::drop_front<N>::template
-      apply<T>::type::head_type unqualified_type;
-  typedef const unqualified_type type;
-};
-
-} // end of namespace detail
-
-
-template<int N, class T>
-struct element:
-  public detail::element_impl<N, T, std::is_const<T>::value>
-{
-};
-
-#endif
-
 
 // -get function templates -----------------------------------------------
 // Usage: get<N>(aTuple)

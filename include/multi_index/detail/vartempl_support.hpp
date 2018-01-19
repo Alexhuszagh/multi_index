@@ -9,20 +9,20 @@
 #pragma once
 
 /* Utilities for emulation of variadic template functions. Variadic packs are
- * replaced by lists of BOOST_MULTI_INDEX_LIMIT_VARTEMPL_ARGS parameters:
+ * replaced by lists of MULTI_INDEX_LIMIT_VARTEMPL_ARGS parameters:
  *
  * Forwarding emulated with Boost.Move. A template functions foo_imp
- * defined in such way accepts *exactly* BOOST_MULTI_INDEX_LIMIT_VARTEMPL_ARGS
+ * defined in such way accepts *exactly* MULTI_INDEX_LIMIT_VARTEMPL_ARGS
  * arguments: variable number of arguments is emulated by providing a set of
  * overloads foo forwarding to foo_impl with
  *
- *   BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL
- *   BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL_EXTRA_ARG (initial extra arg)
+ *   MULTI_INDEX_OVERLOADS_TO_VARTEMPL
+ *   MULTI_INDEX_OVERLOADS_TO_VARTEMPL_EXTRA_ARG (initial extra arg)
  *
  * which fill the extra args with multi_index::detail::noarg's.
  * multi_index::detail::vartempl_placement_new works the opposite
  * way: it acceps a full a pointer x to Value and a
- * BOOST_MULTI_INDEX_FUNCTION_PARAM_PACK and forwards to
+ * MULTI_INDEX_FUNCTION_PARAM_PACK and forwards to
  * new(x) Value(args) where args is the argument pack after discarding
  * noarg's.
  *
@@ -34,14 +34,14 @@
 
 #include <utility>
 
-#define BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL(                     \
+#define MULTI_INDEX_OVERLOADS_TO_VARTEMPL(                           \
   ret,name_from,name_to)                                             \
 template<typename... Args> ret name_from(Args&&... args)             \
 {                                                                    \
   return name_to(std::forward<Args>(args)...);                       \
 }
 
-#define BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL_EXTRA_ARG(           \
+#define MULTI_INDEX_OVERLOADS_TO_VARTEMPL_EXTRA_ARG(                 \
   ret,name_from,name_to,extra_arg_type,extra_arg_name)               \
 template<typename... Args> ret name_from(                            \
   extra_arg_type extra_arg_name,Args&&... args)                      \

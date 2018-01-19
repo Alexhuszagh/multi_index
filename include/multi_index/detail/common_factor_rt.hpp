@@ -237,35 +237,34 @@ namespace detail
     };
 
     // Specialize for the built-in integers
-#define BOOST_PRIVATE_GCD_UF( Ut )                  \
-    template < >  struct gcd_optimal_evaluator<Ut>  \
+#define MULTI_INDEX_PRIVATE_GCD_UF( Ut )                        \
+    template < >  struct gcd_optimal_evaluator<Ut>              \
     {  Ut  operator ()( Ut a, Ut b ) const  { return gcd_binary( a, b ); }  }
 
-    BOOST_PRIVATE_GCD_UF( unsigned char );
-    BOOST_PRIVATE_GCD_UF( unsigned short );
-    BOOST_PRIVATE_GCD_UF( unsigned );
-    BOOST_PRIVATE_GCD_UF( unsigned long );
-    BOOST_PRIVATE_GCD_UF( unsigned long long );
+    MULTI_INDEX_PRIVATE_GCD_UF( unsigned char );
+    MULTI_INDEX_PRIVATE_GCD_UF( unsigned short );
+    MULTI_INDEX_PRIVATE_GCD_UF( unsigned );
+    MULTI_INDEX_PRIVATE_GCD_UF( unsigned long );
+    MULTI_INDEX_PRIVATE_GCD_UF( unsigned long long );
 
-#undef BOOST_PRIVATE_GCD_UF
+#undef MULTI_INDEX_PRIVATE_GCD_UF
 
-#define BOOST_PRIVATE_GCD_SF( St, Ut )                            \
+#define MULTI_INDEX_PRIVATE_GCD_SF( St, Ut )                      \
     template < >  struct gcd_optimal_evaluator<St>                \
     {  St  operator ()( St a, St b ) const  { Ut const  a_abs =   \
     static_cast<Ut>( a < 0 ? -a : +a ), b_abs = static_cast<Ut>(  \
     b < 0 ? -b : +b ); return static_cast<St>(                    \
     gcd_optimal_evaluator<Ut>()(a_abs, b_abs) ); }  }
 
-    BOOST_PRIVATE_GCD_SF( signed char, unsigned char );
-    BOOST_PRIVATE_GCD_SF( short, unsigned short );
-    BOOST_PRIVATE_GCD_SF( int, unsigned );
-    BOOST_PRIVATE_GCD_SF( long, unsigned long );
-    BOOST_PRIVATE_GCD_SF( char, unsigned char );
-    BOOST_PRIVATE_GCD_SF( long long, unsigned long long );
+    MULTI_INDEX_PRIVATE_GCD_SF( signed char, unsigned char );
+    MULTI_INDEX_PRIVATE_GCD_SF( short, unsigned short );
+    MULTI_INDEX_PRIVATE_GCD_SF( int, unsigned );
+    MULTI_INDEX_PRIVATE_GCD_SF( long, unsigned long );
+    MULTI_INDEX_PRIVATE_GCD_SF( char, unsigned char );
+    MULTI_INDEX_PRIVATE_GCD_SF( long long, unsigned long long );
 
-#undef BOOST_PRIVATE_GCD_SF
+#undef MULTI_INDEX_PRIVATE_GCD_SF
 
-#ifndef BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
     template < typename T, bool IsSpecialized, bool IsSigned >
     struct lcm_optimal_evaluator_helper_t
     {
@@ -299,16 +298,6 @@ namespace detail
             return solver( a, b );
         }
     };
-#else // BOOST_NO_LIMITS_COMPILE_TIME_CONSTANTS
-    template < typename T >
-    struct lcm_optimal_evaluator
-    {
-        T  operator ()( T const &a, T const &b )
-        {
-            return lcm_integer( a, b );
-        }
-    };
-#endif
 
     // Functions to find the GCD or LCM in the best way
     template < typename T >

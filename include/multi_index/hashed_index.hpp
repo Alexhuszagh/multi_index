@@ -123,7 +123,7 @@ private:
   typedef typename call_traits<
     key_type>::param_type                              key_param_type;
 
-  /* Needed to avoid commas in BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL
+  /* Needed to avoid commas in MULTI_INDEX_OVERLOADS_TO_VARTEMPL
    * expansion.
    */
 
@@ -184,10 +184,10 @@ public:
 
   /* modifiers */
 
-  BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL(
+  MULTI_INDEX_OVERLOADS_TO_VARTEMPL(
     emplace_return_type,emplace,emplace_impl)
 
-  BOOST_MULTI_INDEX_OVERLOADS_TO_VARTEMPL_EXTRA_ARG(
+  MULTI_INDEX_OVERLOADS_TO_VARTEMPL_EXTRA_ARG(
     iterator,emplace_hint,emplace_hint_impl,iterator,position)
 
   std::pair<iterator,bool> insert(const value_type& x)

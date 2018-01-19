@@ -35,8 +35,8 @@
  * tuple. In Boost 1.32, the limit is 10.
  */
 
-#ifndef BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE
-# define BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE 10
+#ifndef MULTI_INDEX_COMPOSITE_KEY_SIZE
+# define MULTI_INDEX_COMPOSITE_KEY_SIZE 10
 #endif
 
 namespace multi_index{
@@ -61,7 +61,7 @@ struct nth_key_from_value
  * if N exceeds the length of the composite key.
  */
 
-#define BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(name,functor)          \
+#define MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(name,functor)                \
 template<typename KeyFromValue>                                               \
 struct key_##name                                                             \
 {                                                                             \
@@ -87,10 +87,10 @@ struct nth_composite_key_##name                                               \
  * nth_composite_key_hash
  */
 
-BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(equal_to,MULTI_INDEX_EQUAL_TO)
-BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(less,MULTI_INDEX_LESS)
-BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(greater,MULTI_INDEX_GREATER)
-BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(hash,MULTI_INDEX_HASH)
+MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(equal_to,MULTI_INDEX_EQUAL_TO)
+MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(less,MULTI_INDEX_LESS)
+MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(greater,MULTI_INDEX_GREATER)
+MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR(hash,MULTI_INDEX_HASH)
 
 /* used for defining equality and comparison ops of composite_key_result */
 
@@ -101,7 +101,7 @@ struct generic_operator_equal
 };
 
 using generic_operator_equal_tuple = tuple_builder<
-  BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,
+  MULTI_INDEX_COMPOSITE_KEY_SIZE,
   generic_operator_equal
 >;
 
@@ -112,7 +112,7 @@ struct generic_operator_less
 };
 
 using generic_operator_less_tuple = tuple_builder<
-  BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,
+  MULTI_INDEX_COMPOSITE_KEY_SIZE,
   generic_operator_less
 >;
 
@@ -767,7 +767,7 @@ inline bool operator<(
 
 /* rest of comparison operators */
 
-#define BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(t1,t2,a1,a2)                  \
+#define MULTI_INDEX_CK_COMPLETE_COMP_OPS(t1,t2,a1,a2)                        \
 template<t1,t2> inline bool operator!=(const a1& x,const a2& y)              \
 {                                                                            \
   return !(x==y);                                                            \
@@ -788,35 +788,35 @@ template<t1,t2> inline bool operator<=(const a1& x,const a2& y)              \
   return !(y<x);                                                             \
 }
 
-BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
+MULTI_INDEX_CK_COMPLETE_COMP_OPS(
   typename CompositeKey1,
   typename CompositeKey2,
   composite_key_result<CompositeKey1>,
   composite_key_result<CompositeKey2>
 )
 
-BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
+MULTI_INDEX_CK_COMPLETE_COMP_OPS(
   typename CompositeKey,
   typename... Us,
   composite_key_result<CompositeKey>,
   tuple<Us...>
 )
 
-BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
+MULTI_INDEX_CK_COMPLETE_COMP_OPS(
   typename... Us,
   typename CompositeKey,
   tuple<Us...>,
   composite_key_result<CompositeKey>
 )
 
-BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
+MULTI_INDEX_CK_COMPLETE_COMP_OPS(
   typename CompositeKey,
   typename... Values,
   composite_key_result<CompositeKey>,
   std::tuple<Values...>
 )
 
-BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS(
+MULTI_INDEX_CK_COMPLETE_COMP_OPS(
   typename CompositeKey,
   typename... Values,
   std::tuple<Values...>,
@@ -1193,7 +1193,7 @@ public:
 
 template <typename CompositeKeyResult, template <typename, int> class Pred>
 using key_result_builder = indexed_tuple_builder<
-  BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE,
+  MULTI_INDEX_COMPOSITE_KEY_SIZE,
   Pred,
   typename CompositeKeyResult::composite_key_type
 >;
@@ -1338,6 +1338,6 @@ struct hash<multi_index::composite_key_result<CompositeKey> >:
 
 } /* namespace std */
 
-#undef BOOST_MULTI_INDEX_CK_COMPLETE_COMP_OPS
-#undef BOOST_MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR
-#undef BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE
+#undef MULTI_INDEX_CK_COMPLETE_COMP_OPS
+#undef MULTI_INDEX_CK_NTH_COMPOSITE_KEY_FUNCTOR
+#undef MULTI_INDEX_COMPOSITE_KEY_SIZE
