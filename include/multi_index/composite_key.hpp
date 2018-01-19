@@ -35,7 +35,9 @@
  * tuple. In Boost 1.32, the limit is 10.
  */
 
-#define BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE 10
+#ifndef BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE
+# define BOOST_MULTI_INDEX_COMPOSITE_KEY_SIZE 10
+#endif
 
 namespace multi_index{
 
