@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <brigand/algorithms/find.hpp>
 #include <brigand/algorithms/transform.hpp>
 #include <brigand/functions/if.hpp>
 #include <brigand/functions/logical/not.hpp>
